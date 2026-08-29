@@ -20,12 +20,8 @@
 - 🏠 Keeping software local-first, portable, and under the user's control
 - 🐛 Turning “why is this broken?” into “okay, that's actually pretty neat”
 
-## Things I've shipped
+## Featured project
 
-- [DSH Portable](https://github.com/WSL043/DSH-Portable) — pick it up, move it, keep your workspace with you
-- [DSH Codex Subscription](https://github.com/WSL043/dsh-codex-subscription) — Codex inside DeepSeek Harness, minus the API-key scavenger hunt
-- [DSH Chat Manager](https://github.com/WSL043/dsh-chat-manager) — because good conversations deserve better than disappearing into the void
-- [DSH Reasoning Slider](https://github.com/WSL043/dsh-reasoning-slider) — more thinking, less guessing, plus a suspicious amount of WebGL
 - [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility fix with bonus cat energy
 
 ## Current status
