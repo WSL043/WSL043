@@ -2,28 +2,38 @@
   <img src="./assets/banner.png" alt="Warm paper shapes connected by precise circuit-like paths">
 </p>
 
-<h1 align="center">WSL043</h1>
+<h1 align="center">Hey, I'm WSL043 👋</h1>
 
 <p align="center">
-  Building practical, local-first tools for desktop workflows and AI-assisted software.
+  Building weird little tools, breaking boring workflows,<br>
+  and negotiating with bugs at 2 AM.
 </p>
 
-## What I build
+<p align="center">
+  🐈‍⬛ Supervised by a black cat &nbsp;·&nbsp; ⚡ Powered by curiosity &nbsp;·&nbsp; 🧯 Occasionally stable
+</p>
 
-- Desktop utilities that keep control and data close to the user
-- Small tools that make AI-assisted workflows easier to understand and manage
-- Open-source experiments focused on useful, maintainable software
+## What I'm up to
 
-## Selected projects
+- 🧰 Making desktop tools that are useful before they are fashionable
+- 🤖 Teaching AI agents to do the boring parts without eating the whole computer
+- 🏠 Keeping software local-first, portable, and under the user's control
+- 🐛 Turning “why is this broken?” into “okay, that's actually pretty neat”
 
-- [DSH Portable](https://github.com/WSL043/DSH-Portable) — a portable DeepSeek Harness desktop build
-- [DSH Codex Subscription](https://github.com/WSL043/dsh-codex-subscription) — Codex subscription integration for DeepSeek Harness
-- [DSH Chat Manager](https://github.com/WSL043/dsh-chat-manager) — conversation search, restore, and history management
-- [DSH Reasoning Slider](https://github.com/WSL043/dsh-reasoning-slider) — visual model-reasoning controls
-- [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility utility
+## Things I've shipped
 
-## Interests
+- [DSH Portable](https://github.com/WSL043/DSH-Portable) — pick it up, move it, keep your workspace with you
+- [DSH Codex Subscription](https://github.com/WSL043/dsh-codex-subscription) — Codex inside DeepSeek Harness, minus the API-key scavenger hunt
+- [DSH Chat Manager](https://github.com/WSL043/dsh-chat-manager) — because good conversations deserve better than disappearing into the void
+- [DSH Reasoning Slider](https://github.com/WSL043/dsh-reasoning-slider) — more thinking, less guessing, plus a suspicious amount of WebGL
+- [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility fix with bonus cat energy
 
-`desktop apps` · `local-first software` · `developer tools` · `AI workflows` · `automation`
+## Current status
 
-Contact: [wangsr043@gmail.com](mailto:wangsr043@gmail.com)
+```text
+Probably refactoring something that was already working.
+```
+
+`desktop apps` · `local-first` · `developer tools` · `AI agents` · `automation` · `tiny chaos`
+
+Say hi: [wangsr043@gmail.com](mailto:wangsr043@gmail.com)
