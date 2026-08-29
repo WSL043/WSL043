@@ -2,34 +2,23 @@
   <img src="./assets/banner.png" alt="Warm paper shapes connected by precise circuit-like paths">
 </p>
 
-<h1 align="center">Hey, I'm WSL043 👋</h1>
+<h1 align="center">WSL043</h1>
 
 <p align="center">
-  Building weird little tools, breaking boring workflows,<br>
-  and negotiating with bugs at 2 AM.
+  I build the tools I wish already existed.
 </p>
 
-<p align="center">
-  🐈‍⬛ Supervised by a black cat &nbsp;·&nbsp; ⚡ Powered by curiosity &nbsp;·&nbsp; 🧯 Occasionally stable
-</p>
+## About
 
-## What I'm up to
-
-- 🧰 Making desktop tools that are useful before they are fashionable
-- 🤖 Teaching AI agents to do the boring parts without eating the whole computer
-- 🏠 Keeping software local-first, portable, and under the user's control
-- 🐛 Turning “why is this broken?” into “okay, that's actually pretty neat”
+Mostly desktop apps, local-first software, and AI workflows. I care about control,
+clarity, and making complicated things feel simple.
 
 ## Featured project
 
-- [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility fix with bonus cat energy
+- [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility utility for CS2
 
-## Current status
+`desktop apps` · `local-first software` · `developer tools` · `AI workflows` · `automation`
 
-```text
-Probably refactoring something that was already working.
-```
+Still curious. Still shipping.
 
-`desktop apps` · `local-first` · `developer tools` · `AI agents` · `automation` · `tiny chaos`
-
-Say hi: [wangsr043@gmail.com](mailto:wangsr043@gmail.com)
+[wangsr043@gmail.com](mailto:wangsr043@gmail.com)
