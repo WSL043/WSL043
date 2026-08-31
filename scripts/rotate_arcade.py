@@ -150,7 +150,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--state", type=Path, default=Path(".github/arcade-state.json"))
     parser.add_argument("--readme", type=Path, default=Path("README.md"))
-    parser.add_argument("--output-dir", type=Path, default=Path(".rotation-output"))
+    parser.add_argument("--output-dir", type=Path, default=Path("rotation-output"))
     parser.add_argument("--seed", default=os.environ.get("GITHUB_RUN_ID", "local-preview"))
     parser.add_argument("--experience", default="random")
     parser.add_argument("--generation-mode", choices=("selected", "all"), default="selected")
