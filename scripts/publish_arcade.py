@@ -42,8 +42,8 @@ def publish(root: Path, staging: Path) -> None:
 
     modules = ARCADE_EXPERIENCES if mode == "all" else (selected,)
     planned_copies: list[tuple[Path, Path]] = []
+    artifact_dir = staging / "generators"
     for module in modules:
-        artifact_dir = staging / "generators" / f"arcade-{module}"
         for source_name, destination_name in ASSET_MAP[module]:
             source = artifact_dir / source_name
             if not source.is_file() or source.stat().st_size == 0:
@@ -59,7 +59,9 @@ def publish(root: Path, staging: Path) -> None:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
     shutil.copyfile(next_readme, root / "README.md")
-    shutil.copyfile(next_state, root / ".github" / "arcade-state.json")
+    state_destination = root / ".github" / "arcade-state.json"
+    state_destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(next_state, state_destination)
 
 
 def main() -> int:

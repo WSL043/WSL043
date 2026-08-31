@@ -211,6 +211,7 @@ jobs:
         with:
           pattern: arcade-*
           path: staging/generators
+          merge-multiple: true
       - name: Validate and publish generated assets
         run: python scripts/publish_arcade.py
       - name: Commit profile rotation
