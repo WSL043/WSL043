@@ -1,5 +1,11 @@
 {
-  "current": null,
-  "remaining": [],
-  "cycle": 0
+  "current": "snake",
+  "remaining": [
+    "maze-chase",
+    "breakout",
+    "3d-city",
+    "space-shooter"
+  ],
+  "cycle": 1,
+  "updated_on": "2026-08-31"
 }

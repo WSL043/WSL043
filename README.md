@@ -9,12 +9,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 🕹️ Boot Screen
+## Today's Arcade: Snake 🐍
 
-The cabinet is warming up. A different GitHub-powered experience will appear here every day.
+The classic contribution snake is having lunch.
 
 <p align="center">
-  <img src="./assets/arcade/boot-screen.svg" alt="WSL043 Daily Arcade boot screen" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/snake-dark.svg">
+    <img src="./assets/arcade/snake-light.svg"
+         alt="Snake" width="100%">
+  </picture>
 </p>
 
 <p align="center"><sub>🎲 A different experience is drawn every day · no back-to-back repeats</sub></p>
