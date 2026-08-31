@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 260" role="img" aria-labelledby="title desc">
+  <title id="title">WSL043 Daily Arcade</title>
+  <desc id="desc">A pixel arcade cabinet boot screen.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080b16"/>
+      <stop offset="1" stop-color="#161a36"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#59f3ff"/>
+      <stop offset="0.52" stop-color="#b66bff"/>
+      <stop offset="1" stop-color="#ffcf5a"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#3b436a" stroke-opacity=".25"/></pattern>
+  </defs>
+  <rect width="1160" height="260" rx="22" fill="url(#bg)"/>
+  <rect x="12" y="12" width="1136" height="236" rx="15" fill="url(#grid)" stroke="#505a8e"/>
+  <text x="580" y="86" text-anchor="middle" fill="url(#neon)" filter="url(#glow)" font-family="monospace" font-size="25" font-weight="700" letter-spacing="7">WSL043 DAILY ARCADE</text>
+  <text x="580" y="137" text-anchor="middle" fill="#f2f4ff" font-family="monospace" font-size="15" letter-spacing="3">LOADING TODAY'S EXPERIENCE</text>
+  <rect x="360" y="166" width="440" height="13" rx="6" fill="#252b50"/>
+  <rect x="360" y="166" width="330" height="13" rx="6" fill="url(#neon)"/>
+  <text x="580" y="214" text-anchor="middle" fill="#939ccf" font-family="monospace" font-size="12">INSERT CURIOSITY · PRESS START · KEEP SHIPPING</text>
+</svg>
