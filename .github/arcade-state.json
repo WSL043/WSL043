@@ -1,7 +1,6 @@
 {
-  "current": "snake",
+  "current": "maze-chase",
   "remaining": [
-    "maze-chase",
     "breakout",
     "3d-city",
     "space-shooter"
