@@ -1,5 +1,5 @@
 __pycache__/
 *.py[cod]
-.rotation-output/
+rotation-output/
 .rotation-preview/
 staging/
