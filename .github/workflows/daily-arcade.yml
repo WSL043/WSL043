@@ -1,0 +1,216 @@
+name: Daily profile arcade
+
+on:
+  schedule:
+    - cron: "17 1 * * *"
+  workflow_dispatch:
+    inputs:
+      experience:
+        description: Experience to publish
+        required: true
+        default: random
+        type: choice
+        options:
+          - random
+          - space-shooter
+          - breakout
+          - snake
+          - maze-chase
+          - 3d-city
+      generate_all:
+        description: Refresh every stored experience before publishing
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: daily-profile-arcade
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  choose:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      selected: ${{ steps.choose.outputs.selected }}
+      mode: ${{ steps.choose.outputs.mode }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: choose
+        name: Draw the next experience
+        env:
+          REQUESTED_EXPERIENCE: ${{ inputs.experience || 'random' }}
+          GENERATE_ALL: ${{ inputs.generate_all || 'false' }}
+        run: |
+          MODE=selected
+          if [ "$GENERATE_ALL" = "true" ]; then MODE=all; fi
+          export ARCADE_DATE="$(date -u +%F)"
+          python scripts/rotate_arcade.py \
+            --seed "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --experience "$REQUESTED_EXPERIENCE" \
+            --generation-mode "$MODE"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: rotation-metadata
+          path: .rotation-output/
+          retention-days: 1
+
+  space-shooter:
+    needs: choose
+    if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'space-shooter'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: czl9707/gh-space-shooter@eea3dd4d83e464ec7c4153e09e303952b924f5c5 # v2.0.5
+        with:
+          github-token: ${{ github.token }}
+          output-path: generated/space-shooter.gif
+          strategy: random
+          no-commit: true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arcade-space-shooter
+          path: generated/
+          retention-days: 1
+
+  breakout:
+    needs: choose
+    if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'breakout'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: cyprieng/github-breakout@60c43dca3a1361fbc9fb9bb533b5193296345c4f # v1.2.4
+        with:
+          github_username: ${{ github.repository_owner }}
+          github_token: ${{ github.token }}
+          output_path: generated/raw
+          enable_ghost_bricks: true
+      - name: Select theme assets
+        run: |
+          mv generated/raw/light.svg generated/breakout-light.svg
+          mv generated/raw/dark.svg generated/breakout-dark.svg
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arcade-breakout
+          path: generated/*.svg
+          retention-days: 1
+
+  snake:
+    needs: choose
+    if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'snake'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3.5.0
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            generated/snake-light.svg?palette=github-light&color_snake=#ff7a59
+            generated/snake-dark.svg?palette=github-dark&color_snake=#59f3ff
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arcade-snake
+          path: generated/
+          retention-days: 1
+
+  maze-chase:
+    needs: choose
+    if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'maze-chase'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: abozanona/pacman-contribution-graph@7332e1de7903ab780c3692a4127a59cc13872daa # v5.3.2
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          github_token: ${{ github.token }}
+          games: pacman
+          player_style: opportunistic
+      - name: Select theme assets
+        run: |
+          mkdir -p generated
+          mv dist/pacman-contribution-graph.svg generated/maze-chase-light.svg
+          mv dist/pacman-contribution-graph-dark.svg generated/maze-chase-dark.svg
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arcade-maze-chase
+          path: generated/
+          retention-days: 1
+
+  city-3d:
+    needs: choose
+    if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == '3d-city'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: yoshi389111/github-profile-3d-contrib@7d95e7d4cdc028dd1e1cbd957d65f35efb12ae39 # v0.9.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          USERNAME: ${{ github.repository_owner }}
+      - name: Select city asset
+        run: |
+          mkdir -p generated
+          mv profile-3d-contrib/profile-gitblock.svg generated/3d-city.svg
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arcade-3d-city
+          path: generated/
+          retention-days: 1
+
+  publish:
+    needs: [choose, space-shooter, breakout, snake, maze-chase, city-3d]
+    if: >-
+      always() &&
+      needs.choose.result == 'success' &&
+      (needs['space-shooter'].result == 'success' || needs['space-shooter'].result == 'skipped') &&
+      (needs.breakout.result == 'success' || needs.breakout.result == 'skipped') &&
+      (needs.snake.result == 'success' || needs.snake.result == 'skipped') &&
+      (needs['maze-chase'].result == 'success' || needs['maze-chase'].result == 'skipped') &&
+      (needs['city-3d'].result == 'success' || needs['city-3d'].result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: rotation-metadata
+          path: staging/rotation-metadata
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: arcade-*
+          path: staging/generators
+      - name: Validate and publish generated assets
+        run: python scripts/publish_arcade.py
+      - name: Commit profile rotation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md .github/arcade-state.json assets/arcade
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(profile): rotate daily arcade"
+          git push

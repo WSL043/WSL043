@@ -1,24 +1,43 @@
-<p align="center">
-  <img src="./assets/banner.png" alt="Warm paper shapes connected by precise circuit-like paths">
-</p>
+<h1 align="center">👾 WSL043</h1>
 
-<h1 align="center">WSL043</h1>
+<p align="center"><strong>Local-first tools, desktop experiments, and useful little machines.</strong></p>
 
 <p align="center">
-  I build the tools I wish already existed.
+  <a href="https://github.com/WSL043?tab=repositories">Explore the workshop</a>
+  ·
+  <a href="mailto:wangsr043@gmail.com">Say hello</a>
 </p>
 
-## About
+<!-- ARCADE:START -->
+## Today's Arcade: 🕹️ Boot Screen
 
-Mostly desktop apps, local-first software, and AI workflows. I care about control,
-clarity, and making complicated things feel simple.
+The cabinet is warming up. A different GitHub-powered experience will appear here every day.
 
-## Featured project
+<p align="center">
+  <img src="./assets/arcade/boot-screen.svg" alt="WSL043 Daily Arcade boot screen" width="100%">
+</p>
 
-- [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible compatibility utility for CS2
+<p align="center"><sub>🎲 A different experience is drawn every day · no back-to-back repeats</sub></p>
+<!-- ARCADE:END -->
 
-`desktop apps` · `local-first software` · `developer tools` · `AI workflows` · `automation`
+## Pick a cartridge
 
-Still curious. Still shipping.
+| Project | What it unlocks |
+| --- | --- |
+| [**Codex Subscription for DSH**](https://github.com/WSL043/dsh-codex-subscription) | Bring ChatGPT and Codex subscriptions into DeepSeek Harness: models, usage, search, and image generation. |
+| [**DSH Portable**](https://github.com/WSL043/DSH-Portable) | Carry the desktop app, conversations, settings, plugins, and workspace together. |
+| [**DSH Chat Manager**](https://github.com/WSL043/dsh-chat-manager) | Search, archive, restore, and safely delete DeepSeek Harness conversations. |
+| [**Local Dictation**](https://github.com/WSL043/dsh-dictation) | Multilingual, local speech recognition that leaves the result as an editable draft. |
 
-[wangsr043@gmail.com](mailto:wangsr043@gmail.com)
+## Side quests
+
+- 🔊 [LoudEase](https://github.com/WSL043/loudease) — comfortable, consistent web audio with local processing.
+- 📌 [QuotaPin for Codex](https://github.com/WSL043/QuotaPin-for-Codex) — a glanceable usage indicator in the account row.
+- 🌊 [Wave Optical Transfer](https://github.com/WSL043/wave-optical-transfer) — a browser-only screen-to-camera file-transfer experiment.
+- 🎮 [MG Hachimi](https://github.com/WSL043/mg_hachimi) — a reversible CS2 compatibility utility.
+
+## Workshop rules
+
+`local-first` · `reversible by default` · `clear over clever` · `small tools with sharp edges sanded down`
+
+<p align="center"><em>Still curious. Still shipping.</em></p>
