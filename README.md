@@ -9,16 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Maze Chase 👻
+## Today's Arcade: Breakout 🧱
 
-Dots, ghosts, and a full year of commits to chase.
+A tiny paddle is clearing the year's contribution bricks.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/maze-chase-dark.svg">
-    <img src="./assets/arcade/maze-chase-light.svg"
-         alt="Maze Chase" width="100%">
+            srcset="./assets/arcade/breakout-dark.svg">
+    <img src="./assets/arcade/breakout-light.svg"
+         alt="Breakout" width="100%">
   </picture>
 </p>
 
