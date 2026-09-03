@@ -9,14 +9,14 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Contribution City 🏙️
+## Today's Arcade: Space Shooter 🚀
 
-Today's commits have been rebuilt as a tiny skyline.
+Today's contribution grid has entered bullet-hell mode.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-city.svg"
-         alt="3D Contribution City" width="100%">
+    <img src="./assets/arcade/space-shooter.gif"
+         alt="Space Shooter" width="100%">
   </picture>
 </p>
 
