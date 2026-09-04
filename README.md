@@ -9,14 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: Breakout 🧱
 
-Today's contribution grid has entered bullet-hell mode.
+A tiny paddle is clearing the year's contribution bricks.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif"
-         alt="Space Shooter" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/breakout-dark.svg">
+    <img src="./assets/arcade/breakout-light.svg"
+         alt="Breakout" width="100%">
   </picture>
 </p>
 
