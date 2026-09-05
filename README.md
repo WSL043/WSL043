@@ -9,16 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Breakout 🧱
+## Today's Arcade: Snake 🐍
 
-A tiny paddle is clearing the year's contribution bricks.
+The classic contribution snake is having lunch.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/breakout-dark.svg">
-    <img src="./assets/arcade/breakout-light.svg"
-         alt="Breakout" width="100%">
+            srcset="./assets/arcade/snake-dark.svg">
+    <img src="./assets/arcade/snake-light.svg"
+         alt="Snake" width="100%">
   </picture>
 </p>
 
