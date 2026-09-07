@@ -9,14 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: Maze Chase 👻
 
-Today's contribution grid has entered bullet-hell mode.
+Dots, ghosts, and a full year of commits to chase.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif"
-         alt="Space Shooter" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/maze-chase-dark.svg">
+    <img src="./assets/arcade/maze-chase-light.svg"
+         alt="Maze Chase" width="100%">
   </picture>
 </p>
 

@@ -1,9 +1,8 @@
 {
-  "current": "space-shooter",
+  "current": "maze-chase",
   "remaining": [
-    "maze-chase",
     "3d-city"
   ],
   "cycle": 2,
-  "updated_on": "2026-09-06"
+  "updated_on": "2026-09-07"
 }
