@@ -1,8 +1,6 @@
 {
-  "current": "maze-chase",
-  "remaining": [
-    "3d-city"
-  ],
+  "current": "3d-city",
+  "remaining": [],
   "cycle": 2,
-  "updated_on": "2026-09-07"
+  "updated_on": "2026-09-08"
 }
