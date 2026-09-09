@@ -9,14 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Contribution City 🏙️
+## Today's Arcade: Maze Chase 👻
 
-Today's commits have been rebuilt as a tiny skyline.
+Dots, ghosts, and a full year of commits to chase.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-city.svg"
-         alt="3D Contribution City" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/maze-chase-dark.svg">
+    <img src="./assets/arcade/maze-chase-light.svg"
+         alt="Maze Chase" width="100%">
   </picture>
 </p>
 
