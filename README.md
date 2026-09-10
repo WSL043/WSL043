@@ -9,16 +9,16 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Maze Chase 👻
+## Today's Arcade: Snake 🐍
 
-Dots, ghosts, and a full year of commits to chase.
+The classic contribution snake is having lunch.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/maze-chase-dark.svg">
-    <img src="./assets/arcade/maze-chase-light.svg"
-         alt="Maze Chase" width="100%">
+            srcset="./assets/arcade/snake-dark.svg">
+    <img src="./assets/arcade/snake-light.svg"
+         alt="Snake" width="100%">
   </picture>
 </p>
 
