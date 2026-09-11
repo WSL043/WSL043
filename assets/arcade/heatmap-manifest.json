@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-11",
+  "source": "github-graphql",
+  "scenes": [
+    "bomber",
+    "miners",
+    "defense",
+    "pinball",
+    "laser",
+    "gravity"
+  ],
+  "snapshot_sha256": "f56d2adcef57b48ff72e147ae982942125ce7a411cbd358177b2672753336879",
+  "assets": {
+    "heatmap-bomber-dark.gif": "40974396c98b24bef1a46f0f8e0415e839ed8f4c3a5afa9ee00752f55d113f02",
+    "heatmap-bomber-light.gif": "d117689163a1686f72601d0eb673513d64dbce55f0b088042f2485b8e043cf9f",
+    "heatmap-miners-dark.gif": "f6fcde9b1402da8e641bd750fadbdc9ff6d726fca4f3cd470e052942834df3c8",
+    "heatmap-miners-light.gif": "d2fe0f17916bf2c1bdfe5714d0f6739fa7f5bb61d786fca3bb0880375483218e",
+    "heatmap-defense-dark.gif": "62ac135d597785b681f602b7983eae49e12ab72a82ac341d8cd2f02bca8d1174",
+    "heatmap-defense-light.gif": "69e6050b99e34c05ed432ede205f9d87fdd9561ec1c52705baf88606dd376dd9",
+    "heatmap-pinball-dark.gif": "9618aeefb7459dabf8f9f1fcf574e5d4ed13c9e881b61c0610a254168ef423f7",
+    "heatmap-pinball-light.gif": "fd6637d62380b06c1ca900aec95a0c4d4326fb86a865f9a617f6b47c5d22bd4f",
+    "heatmap-laser-dark.gif": "706b5cf7caf8d8e7e92fd532e91e377958bf282804e4c28ede06309324e2a1d3",
+    "heatmap-laser-light.gif": "1830ef144748c3604dc382c43273c594faed267d5715f6aaba0383d3a111ec0c",
+    "heatmap-gravity-dark.gif": "5926aa487ef2e5a71771adb8ca67ce2486aa7458d996843fd62f8b32d47197bc",
+    "heatmap-gravity-light.gif": "98de684033cd91630a7d8869f81cbd0e1ab34be72870b42e6bd841642551ecd0"
+  }
+}

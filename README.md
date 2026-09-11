@@ -9,18 +9,21 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: Heatmap Bomber
 
-Today's contribution grid has entered bullet-hell mode.
+Find a route, plant a bomb, escape. Your green days are the walls.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif"
-         alt="Space Shooter" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/heatmap-bomber-dark.gif">
+    <img src="./assets/arcade/heatmap-bomber-light.gif" alt="Heatmap Bomber" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>🎲 A different experience is drawn every day · no back-to-back repeats</sub></p>
+<p align="center"><sub>11 cartridges · one daily draw · no back-to-back repeats · Published 2026-09-11 UTC</sub></p>
+
+[Watch all six heatmap demos](./ARCADE.md) · Auto-play simulations, driven by contribution tiles.
 <!-- ARCADE:END -->
 
 ## Pick a cartridge
