@@ -9,16 +9,14 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Snake 🐍
+## Today's Arcade: Space Shooter 🚀
 
-The classic contribution snake is having lunch.
+Today's contribution grid has entered bullet-hell mode.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/snake-dark.svg">
-    <img src="./assets/arcade/snake-light.svg"
-         alt="Snake" width="100%">
+    <img src="./assets/arcade/space-shooter.gif"
+         alt="Space Shooter" width="100%">
   </picture>
 </p>
 
