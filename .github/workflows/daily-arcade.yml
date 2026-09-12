@@ -60,7 +60,7 @@ jobs:
       - id: choose
         name: Draw the next experience
         env:
-          REQUESTED_EXPERIENCE: ${{ inputs.experience || (github.event_name == 'push' && 'assembly') || 'random' }}
+          REQUESTED_EXPERIENCE: ${{ inputs.experience || 'random' }}
           GENERATE_ALL: ${{ inputs.generate_all || 'false' }}
           REFRESH_NATIVE: ${{ github.event_name != 'workflow_dispatch' || inputs.refresh_native }}
         run: |

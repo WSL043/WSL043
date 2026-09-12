@@ -186,7 +186,7 @@ class RenderingTests(unittest.TestCase):
             days = [tuple(map(int, node.attrib['data-day'].split(','))) for node in doc.iter(ns+'rect') if 'data-day' in node.attrib]
             self.assertCountEqual(days, cal.active)
 
-    def test_reduced_motion_is_an_original_static_calendar(self):
+    def test_arcade_autoplays_on_screen_and_prints_an_original_static_calendar(self):
         cal = calendar()
         ns = '{http://www.w3.org/2000/svg}'
         for name in PLANNERS:
@@ -194,7 +194,9 @@ class RenderingTests(unittest.TestCase):
             doc = ET.fromstring(raw)
             still = next(n for n in doc.findall(ns+'g') if n.get('class') == 'still')
             self.assertEqual(len(list(still)), 53*7-len(cal.missing))
-            self.assertIn('@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}', raw)
+            self.assertIn('.motion{display:inline}', raw)
+            self.assertNotIn('prefers-reduced-motion', raw)
+            self.assertIn('@media print{.motion{display:none}.still{display:inline}}', raw)
 
     def test_tracks_return_to_initial_state_and_effects_wait_for_their_cue(self):
         cal = calendar()
