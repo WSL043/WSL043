@@ -9,7 +9,7 @@
     "assembly"
   ],
   "engine": "svg-v3",
-  "snapshot_sha256": "c83a903aec85961f490f8ea932b7760894723527d1ea1feea637bd9fc72f350a",
+  "snapshot_sha256": "beb206e8aa27fa542be09d402ce4a9986c7626112c6941983ab8fe480dd8656c",
   "assets": {
     "heatmap-bomber-dark.svg": "2828e6c313237e3abfeaafe62727a21cd7c9c766b56de000a4a6835313043c9f",
     "heatmap-bomber-light.svg": "047096982936b099c55a49bbe6edb5b9b2466d79f6779cf9638f394d6b12f219",
