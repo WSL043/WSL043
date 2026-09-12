@@ -14,6 +14,7 @@ from pathlib import Path
 from scripts.rotate_arcade import NATIVE, valid_day
 from scripts.svg_models import Calendar, PLANNERS
 from scripts.svg_arcade import render
+from scripts.search_race import comparison, render_comparison
 
 LEVELS = {name: i for i, name in enumerate(('NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE'))}
 QUERY = '''query($login:String!,$from:DateTime!,$to:DateTime!){
@@ -100,7 +101,7 @@ def build(snapshot, selection, output):
     cal = Calendar.from_snapshot(snapshot)
     output.mkdir(parents=True, exist_ok=True)
     snapshot_path = output/'heatmap-snapshot.json'
-    snapshot_path.write_text(json.dumps(snapshot, indent=2)+'\n', encoding='utf-8')
+    snapshot_path.write_text(json.dumps(snapshot, indent=2)+'\n', encoding='utf-8', newline='\n')
     scenes = NATIVE if selection.get('refresh_native') or selection.get('mode') == 'all' else (selection['selected'],)
     if any(s not in NATIVE for s in scenes):
         raise ValueError('Not a native SVG scene')
@@ -112,9 +113,17 @@ def build(snapshot, selection, output):
             asset = output/f'heatmap-{scene}-{theme}.svg'
             asset.write_text(render(cal, scene, seed, theme, model), encoding='utf-8')
             hashes[asset.name] = digest(asset)
-    manifest = {'date': selection['date'], 'source': snapshot['source'], 'scenes': list(scenes),
+    report = comparison(cal)
+    report_path = output/'search-comparison.json'
+    report_path.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8', newline='\n')
+    analysis = {report_path.name: digest(report_path)}
+    for theme in ('dark', 'light'):
+        asset = output/f'search-comparison-{theme}.svg'
+        asset.write_text(render_comparison(cal, theme, report), encoding='utf-8')
+        analysis[asset.name] = digest(asset)
+    manifest = {'date': selection['date'], 'source': snapshot['source'], 'scenes': list(scenes), 'analysis': analysis,
                 'engine': 'svg-v3', 'snapshot_sha256': digest(snapshot_path), 'assets': hashes}
-    (output/'heatmap-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
+    (output/'heatmap-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8', newline='\n')
     return manifest
 
 

@@ -1,10 +1,10 @@
 name: Heatmap engine tests
 on:
   pull_request:
-    paths: ['scripts/**', 'tests/**', '.github/workflows/**', 'requirements-arcade.txt']
+    paths: ['scripts/**', 'tests/**', 'assets/arcade/search-comparison*', 'assets/arcade/heatmap-snapshot.json', 'assets/arcade/heatmap-manifest.json', '.github/workflows/**', 'requirements-arcade.txt']
   push:
     branches: [main]
-    paths: ['scripts/**', 'tests/**', '.github/workflows/**', 'requirements-arcade.txt']
+    paths: ['scripts/**', 'tests/**', 'assets/arcade/search-comparison*', 'assets/arcade/heatmap-snapshot.json', 'assets/arcade/heatmap-manifest.json', '.github/workflows/**', 'requirements-arcade.txt']
 permissions:
   contents: read
 jobs:
