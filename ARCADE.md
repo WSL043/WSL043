@@ -7,8 +7,8 @@
 真实活跃格子拆成相邻的 1–4 格小零件，旋转到下方暂存，再磁吸回每一个原来的日期。颜色和位置完全复原。分组按每日种子变化；这是磁吸拼装，不冒充带消行和重力规则的俄罗斯方块。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-assembly-dark.svg">
-  <img src="./assets/arcade/heatmap-assembly-light.svg" alt="磁力拼装：完整贡献热图拆分成相邻零件，再准确归位" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-assembly-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-assembly-light.svg?v=autoplay-1" alt="磁力拼装：完整贡献热图拆分成相邻零件，再准确归位" width="100%">
 </picture>
 
 ## 热图连连看 · Contribution Link
@@ -16,8 +16,8 @@
 相同活跃等级的两格，能通过空白格或外围走道、最多拐两次弯，就连线消除。路径真的检查障碍，不隔墙连线。配到没有合法配对即结束；奇数或被挡住的格子会留下，绝不补假贡献凑通关。停留后恢复原图，开始下一轮。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-link-match-dark.svg">
-  <img src="./assets/arcade/heatmap-link-match-light.svg" alt="热图连连看：相同等级的日期沿合法路线配对消除" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-link-match-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-link-match-light.svg?v=autoplay-1" alt="热图连连看：相同等级的日期沿合法路线配对消除" width="100%">
 </picture>
 
 ## 传送门搬运 · Portal Courier
@@ -25,8 +25,8 @@
 绿格子离开原来的日期，被橙色传送门收走，再从蓝色门逐个送回原位。搬运先后随每日种子变化，每块的原色和身份不变。两扇门是游戏设施，不是贡献日。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-portal-dark.svg">
-  <img src="./assets/arcade/heatmap-portal-light.svg" alt="传送门搬运：贡献格子穿过双门，再回到原来的日期" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-portal-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-portal-light.svg?v=autoplay-1" alt="传送门搬运：贡献格子穿过双门，再回到原来的日期" width="100%">
 </picture>
 
 ## 热图炸弹人 · Heatmap Bomber
@@ -34,8 +34,8 @@
 空白是通路，绿格子是墙，活跃等级是耐久。机器人寻找能安全撤离的位置，放炸弹、后退，爆炸遇墙停止。一直规划到墙被清完，而不是固定演示九次爆炸。清场后贡献图逐格重建，平滑循环。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-bomber-dark.svg">
-  <img src="./assets/arcade/heatmap-bomber-light.svg" alt="SVG 热图炸弹人：真实寻路、安全撤离、完整清场" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-bomber-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-bomber-light.svg?v=autoplay-1" alt="SVG 热图炸弹人：真实寻路、安全撤离、完整清场" width="100%">
 </picture>
 
 ## 采矿小队 · Commit Miners
@@ -43,8 +43,8 @@
 两台矿工从上下两侧开工，沿空白格走到可开采的矿块。颜色等级越高，钻取时间越长；矿粒落向下方小车。每轮采完所有活跃格子，再恢复原图，不半途截断。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-miners-dark.svg">
-  <img src="./assets/arcade/heatmap-miners-light.svg" alt="SVG 采矿小队：双矿工将完整贡献热图开采完毕" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-miners-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-miners-light.svg?v=autoplay-1" alt="SVG 采矿小队：双矿工将完整贡献热图开采完毕" width="100%">
 </picture>
 
 ## 每天更新什么
@@ -59,7 +59,7 @@
 
 ## 画面与边界
 
-这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。系统开启“减少动态效果”时，新 SVG 显示完整的静态原始日历。
+这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的五种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
 
 仍然是自动播放的热图演出，不支持按键操作。小游戏不修改真实贡献记录。墙耐久、矿粒和配对规则属于模拟规则，不是精确提交次数；仅使用可访问的日期和等级，不展示私有仓库内容。
 
