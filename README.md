@@ -11,15 +11,13 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Magnetic Assembly
+## Today's Arcade: Space Shooter 🚀
 
-Your calendar breaks into connected pieces, then clicks back into its exact original shape.
+Today's contribution grid has entered bullet-hell mode.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-assembly-dark.svg">
-    <img src="./assets/arcade/heatmap-assembly-light.svg" alt="Magnetic Assembly" width="100%">
+    <img src="./assets/arcade/space-shooter.gif" alt="Space Shooter" width="100%">
   </picture>
 </p>
 
