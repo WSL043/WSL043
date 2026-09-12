@@ -48,16 +48,22 @@ python -X utf8 -m scripts.preview_search --output .rotation-preview/search
 
 具体边界可见[更新与修复](https://github.com/WSL043/DSH-Portable#更新与修复)和[跨电脑迁移指南](https://github.com/WSL043/DSH-Portable/blob/main/docs/move-between-computers.md)。
 
-## Deleting a conversation is a lifecycle operation
+## LoudEase: a complete local audio path
 
-[DSH Chat Manager](https://github.com/WSL043/dsh-chat-manager) 在确认删除后先停止运行中的任务并等待收敛，然后检查并删除目标会话独占目录。归档、恢复和永久删除是不同操作；非默认 JSONL 存储或宿主缺少停止能力时，项目会拒绝强删。
+[LoudEase](https://github.com/WSL043/loudease) 从用户授权的 Chrome 标签页采集音频，在本地 AudioWorklet 中完成处理。K 加权门控测量建立节目响度基线，安静细节提升有明确上限，快速保护与 5 ms 前瞻限幅处理突发响声。播放器静音和零音量仍然是硬边界。
 
-这些限制直接写在[安全边界](https://github.com/WSL043/dsh-chat-manager#安全边界)中；它没有把外部附件、缓存或备份也已被删除作为承诺。
+项目同时维护商店发行包与开发诊断包，两者共用音频核心；商店包移除开发诊断入口。它目前是公开 Beta，各站点的验证范围和待社区测试范围分开记录。继续阅读 [Audio DSP](https://github.com/WSL043/loudease/blob/main/docs/AUDIO_DSP.md)、[架构](https://github.com/WSL043/loudease/blob/main/docs/ARCHITECTURE.md)和[测试矩阵](https://github.com/WSL043/loudease/blob/main/docs/TEST_MATRIX.md)。
 
-## A physical-layer experiment with an honest benchmark boundary
+## Updated Again: playful content, a verifiable update protocol
 
-[Wave Optical Transfer](https://github.com/WSL043/wave-optical-transfer) 把屏幕当成光学发送端，浏览器摄像头当成接收端。探索包括分 lane 的滚动快门容错、QC-LDPC、分块 CRC、几何校准和最终 SHA-256 验证。
+[Updated Again](https://github.com/WSL043/updated-again) 把每日内容胶囊与客户端核心版本分成两条时间线。胶囊经 Ed25519 签名，安装前验证签名与内容哈希，安装时保存本地快照以支持回滚；Web、PWA 与 Tauri 客户端共用协议和能力注册表。
 
-这是研究原型。确定性相机模拟与协议容量计算，并不等于真实手机上的有效吞吐率。继续阅读[物理层设计](https://github.com/WSL043/wave-optical-transfer/blob/main/docs/PHY.md)和[同硬件基准协议](https://github.com/WSL043/wave-optical-transfer/blob/main/docs/BENCHMARK.md)。
+错峰调度、末班保底与断档回填维护日更账本；受限社区内容有独立的自动验证和恢复边界。桌面产物仍标为 Developer Preview。继续阅读[架构](https://github.com/WSL043/updated-again/blob/main/docs/ARCHITECTURE.md)和[每日发布契约](https://github.com/WSL043/updated-again/blob/main/docs/DAILY_RELEASE_CONTRACT.md)。
+
+## Agent Skills Neutral: maintaining reasoning workflows
+
+[Agent Skills Neutral](https://github.com/WSL043/agent-skills-neutral) 维护一个常驻思考核心与可选工作流。创作、来源研究和演化评估留在维护仓库，任务执行只消费紧凑的运行时包。语义选择是默认路径，词法选择脚本只是离线辅助。
+
+候选改进需要基线比较、留出任务、回归和明确的保留决策；演化运行器记录验证状态，并不自动生成或晋升候选。这些是项目定义的评估机制，不等同于已经证明对所有模型和任务都有收益。继续阅读[运行时包](https://github.com/WSL043/agent-skills-neutral/blob/main/docs/RUNTIME_BUNDLE.md)、[学习循环](https://github.com/WSL043/agent-skills-neutral/blob/main/docs/LEARNING_LOOP.md)和[演化运行器](https://github.com/WSL043/agent-skills-neutral/blob/main/docs/EVOLUTION_RUNNER.md)。
 
 项目说明依据 2026-09-12 的公开仓库内容整理；具体支持状态以各项目当前文档和 Release 为准。
