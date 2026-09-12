@@ -62,8 +62,12 @@ def validate_svg(path, scene, snapshot):
         raise ValueError('SVG data does not match the contribution snapshot')
     if not 1 <= meta.get('duration_seconds', 0) <= 180:
         raise ValueError('SVG loop duration out of bounds')
-    if 'prefers-reduced-motion:reduce' not in raw or (cal.active and '@keyframes' not in raw):
-        raise ValueError('Missing animation or reduced-motion fallback')
+    if cal.active and '@keyframes' not in raw:
+        raise ValueError('Missing animation')
+    if scene in NATIVE and ('.motion{display:inline}' not in raw or 'prefers-reduced-motion' in raw):
+        raise ValueError('Native arcade must autoplay on screen')
+    if scene == 'search-comparison' and 'prefers-reduced-motion:reduce' not in raw:
+        raise ValueError('Missing search comparison reduced-motion fallback')
 
 
 def publish(root, staging):

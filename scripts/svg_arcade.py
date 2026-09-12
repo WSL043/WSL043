@@ -135,12 +135,12 @@ class Drawing:
                 'active_days': len(self.cal.active), 'grid_sha256': digest, 'seed': seed,
                 'duration_seconds': round(self.duration, 4), 'format': 'vector-css-svg'}
         styles = ('svg{font:10px ui-monospace,monospace}text{fill:'+self.muted+'}'
-                  '.still{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}')
+                  '.still{display:none}.motion{display:inline}@media print{.motion{display:none}.still{display:inline}}')
         return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {self.width} 216" '
                 f'width="{self.width}" height="216" role="img" aria-labelledby="title desc" data-scene="{self.scene}">'
                 f'<title id="title">{escape(self.cal.owner)} — {NAMES[self.scene]}</title>'
                 f'<desc id="desc">Full contribution calendar, {escape(self.cal.day)}. '
-                'Autoplay simulation; the source contributions are never modified. Reduced motion shows the original calendar.</desc>'
+                'Autoplay simulation; the source contributions are never modified. Printing shows the original calendar.</desc>'
                 f'<metadata>{escape(json.dumps(meta, separators=(",", ":")))}</metadata>'
                 '<style>'+styles+''.join(self.css)+'</style>'
                 f'<rect width="100%" height="100%" fill="{self.bg}"/>'+''.join(months)+
