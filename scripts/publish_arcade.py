@@ -11,9 +11,11 @@ from pathlib import Path
 try:
     from scripts.rotate_arcade import ARCADE_EXPERIENCES, NATIVE
     from scripts.svg_models import Calendar
+    from scripts.search_race import ANALYSIS_FILES, comparison, render_comparison
 except ModuleNotFoundError:
     from rotate_arcade import ARCADE_EXPERIENCES, NATIVE
     from svg_models import Calendar
+    from search_race import ANALYSIS_FILES, comparison, render_comparison
 
 ASSET_MAP = {
     'space-shooter': (('space-shooter.gif', 'space-shooter.gif'),),
@@ -107,6 +109,23 @@ def publish(root, staging):
                 if digest(artifacts/name) != manifest['assets'][name]:
                     raise ValueError(f'Asset digest mismatch: {name}')
                 validate_svg(artifacts/name, scene, snapshot)
+        if set(manifest.get('analysis', {})) != set(ANALYSIS_FILES):
+            raise ValueError('Search comparison allowlist mismatch')
+        cal = Calendar.from_snapshot(snapshot)
+        report = comparison(cal)
+        for name in ANALYSIS_FILES:
+            path = artifacts/name
+            if digest(path) != manifest['analysis'][name]:
+                raise ValueError('Search comparison digest mismatch')
+            if name.endswith('.json'):
+                if json.loads(path.read_text(encoding='utf-8')) != report:
+                    raise ValueError('Search comparison does not reproduce')
+            else:
+                validate_svg(path, 'search-comparison', snapshot)
+                theme = 'dark' if '-dark.' in name else 'light'
+                if path.read_text(encoding='utf-8') != render_comparison(cal, theme, report):
+                    raise ValueError('Search visualization does not reproduce')
+            copies.append((path, root/'assets'/'arcade'/name))
         copies += [(manifest_path, root/'assets'/'arcade'/manifest_path.name),
                    (snapshot_path, root/'assets'/'arcade'/snapshot_path.name)]
         gallery = root/'scripts'/'arcade_gallery.md'

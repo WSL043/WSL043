@@ -105,6 +105,7 @@ jobs:
             generated/*.svg
             generated/heatmap-manifest.json
             generated/heatmap-snapshot.json
+            generated/search-comparison.json
           retention-days: 1
   space-shooter:
     needs: choose
