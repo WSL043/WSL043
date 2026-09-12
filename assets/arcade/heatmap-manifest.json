@@ -1,27 +1,25 @@
 {
-  "date": "2026-09-11",
+  "date": "2026-09-12",
   "source": "github-graphql",
   "scenes": [
     "bomber",
     "miners",
-    "defense",
-    "pinball",
-    "laser",
-    "gravity"
+    "link-match",
+    "portal",
+    "assembly"
   ],
-  "snapshot_sha256": "f56d2adcef57b48ff72e147ae982942125ce7a411cbd358177b2672753336879",
+  "engine": "svg-v3",
+  "snapshot_sha256": "c83a903aec85961f490f8ea932b7760894723527d1ea1feea637bd9fc72f350a",
   "assets": {
-    "heatmap-bomber-dark.gif": "40974396c98b24bef1a46f0f8e0415e839ed8f4c3a5afa9ee00752f55d113f02",
-    "heatmap-bomber-light.gif": "d117689163a1686f72601d0eb673513d64dbce55f0b088042f2485b8e043cf9f",
-    "heatmap-miners-dark.gif": "f6fcde9b1402da8e641bd750fadbdc9ff6d726fca4f3cd470e052942834df3c8",
-    "heatmap-miners-light.gif": "d2fe0f17916bf2c1bdfe5714d0f6739fa7f5bb61d786fca3bb0880375483218e",
-    "heatmap-defense-dark.gif": "62ac135d597785b681f602b7983eae49e12ab72a82ac341d8cd2f02bca8d1174",
-    "heatmap-defense-light.gif": "69e6050b99e34c05ed432ede205f9d87fdd9561ec1c52705baf88606dd376dd9",
-    "heatmap-pinball-dark.gif": "9618aeefb7459dabf8f9f1fcf574e5d4ed13c9e881b61c0610a254168ef423f7",
-    "heatmap-pinball-light.gif": "fd6637d62380b06c1ca900aec95a0c4d4326fb86a865f9a617f6b47c5d22bd4f",
-    "heatmap-laser-dark.gif": "706b5cf7caf8d8e7e92fd532e91e377958bf282804e4c28ede06309324e2a1d3",
-    "heatmap-laser-light.gif": "1830ef144748c3604dc382c43273c594faed267d5715f6aaba0383d3a111ec0c",
-    "heatmap-gravity-dark.gif": "5926aa487ef2e5a71771adb8ca67ce2486aa7458d996843fd62f8b32d47197bc",
-    "heatmap-gravity-light.gif": "98de684033cd91630a7d8869f81cbd0e1ab34be72870b42e6bd841642551ecd0"
+    "heatmap-bomber-dark.svg": "2828e6c313237e3abfeaafe62727a21cd7c9c766b56de000a4a6835313043c9f",
+    "heatmap-bomber-light.svg": "047096982936b099c55a49bbe6edb5b9b2466d79f6779cf9638f394d6b12f219",
+    "heatmap-miners-dark.svg": "45ca4df1b2be179642fe5453b86113bbe10d577c697446cac810986a9290306f",
+    "heatmap-miners-light.svg": "7857cd0c1aa092433d52f47a395a28afbac88fb44fc0387a1a55d6274e75ef23",
+    "heatmap-link-match-dark.svg": "68a15d12686477330fa0f015387b5688b1a10f4d34b29e44a423ea076a474f33",
+    "heatmap-link-match-light.svg": "6dffedeb2fe6e6757d5f60d499df9b44f6314efa2d2be46633d1b463a40111f7",
+    "heatmap-portal-dark.svg": "78e3a92c60e62cd600af96a844b399b7b6429fec6e402498fa58ac7f59d1fe6d",
+    "heatmap-portal-light.svg": "d6b0714cf87307a45c2bd1081a355453444db1b1d6b6e7aac07abf0cb9c09981",
+    "heatmap-assembly-dark.svg": "8227cbd807fce2da2381c76690b2709e9190c11b040823981296add962967d4c",
+    "heatmap-assembly-light.svg": "1f15f05206174b3c98e3dfb01e793d884c80cf0b24f38eb10be550fc55a9a2fe"
   }
 }
