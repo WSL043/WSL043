@@ -1,14 +1,10 @@
 name: Daily profile arcade
-
 on:
   schedule:
     - cron: "17 1 * * *"
   push:
     branches: [main]
-    paths:
-      - 'scripts/**'
-      - 'requirements-arcade.txt'
-      - '.github/workflows/daily-arcade.yml'
+    paths: ['scripts/**', 'requirements-arcade.txt', '.github/workflows/daily-arcade.yml']
   workflow_dispatch:
     inputs:
       experience:
@@ -25,26 +21,23 @@ on:
           - 3d-city
           - bomber
           - miners
-          - defense
-          - pinball
-          - laser
-          - gravity
+          - link-match
+          - portal
+          - assembly
       generate_all:
-        description: Refresh all eleven experiences (includes external generators)
+        description: Refresh all ten experiences including external generators
         required: true
         default: false
         type: boolean
       refresh_native:
-        description: Refresh all six heatmap demos without refreshing legacy generators
+        description: Refresh all five SVG experiences from a fresh calendar
         required: true
-        default: false
+        default: true
         type: boolean
-
 concurrency:
   group: daily-profile-arcade
   cancel-in-progress: false
 permissions: {}
-
 jobs:
   choose:
     if: github.ref == 'refs/heads/main'
@@ -63,14 +56,13 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.12"
-      - run: python -m pip install --disable-pip-version-check -r requirements-arcade.txt
       - run: python -m unittest discover -s tests -v
       - id: choose
         name: Draw the next experience
         env:
-          REQUESTED_EXPERIENCE: ${{ inputs.experience || (github.event_name == 'push' && 'bomber') || 'random' }}
+          REQUESTED_EXPERIENCE: ${{ inputs.experience || (github.event_name == 'push' && 'assembly') || 'random' }}
           GENERATE_ALL: ${{ inputs.generate_all || 'false' }}
-          REFRESH_NATIVE: ${{ github.event_name == 'push' || inputs.refresh_native || 'false' }}
+          REFRESH_NATIVE: ${{ github.event_name != 'workflow_dispatch' || inputs.refresh_native }}
         run: |
           MODE=selected
           if [ "$GENERATE_ALL" = "true" ]; then MODE=all; fi
@@ -84,12 +76,11 @@ jobs:
           name: rotation-metadata
           path: rotation-output/
           retention-days: 1
-
   heatmap:
     needs: choose
     if: needs.choose.outputs.native == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -99,12 +90,11 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.12"
-      - run: python -m pip install --disable-pip-version-check -r requirements-arcade.txt
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: rotation-metadata
           path: rotation-output
-      - name: Fetch fresh contributions and render heatmap games
+      - name: Fetch fresh contributions and generate vector SVGs
         env:
           GH_TOKEN: ${{ github.token }}
         run: python -m scripts.heatmap_data --selection rotation-output/selection.json --output generated
@@ -112,11 +102,10 @@ jobs:
         with:
           name: arcade-heatmap
           path: |
-            generated/*.gif
+            generated/*.svg
             generated/heatmap-manifest.json
             generated/heatmap-snapshot.json
           retention-days: 1
-
   space-shooter:
     needs: choose
     if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'space-shooter'
@@ -143,7 +132,6 @@ jobs:
           name: arcade-space-shooter
           path: generated/
           retention-days: 1
-
   breakout:
     needs: choose
     if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'breakout'
@@ -167,9 +155,8 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: arcade-breakout
-          path: generated/
+          path: generated/*.svg
           retention-days: 1
-
   snake:
     needs: choose
     if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'snake'
@@ -192,7 +179,6 @@ jobs:
           name: arcade-snake
           path: generated/
           retention-days: 1
-
   maze-chase:
     needs: choose
     if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == 'maze-chase'
@@ -219,7 +205,6 @@ jobs:
           name: arcade-maze-chase
           path: generated/
           retention-days: 1
-
   city-3d:
     needs: choose
     if: needs.choose.outputs.mode == 'all' || needs.choose.outputs.selected == '3d-city'
@@ -243,7 +228,6 @@ jobs:
           name: arcade-3d-city
           path: generated/
           retention-days: 1
-
   publish:
     needs: [choose, heatmap, space-shooter, breakout, snake, maze-chase, city-3d]
     if: >-
@@ -264,7 +248,6 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.12"
-      - run: python -m pip install --disable-pip-version-check -r requirements-arcade.txt
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: rotation-metadata
@@ -278,13 +261,13 @@ jobs:
         run: |
           CURRENT="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "$CURRENT" = "$GITHUB_SHA" || { echo 'main changed during generation; keep the live profile'; exit 1; }
-      - name: Validate all assets before staging
+      - name: Validate every SVG and source snapshot before staging
         run: python scripts/publish_arcade.py
       - name: Commit profile rotation
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md .github/arcade-state.json assets/arcade
+          git add README.md ARCADE.md .github/arcade-state.json assets/arcade
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore(profile): rotate contribution arcade"
+          git commit -m "chore(profile): refresh full-calendar SVG arcade"
           git push origin HEAD:main

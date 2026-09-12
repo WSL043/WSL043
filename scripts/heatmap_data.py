@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch a fresh contribution calendar and build verified, theme-aware GIFs."""
+"""Fetch fresh contribution levels and produce verified, theme-aware vector SVGs."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -12,6 +12,8 @@ import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from scripts.rotate_arcade import NATIVE, valid_day
+from scripts.svg_models import Calendar, PLANNERS
+from scripts.svg_arcade import render
 
 LEVELS = {name: i for i, name in enumerate(('NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE'))}
 QUERY = '''query($login:String!,$from:DateTime!,$to:DateTime!){
@@ -22,7 +24,8 @@ QUERY = '''query($login:String!,$from:DateTime!,$to:DateTime!){
 
 
 def normalize(payload, owner, day):
-    end = date.fromisoformat(valid_day(day)); begin = end-timedelta(days=364)
+    end = date.fromisoformat(valid_day(day))
+    begin = end-timedelta(days=364)
     if payload.get('errors'):
         raise ValueError('GitHub GraphQL returned errors; not using partial data')
     try:
@@ -33,15 +36,15 @@ def normalize(payload, owner, day):
         raise ValueError('Unexpected number of calendar weeks')
     columns, seen, starts = {}, set(), []
     for x, week in enumerate(weeks):
-        cells = [None]*7
-        dates = []
+        cells, dates = [None]*7, []
         for d in week['contributionDays']:
             dt = date.fromisoformat(valid_day(d['date']))
-            y = d['weekday']; level = LEVELS.get(d['contributionLevel'])
+            y, level = d['weekday'], LEVELS.get(d['contributionLevel'])
             if (type(y) is not int or not 0 <= y < 7 or y != (dt.weekday()+1) % 7
                     or dt in seen or not begin <= dt <= end or level is None or cells[y] is not None):
                 raise ValueError('Invalid or duplicate contribution day')
-            seen.add(dt); dates.append(dt)
+            seen.add(dt)
+            dates.append(dt)
             cells[y] = level
         if not dates:
             raise ValueError('Empty calendar week')
@@ -50,29 +53,31 @@ def normalize(payload, owner, day):
             raise ValueError('Mixed dates in a calendar week')
         if starts and sunday != date.fromisoformat(starts[-1])+timedelta(days=7):
             raise ValueError('Calendar weeks are not consecutive')
-        starts.append(sunday.isoformat()); columns[str(x)] = cells
+        starts.append(sunday.isoformat())
+        columns[str(x)] = cells
     if seen != {begin+timedelta(days=i) for i in range(365)}:
         raise ValueError('Calendar does not contain the requested 365 days')
     return {'owner': owner, 'source': 'github-graphql', 'as_of': day, 'range_start': begin.isoformat(),
             'retrieved_at': datetime.now(timezone.utc).isoformat(), 'columns': len(weeks), 'rows': 7,
             'week_starts': starts, 'active_columns': columns,
-            'note': 'Positions and GitHub contribution levels only. Game durability and grain counts are not contribution counts.'}
+            'note': 'Calendar positions and levels only. Game units are not contribution counts.'}
 
 
 def fetch_calendar(owner, day, token):
     if not re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})', owner):
         raise ValueError('Invalid GitHub owner')
     if not token:
-        raise ValueError('GH_TOKEN is required for a fresh calendar; refusing stale fallback')
-    end = date.fromisoformat(valid_day(day)); begin = end-timedelta(days=364)
+        raise ValueError('GH_TOKEN is required; refusing stale or fabricated fallback')
+    end = date.fromisoformat(valid_day(day))
+    begin = end-timedelta(days=364)
     body = json.dumps({'query': QUERY, 'variables': {'login': owner,
                       'from': begin.isoformat()+'T00:00:00Z', 'to': day+'T23:59:59Z'}}).encode()
-    req = urllib.request.Request('https://api.github.com/graphql', data=body, headers={
+    request = urllib.request.Request('https://api.github.com/graphql', data=body, headers={
         'Authorization': 'Bearer '+token, 'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github+json', 'User-Agent': 'WSL043-heatmap-arcade'})
+        'Accept': 'application/vnd.github+json', 'User-Agent': 'WSL043-svg-arcade'})
     for attempt in range(3):
         try:
-            with urllib.request.urlopen(req, timeout=30) as response:
+            with urllib.request.urlopen(request, timeout=30) as response:
                 raw = response.read(1_000_001)
             if len(raw) > 1_000_000:
                 raise ValueError('Oversized calendar response')
@@ -92,28 +97,23 @@ def digest(path):
 
 
 def build(snapshot, selection, output):
-    from scripts import heatmap_arcade as a
-    from scripts.heatmap_extra import register
-    register()
+    cal = Calendar.from_snapshot(snapshot)
     output.mkdir(parents=True, exist_ok=True)
     snapshot_path = output/'heatmap-snapshot.json'
     snapshot_path.write_text(json.dumps(snapshot, indent=2)+'\n', encoding='utf-8')
-    _, grid, missing = a.load_snapshot(snapshot_path)
-    a.OWNER = snapshot['owner']
-    a.DATA_LABEL = snapshot.get('as_of', 'SAVED SNAPSHOT')
     scenes = NATIVE if selection.get('refresh_native') or selection.get('mode') == 'all' else (selection['selected'],)
     if any(s not in NATIVE for s in scenes):
-        raise ValueError('Not a native heatmap scene')
+        raise ValueError('Not a native SVG scene')
     hashes = {}
     for scene in scenes:
-        seed = int.from_bytes(hashlib.sha256(f'{snapshot["owner"]}:{selection["date"]}:{scene}'.encode()).digest()[:8], 'big')
-        model = a.PLANNERS[scene](grid, seed)
+        seed = int.from_bytes(hashlib.sha256(f'{cal.owner}:{selection["date"]}:{scene}'.encode()).digest()[:8], 'big')
+        model = PLANNERS[scene](cal, seed)
         for theme in ('dark', 'light'):
-            asset = output/f'heatmap-{scene}-{theme}.gif'
-            a.render(scene, grid, missing, seed, asset, theme=theme, model=model)
+            asset = output/f'heatmap-{scene}-{theme}.svg'
+            asset.write_text(render(cal, scene, seed, theme, model), encoding='utf-8')
             hashes[asset.name] = digest(asset)
     manifest = {'date': selection['date'], 'source': snapshot['source'], 'scenes': list(scenes),
-                'snapshot_sha256': digest(snapshot_path), 'assets': hashes}
+                'engine': 'svg-v3', 'snapshot_sha256': digest(snapshot_path), 'assets': hashes}
     (output/'heatmap-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
     return manifest
 
@@ -123,11 +123,14 @@ def main():
     p.add_argument('--owner', default=os.environ.get('GITHUB_REPOSITORY_OWNER', 'WSL043'))
     p.add_argument('--selection', type=Path, required=True)
     p.add_argument('--output', type=Path, default=Path('generated'))
-    p.add_argument('--input', type=Path, help='Explicit offline snapshot for local demos only')
+    p.add_argument('--input', type=Path, help='Explicit offline snapshot; never publish as fresh data')
     args = p.parse_args()
-    selection = json.loads(args.selection.read_text())
-    snapshot = (json.loads(args.input.read_text()) if args.input else
-                fetch_calendar(args.owner, selection['date'], os.environ.get('GH_TOKEN', '')))
+    selection = json.loads(args.selection.read_text(encoding='utf-8'))
+    if args.input:
+        snapshot = json.loads(args.input.read_text(encoding='utf-8'))
+        snapshot['source'] = 'offline-preview'
+    else:
+        snapshot = fetch_calendar(args.owner, selection['date'], os.environ.get('GH_TOKEN', ''))
     build(snapshot, selection, args.output)
 
 if __name__ == '__main__':

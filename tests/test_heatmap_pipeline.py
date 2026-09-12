@@ -1,272 +1,288 @@
+"""Fresh-data, rotation, safe-publication and integration tests for SVG v3."""
 import copy
+from datetime import date, timedelta
 import hashlib
 import json
+from pathlib import Path
 import random
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
-from datetime import date, timedelta
-from pathlib import Path
 from unittest.mock import patch
-from PIL import Image
-from scripts import heatmap_arcade as a, heatmap_extra as e
-from scripts import heatmap_data as data, rotate_arcade as r, publish_arcade as pub
+import urllib.error
+from scripts import heatmap_data as data
+from scripts import rotate_arcade as rotation
+from scripts.publish_arcade import publish, ASSET_MAP, OLD_GIFS, digest
+from scripts.svg_models import SCENES
 
-FIXTURE = Path(__file__).parent/'fixtures'/'heatmap.json'
+ROOT = Path(__file__).resolve().parents[1]
+DAY = '2026-09-12'
 
 
-def calendar_payload(day='2026-09-11'):
-    end = date.fromisoformat(day); begin = end-timedelta(days=364)
-    weeks = []
+def payload(day=DAY):
+    end = date.fromisoformat(day)
+    begin = end-timedelta(days=364)
+    weeks = {}
+    levels = list(data.LEVELS)
     for i in range(365):
-        dt = begin+timedelta(days=i); y = (dt.weekday()+1) % 7
-        if not weeks or y == 0:
-            weeks.append({'contributionDays': []})
-        weeks[-1]['contributionDays'].append({'date': dt.isoformat(), 'weekday': y,
-                                            'contributionLevel': list(data.LEVELS)[i % 5]})
-    return {'data': {'user': {'contributionsCollection': {'contributionCalendar': {'weeks': weeks}}}}}
+        dt = begin+timedelta(days=i)
+        weekday = (dt.weekday()+1) % 7
+        sunday = dt-timedelta(days=weekday)
+        level = dt.toordinal() % 5 if dt >= end-timedelta(days=35) else 0
+        weeks.setdefault(sunday, []).append({'date': dt.isoformat(), 'weekday': weekday, 'contributionLevel': levels[level]})
+    return {'data': {'user': {'contributionsCollection': {'contributionCalendar': {
+        'weeks': [{'contributionDays': values} for values in weeks.values()]}}}}}
 
 
 class DataTests(unittest.TestCase):
-    def test_fresh_calendar_keeps_dates_levels_and_missing_edges(self):
-        obj = data.normalize(calendar_payload(), 'WSL043', '2026-09-11')
-        cells = [x for column in obj['active_columns'].values() for x in column]
-        self.assertEqual(sum(v is not None for v in cells), 365)
-        self.assertEqual(obj['range_start'], '2025-09-12')
-        self.assertEqual(obj['source'], 'github-graphql')
-        self.assertEqual(cells.count(4), 73)
+    def test_normalize_preserves_all_dates_and_partial_edges(self):
+        source = payload()
+        snap = data.normalize(source, 'WSL043', DAY)
+        self.assertEqual(snap['source'], 'github-graphql')
+        self.assertEqual(sum(v is not None for col in snap['active_columns'].values() for v in col), 365)
+        self.assertEqual(snap['range_start'], '2025-09-13')
+        for x, week in enumerate(source['data']['user']['contributionsCollection']['contributionCalendar']['weeks']):
+            for d in week['contributionDays']:
+                self.assertEqual(snap['active_columns'][str(x)][d['weekday']], data.LEVELS[d['contributionLevel']])
 
-    def test_leap_year_range_has_exactly_365_days(self):
-        obj = data.normalize(calendar_payload('2024-03-01'), 'WSL043', '2024-03-01')
-        self.assertEqual(obj['range_start'], '2023-03-03')
+    def test_leap_year_is_exactly_365_days(self):
+        for day in ('2024-03-01', '2024-12-31', '2026-09-12'):
+            snap = data.normalize(payload(day), 'WSL043', day)
+            self.assertEqual((date.fromisoformat(day)-date.fromisoformat(snap['range_start'])).days, 364)
 
-    def test_graphql_errors_never_become_fake_empty_calendar(self):
-        obj = calendar_payload(); obj['errors'] = [{'message': 'blocked'}]
-        with self.assertRaises(ValueError): data.normalize(obj, 'WSL043', '2026-09-11')
+    def test_partial_graphql_errors_are_not_an_empty_calendar(self):
+        source = payload()
+        source['errors'] = [{'message': 'denied'}]
+        with self.assertRaises(ValueError):
+            data.normalize(source, 'WSL043', DAY)
 
-    def test_unknown_level_wrong_weekday_and_duplicate_are_rejected(self):
-        for mutation in ('level', 'weekday', 'duplicate', 'gap'):
-            obj = calendar_payload()
-            days = obj['data']['user']['contributionsCollection']['contributionCalendar']['weeks'][1]['contributionDays']
-            if mutation == 'level': days[0]['contributionLevel'] = 'UNKNOWN'
-            elif mutation == 'weekday': days[0]['weekday'] = 6
-            elif mutation == 'duplicate': days.append(days[0].copy())
-            else: days.pop()
-            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
-                data.normalize(obj, 'WSL043', '2026-09-11')
+    def test_unknown_level_duplicate_or_bad_weekday_rejected(self):
+        for kind in ('level', 'duplicate', 'weekday'):
+            source = payload()
+            days = source['data']['user']['contributionsCollection']['contributionCalendar']['weeks'][1]['contributionDays']
+            if kind == 'level':
+                days[0]['contributionLevel'] = 'UNKNOWN'
+            elif kind == 'weekday':
+                days[0]['weekday'] = 9
+            else:
+                days.append(days[0].copy())
+            with self.assertRaises(ValueError):
+                data.normalize(source, 'WSL043', DAY)
 
-    def test_absent_token_is_an_explicit_failure(self):
-        with self.assertRaises(ValueError): data.fetch_calendar('WSL043', '2026-09-11', '')
+    def test_missing_token_and_invalid_owner_fail_explicitly(self):
+        for owner, token in [('WSL043', ''), ('bad/user', 'token')]:
+            with self.assertRaises(ValueError):
+                data.fetch_calendar(owner, DAY, token)
 
-    def test_retry_is_bounded_and_does_not_return_stale_data(self):
-        with patch.object(data.urllib.request, 'urlopen', side_effect=TimeoutError), patch.object(data.time, 'sleep') as sleep:
-            with self.assertRaises(RuntimeError): data.fetch_calendar('WSL043', '2026-09-11', 'test-only')
-            self.assertEqual(sleep.call_count, 2)
+    def test_retries_bounded_and_never_return_old_data(self):
+        with patch.object(data.urllib.request, 'urlopen', side_effect=urllib.error.URLError('offline')) as mock, patch.object(data.time, 'sleep'):
+            with self.assertRaises(RuntimeError):
+                data.fetch_calendar('WSL043', DAY, 'not-a-real-token')
+            self.assertEqual(mock.call_count, 3)
 
-    def test_both_partial_weeks_remain_null(self):
-        obj = data.normalize(calendar_payload(), 'WSL043', '2026-09-11')
-        self.assertEqual(obj['active_columns']['0'][:5], [None]*5)
-        self.assertIsNone(obj['active_columns'][str(obj['columns']-1)][6])
+    def test_auth_failure_is_not_retried(self):
+        error = urllib.error.HTTPError('test', 401, 'denied', {}, None)
+        with patch.object(data.urllib.request, 'urlopen', side_effect=error) as mock:
+            with self.assertRaises(RuntimeError):
+                data.fetch_calendar('WSL043', DAY, 'not-a-real-token')
+            self.assertEqual(mock.call_count, 1)
 
+    def test_build_all_outputs_only_ten_svg_files(self):
+        snap = data.normalize(payload(), 'WSL043', DAY)
+        before = copy.deepcopy(snap)
+        with tempfile.TemporaryDirectory() as temp:
+            manifest = data.build(snap, {'selected': 'assembly', 'date': DAY, 'refresh_native': True}, Path(temp))
+            self.assertEqual(len(manifest['assets']), 10)
+            self.assertTrue(all(name.endswith('.svg') for name in manifest['assets']))
+            self.assertEqual(snap, before)
 
-class ExtraTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        e.register(); _, cls.grid, cls.missing = a.load_snapshot(FIXTURE)
-        cls.models = {s: a.PLANNERS[s](cls.grid, 43) for s in ('pinball', 'laser', 'gravity')}
-
-    def test_all_extra_models_are_deterministic_and_do_not_mutate(self):
-        before = self.grid.copy()
-        for s, model in self.models.items():
-            self.assertEqual(model, a.PLANNERS[s](self.grid, 43))
-        self.assertEqual(self.grid, before)
-
-    def test_pinball_damage_is_conserved_and_real(self):
-        model = self.models['pinball']; expected = self.grid.copy()
-        for hit in model['events']:
-            self.assertGreater(expected[hit['p']], 0); expected[hit['p']] -= 1
-        self.assertEqual(expected, model['final'])
-        self.assertTrue(model['events'])
-
-    def test_pinball_balls_stay_inside_the_arena(self):
-        model = self.models['pinball']; lo, hi = model['bounds']
-        for frame in model['states']:
-            for x, y in frame['balls']:
-                self.assertTrue(lo-.301 <= x <= hi+.301)
-                self.assertTrue(-.851 <= y <= 6.851)
-
-    def test_laser_reflections_are_axis_aligned_and_reversible(self):
-        for direction in a.DIRS:
-            for slash in (True, False):
-                reflected = e.reflect(direction, slash)
-                self.assertIn(reflected, a.DIRS)
-                self.assertEqual(e.reflect(reflected, slash), direction)
-                self.assertNotEqual(reflected, direction)
-
-    def test_laser_uses_real_cells_and_conserves_damage(self):
-        model = self.models['laser']; expected = self.grid.copy()
-        for hit in model['events']:
-            self.assertGreater(expected[hit['p']], 0); expected[hit['p']] -= 1
-        self.assertEqual(expected, model['final'])
-        for pulse in model['pulses']:
-            self.assertTrue(all(self.grid[p] > 0 for p in pulse['hits']))
-            for p, q in zip(pulse['vertices'], pulse['vertices'][1:]):
-                self.assertTrue(p[0] == q[0] or p[1] == q[1])
-
-    def test_sand_conserves_every_emitted_particle_on_every_frame(self):
-        model = self.models['gravity']
-        for frame in model['states']:
-            expected = sum(x['grains'] for x in model['events'][:frame['released']])
-            self.assertEqual(len(frame['sand']), expected)
-            for (x, y) in frame['sand']:
-                self.assertTrue(-4 <= x < a.COLS*4+4 and 0 <= y < 30)
-                self.assertEqual(frame['grid'].get((x//4, y//4), 0), 0)
-        self.assertFalse(any(model['final'].values()))
-
-    def test_empty_input_does_not_invent_game_tiles(self):
-        empty = {p: 0 for p in self.grid}
-        for s in self.models:
-            model = a.PLANNERS[s](empty, 43)
-            self.assertEqual(model['events'], [])
-            self.assertFalse(any(model['final'].values()))
-
-    def test_all_six_draw_in_both_themes_with_changes(self):
-        models = {**self.models, **{s: a.PLANNERS[s](self.grid, 43) for s in ('bomber', 'miners', 'defense')}}
-        for theme in ('dark', 'light'):
-            a.configure_theme(theme)
-            for s, model in models.items():
-                first = a.DRAWERS[s](model, self.grid, self.missing, 3.1, 48)
-                later = a.DRAWERS[s](model, self.grid, self.missing, 9.2, 48)
-                self.assertEqual(first.size, (1040, 420))
-                self.assertNotEqual(first.tobytes(), later.tobytes())
-                self.assertEqual(first.getpixel((0, 400)), Image.new('RGB', (1,1), a.BG).getpixel((0,0)))
-        a.configure_theme('dark')
-
-    def test_full_heatmap_does_not_break_or_fabricate_new_tiles(self):
-        full = {p: 4 for p in self.grid}
-        for s in ('pinball', 'laser', 'gravity'):
-            model = a.PLANNERS[s](full, 3)
-            self.assertTrue(all(0 <= v <= 4 for v in model['final'].values()))
-
-    def test_snapshot_accepts_54_columns_without_filling_nulls(self):
-        obj = json.loads(FIXTURE.read_text()); obj['columns'] = 54; obj['active_columns']['53'] = [None]*7
-        try:
-            with tempfile.TemporaryDirectory() as td:
-                path = Path(td)/'calendar.json'; path.write_text(json.dumps(obj))
-                _, grid, missing = a.load_snapshot(path)
-                self.assertEqual(len(grid), 378); self.assertIn((53,0), missing)
-        finally:
-            a.load_snapshot(FIXTURE)
+    def test_offline_cli_forces_source_label_even_for_a_live_snapshot(self):
+        snap = data.normalize(payload(), 'WSL043', DAY)
+        with tempfile.TemporaryDirectory() as temp:
+            p = Path(temp)
+            (p/'snapshot.json').write_text(json.dumps(snap))
+            (p/'selection.json').write_text(json.dumps({'selected': 'portal', 'date': DAY}))
+            subprocess.run([sys.executable, '-m', 'scripts.heatmap_data', '--input', str(p/'snapshot.json'),
+                '--selection', str(p/'selection.json'), '--output', str(p/'out')], cwd=ROOT, check=True, capture_output=True)
+            self.assertEqual(json.loads((p/'out/heatmap-snapshot.json').read_text())['source'], 'offline-preview')
 
 
 class RotationTests(unittest.TestCase):
-    def test_three_hundred_complete_bags_have_no_adjacent_repeat(self):
-        state = {}; previous = None
+    def test_migration_removes_retired_and_prioritizes_svg(self):
+        selected, state = rotation.choose_next({'current': 'defense', 'remaining': ['pinball', 'laser', 'gravity', 'snake'], 'catalog_version': 2}, random.Random(2))
+        self.assertIn(selected, rotation.NATIVE)
+        self.assertEqual(set([selected]+state['remaining']), set(rotation.NATIVE+('snake',)))
+        self.assertEqual(state['catalog_version'], 3)
+
+    def test_three_hundred_complete_bags_no_repeats(self):
+        state = {}
+        previous = None
         for cycle in range(300):
-            seen = []
-            for _ in r.ARCADE_EXPERIENCES:
-                selected, state = r.choose_next(state, random.Random(cycle+len(seen)))
-                self.assertNotEqual(previous, selected); previous = selected; seen.append(selected)
-            self.assertEqual(set(seen), set(r.ARCADE_EXPERIENCES))
+            values = []
+            for i in rotation.ARCADE_EXPERIENCES:
+                selected, state = rotation.choose_next(state, random.Random(f'{cycle}:{i}'))
+                self.assertNotEqual(selected, previous)
+                values.append(selected)
+                previous = selected
+            self.assertCountEqual(values, rotation.ARCADE_EXPERIENCES)
 
-    def test_legacy_bag_gets_all_six_new_cartridges_first(self):
-        state = {'current': 'space-shooter', 'remaining': ['3d-city', 'breakout'], 'cycle': 3}
-        seen = []
-        for _ in r.NATIVE:
-            s, state = r.choose_next(state, random.Random(1)); seen.append(s)
-        self.assertEqual(set(seen), set(r.NATIVE))
-        self.assertEqual(state['remaining'], ['3d-city', 'breakout'])
+    def test_same_day_retry_preserves_draw_and_bag(self):
+        selected, state = rotation.select_daily({}, DAY, seed='first')
+        self.assertEqual((selected, state), rotation.select_daily(state, DAY, seed='different'))
 
-    def test_same_day_random_retry_keeps_selection_and_bag(self):
-        s, state = r.select_daily({}, '2026-09-11', seed='one')
-        s2, state2 = r.select_daily(state, '2026-09-11', seed='two')
-        self.assertEqual((s, state), (s2, state2))
+    def test_manual_selection_and_time_rewind(self):
+        _, state = rotation.select_daily({}, DAY, 'portal')
+        selected, new = rotation.select_daily(state, DAY, 'assembly')
+        self.assertEqual(selected, 'assembly')
+        self.assertNotIn('assembly', new['remaining'])
+        with self.assertRaises(ValueError):
+            rotation.select_daily(state, '2026-09-11')
+        for retired in rotation.RETIRED:
+            with self.assertRaises(ValueError):
+                rotation.force_selection(state, retired)
 
-    def test_manual_change_removes_duplicate_and_rewind_is_rejected(self):
-        _, state = r.select_daily({}, '2026-09-11')
-        _, state = r.select_daily(state, '2026-09-11', 'miners')
-        self.assertNotIn('miners', state['remaining'])
-        with self.assertRaises(ValueError): r.select_daily(state, '2026-09-10')
+    def test_readme_preserves_project_section_and_literal_backslashes(self):
+        original = 'before\\1\n<!-- ARCADE:START -->old<!-- ARCADE:END -->\nafter\\1'
+        updated = rotation.replace_arcade_block(original, 'new\\1')
+        self.assertEqual(updated, 'before\\1\n<!-- ARCADE:START -->\nnew\\1\n<!-- ARCADE:END -->\nafter\\1')
 
-    def test_readme_preserves_outside_content_and_backslashes(self):
-        original = 'before\n'+r.START_MARKER+'\nold\n'+r.END_MARKER+'\nafter\n'
-        updated = r.replace_arcade_block(original, r'new\path')
-        self.assertEqual(updated, 'before\n'+r.START_MARKER+'\nnew\\path\n'+r.END_MARKER+'\nafter\n')
-        for bad in ('', r.START_MARKER+r.START_MARKER+r.END_MARKER, r.END_MARKER+r.START_MARKER):
-            with self.assertRaises(ValueError): r.replace_arcade_block(bad, 'x')
+    def test_bad_markers_and_dates_rejected(self):
+        for text in ('no markers', '<!-- ARCADE:END --><!-- ARCADE:START -->', '<!-- ARCADE:START --><!-- ARCADE:START --><!-- ARCADE:END -->'):
+            with self.assertRaises(ValueError):
+                rotation.replace_arcade_block(text, 'new')
+        for value in ('2026-9-12', '2026-02-30', 'x'):
+            with self.assertRaises(ValueError):
+                rotation.valid_day(value)
 
-    def test_catalog_assets_and_workflow_agree(self):
-        self.assertEqual(len(r.ARCADE_EXPERIENCES), 11)
-        self.assertEqual(set(pub.ASSET_MAP), set(r.ARCADE_EXPERIENCES))
-        workflow = (Path(__file__).parents[1]/'.github/workflows/daily-arcade.yml').read_text()
-        for name in r.ARCADE_EXPERIENCES:
+    def test_workflow_catalog_asset_map_and_gallery_agree(self):
+        self.assertEqual(rotation.NATIVE, SCENES)
+        self.assertEqual(set(ASSET_MAP), set(rotation.ARCADE_EXPERIENCES))
+        workflow = (ROOT/'.github/workflows/daily-arcade.yml').read_text()
+        gallery = (ROOT/'scripts/arcade_gallery.md').read_text()
+        for name in rotation.ARCADE_EXPERIENCES:
             self.assertIn(f'          - {name}\n', workflow)
-            self.assertIn('Today', r.render_arcade_block(name, '2026-09-11'))
+        for name in rotation.NATIVE:
+            self.assertIn(f'heatmap-{name}-dark.svg', gallery)
+            self.assertIn('.svg', rotation.render_arcade_block(name))
+        self.assertIn("github.event_name != 'workflow_dispatch' || inputs.refresh_native", workflow)
+        self.assertEqual(workflow.count('contents: write'), 1)
+        self.assertIn('git add README.md ARCADE.md', workflow)
+
+    def test_cli_defaults_to_refreshing_all_native_scenes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            p = Path(temp)
+            (p/'README.md').write_text('<!-- ARCADE:START --><!-- ARCADE:END -->')
+            subprocess.run([sys.executable, 'scripts/rotate_arcade.py', '--state', str(p/'absent.json'), '--readme', str(p/'README.md'),
+                '--date', DAY, '--output-dir', str(p/'out')], cwd=ROOT, check=True, capture_output=True)
+            self.assertTrue(json.loads((p/'out/selection.json').read_text())['refresh_native'])
 
 
 class PublicationTests(unittest.TestCase):
-    def setup_stage(self, root, all_native=False):
-        (root/'README.md').write_text('live\n')
-        staging = root/'staging'; md = staging/'rotation-metadata'; gen = staging/'generators'
-        md.mkdir(parents=True); gen.mkdir(parents=True)
-        selection = {'selected': 'bomber', 'mode': 'selected', 'date': '2026-09-11',
-                     'refresh_native': all_native, 'readme_sha256': pub.digest(root/'README.md')}
-        (md/'selection.json').write_text(json.dumps(selection))
-        (md/'README.next.md').write_text('next\n')
-        (md/'arcade-state.next.json').write_text(json.dumps({'current':'bomber','updated_on':'2026-09-11'}))
-        (gen/'heatmap-snapshot.json').write_text(json.dumps({'source':'github-graphql','as_of':'2026-09-11'}))
-        scenes = list(r.NATIVE) if all_native else ['bomber']
-        hashes = {}
-        for s in scenes:
-            for name, _ in pub.ASSET_MAP[s]:
-                path = gen/name
-                Image.new('RGB',(1040,420),'black').save(path,save_all=True,append_images=[Image.new('RGB',(1040,420),'white')],duration=50,loop=0)
-                hashes[name] = pub.digest(path)
-        manifest = {'date':'2026-09-11','source':'github-graphql','scenes':scenes,
-                    'snapshot_sha256':pub.digest(gen/'heatmap-snapshot.json'),'assets':hashes}
-        (gen/'heatmap-manifest.json').write_text(json.dumps(manifest))
-        return staging, gen
+    def prepare(self, all_native=False, selected='assembly'):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        (root/'README.md').write_text('before\n<!-- ARCADE:START -->old<!-- ARCADE:END -->\nafter')
+        (root/'ARCADE.md').write_text('old gallery')
+        (root/'scripts').mkdir()
+        shutil.copyfile(ROOT/'scripts/arcade_gallery.md', root/'scripts/arcade_gallery.md')
+        metadata = root/'staging/rotation-metadata'
+        metadata.mkdir(parents=True)
+        selection = {'selected': selected, 'mode': 'selected', 'date': DAY, 'refresh_native': all_native,
+                     'readme_sha256': digest(root/'README.md')}
+        (metadata/'selection.json').write_text(json.dumps(selection))
+        (metadata/'arcade-state.next.json').write_text(json.dumps({'current': selected, 'updated_on': DAY}))
+        (metadata/'README.next.md').write_text('new readme')
+        artifacts = root/'staging/generators'
+        data.build(data.normalize(payload(), 'WSL043', DAY), selection, artifacts)
+        return root, artifacts, metadata
 
-    def test_valid_native_publish_copies_both_themes(self):
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td); st, gen = self.setup_stage(root); pub.publish(root, st)
-            self.assertEqual((root/'README.md').read_text(), 'next\n')
-            self.assertTrue((root/'assets/arcade/heatmap-bomber-light.gif').is_file())
+    def test_valid_single_publish_copies_both_themes(self):
+        root, _, _ = self.prepare()
+        publish(root, root/'staging')
+        self.assertEqual((root/'README.md').read_text(), 'new readme')
+        for theme in ('dark', 'light'):
+            self.assertTrue((root/f'assets/arcade/heatmap-assembly-{theme}.svg').is_file())
+        self.assertEqual((root/'ARCADE.md').read_text(), 'old gallery')
 
-    def test_refresh_all_native_publishes_all_twelve_without_legacy(self):
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td); st, gen = self.setup_stage(root, True); pub.publish(root, st)
-            self.assertEqual(len(list((root/'assets/arcade').glob('*.gif'))), 12)
+    def test_full_refresh_swaps_gallery_and_removes_only_old_native_gifs(self):
+        root, _, _ = self.prepare(True)
+        assets = root/'assets/arcade'
+        assets.mkdir(parents=True)
+        for name in OLD_GIFS+('space-shooter.gif',):
+            (assets/name).write_text('old')
+        publish(root, root/'staging')
+        self.assertEqual(len(list(assets.glob('*.svg'))), 10)
+        self.assertEqual((assets/'space-shooter.gif').read_text(), 'old')
+        self.assertFalse(any((assets/name).exists() for name in OLD_GIFS))
+        self.assertNotEqual((root/'ARCADE.md').read_text(), 'old gallery')
 
-    def test_missing_or_tampered_asset_keeps_readme_and_assets_untouched(self):
-        for damage in ('delete','tamper'):
-            with tempfile.TemporaryDirectory() as td:
-                root = Path(td); st, gen = self.setup_stage(root)
-                p = gen/'heatmap-bomber-dark.gif'
-                if damage == 'delete': p.unlink()
-                else: p.write_bytes(b'not a gif')
-                with self.assertRaises((ValueError,FileNotFoundError)): pub.publish(root, st)
-                self.assertEqual((root/'README.md').read_text(), 'live\n')
-                self.assertFalse((root/'assets').exists())
+    def test_missing_asset_changes_nothing(self):
+        root, artifacts, _ = self.prepare(True)
+        (artifacts/'heatmap-bomber-light.svg').unlink()
+        before = (root/'README.md').read_bytes()
+        with self.assertRaises(FileNotFoundError):
+            publish(root, root/'staging')
+        self.assertEqual((root/'README.md').read_bytes(), before)
+        self.assertEqual((root/'ARCADE.md').read_text(), 'old gallery')
+        self.assertFalse((root/'assets').exists())
 
-    def test_changed_readme_is_not_overwritten(self):
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td); st, gen = self.setup_stage(root); (root/'README.md').write_text('human edit\n')
-            with self.assertRaises(ValueError): pub.publish(root, st)
-            self.assertEqual((root/'README.md').read_text(), 'human edit\n')
+    def test_tampered_asset_fails_before_any_copy(self):
+        root, artifacts, _ = self.prepare()
+        with (artifacts/'heatmap-assembly-dark.svg').open('a') as f:
+            f.write('tampered')
+        with self.assertRaises(ValueError):
+            publish(root, root/'staging')
+        self.assertFalse((root/'assets').exists())
 
-    def test_stale_or_local_snapshot_cannot_be_published_as_live(self):
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td); st, gen = self.setup_stage(root)
-            p = gen/'heatmap-snapshot.json'; p.write_text(FIXTURE.read_text())
-            with self.assertRaises(ValueError): pub.publish(root, st)
-            self.assertEqual((root/'README.md').read_text(), 'live\n')
+    def test_script_image_and_external_resource_rejected_even_with_updated_digest(self):
+        for addition in ('<script>alert(1)</script>', '<image href="x.gif"/>', '<foreignObject/>', '<g onclick="x()"/>', '<style>@import "x";</style>'):
+            root, artifacts, _ = self.prepare()
+            asset = artifacts/'heatmap-assembly-dark.svg'
+            asset.write_text(asset.read_text().replace('</svg>', addition+'</svg>'))
+            manifest = json.loads((artifacts/'heatmap-manifest.json').read_text())
+            manifest['assets'][asset.name] = digest(asset)
+            (artifacts/'heatmap-manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaises(ValueError):
+                publish(root, root/'staging')
+            self.assertFalse((root/'assets').exists())
 
-    def test_state_mismatch_and_unknown_mode_are_rejected(self):
-        for key, value in [('selected','miners'),('mode','surprise')]:
-            with tempfile.TemporaryDirectory() as td:
-                root = Path(td); st, gen = self.setup_stage(root)
-                p = st/'rotation-metadata/selection.json'; obj = json.loads(p.read_text()); obj[key] = value; p.write_text(json.dumps(obj))
-                with self.assertRaises((ValueError,FileNotFoundError)): pub.publish(root, st)
-                self.assertEqual((root/'README.md').read_text(), 'live\n')
+    def test_wrong_snapshot_or_scene_is_rejected(self):
+        root, artifacts, _ = self.prepare()
+        asset = artifacts/'heatmap-assembly-dark.svg'
+        asset.write_text(asset.read_text().replace('data-scene="assembly"', 'data-scene="portal"'))
+        manifest = json.loads((artifacts/'heatmap-manifest.json').read_text())
+        manifest['assets'][asset.name] = digest(asset)
+        (artifacts/'heatmap-manifest.json').write_text(json.dumps(manifest))
+        with self.assertRaises(ValueError):
+            publish(root, root/'staging')
 
-if __name__ == '__main__': unittest.main()
+    def test_stale_or_offline_snapshot_cannot_publish(self):
+        for key, value in [('as_of', '2026-09-11'), ('source', 'offline-preview')]:
+            root, artifacts, _ = self.prepare()
+            source = json.loads((artifacts/'heatmap-snapshot.json').read_text())
+            source[key] = value
+            (artifacts/'heatmap-snapshot.json').write_text(json.dumps(source))
+            with self.assertRaises(ValueError):
+                publish(root, root/'staging')
+
+    def test_concurrent_readme_edits_are_not_overwritten(self):
+        root, _, _ = self.prepare()
+        (root/'README.md').write_text('a newer user edit')
+        with self.assertRaises(ValueError):
+            publish(root, root/'staging')
+        self.assertEqual((root/'README.md').read_text(), 'a newer user edit')
+
+    def test_selection_state_mismatch_and_unknown_mode(self):
+        for field, value in [('mode', 'surprise'), ('selected', 'gravity'), ('date', '2026-09-13')]:
+            root, _, metadata = self.prepare()
+            selection = json.loads((metadata/'selection.json').read_text())
+            selection[field] = value
+            (metadata/'selection.json').write_text(json.dumps(selection))
+            with self.assertRaises(ValueError):
+                publish(root, root/'staging')
+
+if __name__ == '__main__':
+    unittest.main()
