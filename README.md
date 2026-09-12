@@ -9,21 +9,21 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Heatmap Bomber
+## Today's Arcade: Magnetic Assembly
 
-Find a route, plant a bomb, escape. Your green days are the walls.
+Your calendar breaks into connected pieces, then clicks back into its exact original shape.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-bomber-dark.gif">
-    <img src="./assets/arcade/heatmap-bomber-light.gif" alt="Heatmap Bomber" width="100%">
+            srcset="./assets/arcade/heatmap-assembly-dark.svg">
+    <img src="./assets/arcade/heatmap-assembly-light.svg" alt="Magnetic Assembly" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>11 cartridges · one daily draw · no back-to-back repeats · Published 2026-09-11 UTC</sub></p>
+<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-12 UTC</sub></p>
 
-[Watch all six heatmap demos](./ARCADE.md) · Auto-play simulations, driven by contribution tiles.
+[Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
 
 ## Pick a cartridge
