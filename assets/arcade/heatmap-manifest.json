@@ -14,17 +14,17 @@
     "search-comparison-light.svg": "f1e05847bf9957474ac3264583be17c986f0512e2983bc43be8d90369df9777b"
   },
   "engine": "svg-v3",
-  "snapshot_sha256": "374241c7fd03e969e80b91de01cb52efe5394cf1af3b1c7a235b801a5642dd9c",
+  "snapshot_sha256": "ec7da1fc1720a542465ff839c2c4a15234f4c829ce175539c91c0ba7c8433353",
   "assets": {
-    "heatmap-bomber-dark.svg": "2828e6c313237e3abfeaafe62727a21cd7c9c766b56de000a4a6835313043c9f",
-    "heatmap-bomber-light.svg": "047096982936b099c55a49bbe6edb5b9b2466d79f6779cf9638f394d6b12f219",
-    "heatmap-miners-dark.svg": "45ca4df1b2be179642fe5453b86113bbe10d577c697446cac810986a9290306f",
-    "heatmap-miners-light.svg": "7857cd0c1aa092433d52f47a395a28afbac88fb44fc0387a1a55d6274e75ef23",
-    "heatmap-link-match-dark.svg": "68a15d12686477330fa0f015387b5688b1a10f4d34b29e44a423ea076a474f33",
-    "heatmap-link-match-light.svg": "6dffedeb2fe6e6757d5f60d499df9b44f6314efa2d2be46633d1b463a40111f7",
-    "heatmap-portal-dark.svg": "78e3a92c60e62cd600af96a844b399b7b6429fec6e402498fa58ac7f59d1fe6d",
-    "heatmap-portal-light.svg": "d6b0714cf87307a45c2bd1081a355453444db1b1d6b6e7aac07abf0cb9c09981",
-    "heatmap-assembly-dark.svg": "8227cbd807fce2da2381c76690b2709e9190c11b040823981296add962967d4c",
-    "heatmap-assembly-light.svg": "1f15f05206174b3c98e3dfb01e793d884c80cf0b24f38eb10be550fc55a9a2fe"
+    "heatmap-bomber-dark.svg": "7d456e6b13b3a5f85e92fc086da1eabb37f1c0ee6070059bc3c1f310ea739377",
+    "heatmap-bomber-light.svg": "675fbb4d33552f39c72fc2f42fb6a666058a3855a8eeecebf0b32f94d435c493",
+    "heatmap-miners-dark.svg": "4719326d0c4636720701f1c317e5201c7d2f552cfff24844d333cffdc2af252a",
+    "heatmap-miners-light.svg": "7bd6d2f3e2615f4405ffa59cc8423f1e03daec38dcc7e65cd99faf0e1563ae01",
+    "heatmap-link-match-dark.svg": "fa8f211722d9e76865398af6e9c04a08cfd2eba4569fcd89e54498e74609b066",
+    "heatmap-link-match-light.svg": "01939ce48e9df3b34f07555390dfa03653a2de71b7f1f9321371f60eb5bb2728",
+    "heatmap-portal-dark.svg": "edcb2d3a5635442e165c7532ac113786a010dbe318cf7f96c1fd4c0cf959c2c5",
+    "heatmap-portal-light.svg": "9f1dc85934fdec237e6f9733282192e3a916095f16fdbf88f169e68cf085cec1",
+    "heatmap-assembly-dark.svg": "dbdf9b79952a96f73f12688a0f11c7f9b2b6a37dc8e31318cf5018e04198f274",
+    "heatmap-assembly-light.svg": "935914fcf0ae103d6923f346b2f6749c0cc4cf1fe60e2b1fd690a7def700dfe3"
   }
 }
