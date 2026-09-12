@@ -89,13 +89,14 @@ class DataTests(unittest.TestCase):
                 data.fetch_calendar('WSL043', DAY, 'not-a-real-token')
             self.assertEqual(mock.call_count, 1)
 
-    def test_build_all_outputs_only_ten_svg_files(self):
+    def test_build_all_outputs_include_native_and_comparison_assets(self):
         snap = data.normalize(payload(), 'WSL043', DAY)
         before = copy.deepcopy(snap)
         with tempfile.TemporaryDirectory() as temp:
             manifest = data.build(snap, {'selected': 'assembly', 'date': DAY, 'refresh_native': True}, Path(temp))
             self.assertEqual(len(manifest['assets']), 10)
             self.assertTrue(all(name.endswith('.svg') for name in manifest['assets']))
+            self.assertEqual(set(manifest['analysis']), {'search-comparison-dark.svg', 'search-comparison-light.svg', 'search-comparison.json'})
             self.assertEqual(snap, before)
 
     def test_offline_cli_forces_source_label_even_for_a_live_snapshot(self):
@@ -214,7 +215,8 @@ class PublicationTests(unittest.TestCase):
         for name in OLD_GIFS+('space-shooter.gif',):
             (assets/name).write_text('old')
         publish(root, root/'staging')
-        self.assertEqual(len(list(assets.glob('*.svg'))), 10)
+        self.assertEqual(len(list(assets.glob('*.svg'))), 12)
+        self.assertTrue((assets/'search-comparison.json').is_file())
         self.assertEqual((assets/'space-shooter.gif').read_text(), 'old')
         self.assertFalse(any((assets/name).exists() for name in OLD_GIFS))
         self.assertNotEqual((root/'ARCADE.md').read_text(), 'old gallery')

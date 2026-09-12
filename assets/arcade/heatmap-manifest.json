@@ -21,5 +21,10 @@
     "heatmap-portal-light.svg": "d6b0714cf87307a45c2bd1081a355453444db1b1d6b6e7aac07abf0cb9c09981",
     "heatmap-assembly-dark.svg": "8227cbd807fce2da2381c76690b2709e9190c11b040823981296add962967d4c",
     "heatmap-assembly-light.svg": "1f15f05206174b3c98e3dfb01e793d884c80cf0b24f38eb10be550fc55a9a2fe"
+  },
+  "analysis": {
+    "search-comparison-dark.svg": "3ab6b7a09dd98bb77ab956a5e1545c5eb035dba6b6cd62ee10460df07d5e86b9",
+    "search-comparison-light.svg": "f1e05847bf9957474ac3264583be17c986f0512e2983bc43be8d90369df9777b",
+    "search-comparison.json": "85950b4527003a45b8582d9054d68d03fda8ee2f91fe89983f31b5d5683a0e36"
   }
 }
