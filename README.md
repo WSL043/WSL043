@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: Commit Miners
 
-Today's contribution grid has entered bullet-hell mode.
+Two miners work through the whole calendar. Every ore tile is a real active day.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif" alt="Space Shooter" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/heatmap-miners-dark.svg">
+    <img src="./assets/arcade/heatmap-miners-light.svg" alt="Commit Miners" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-12 UTC</sub></p>
+<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-13 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
