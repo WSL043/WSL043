@@ -1,13 +1,12 @@
 {
-  "current": "space-shooter",
+  "current": "miners",
   "remaining": [
-    "miners",
     "link-match",
     "portal",
     "3d-city",
     "breakout"
   ],
   "cycle": 3,
-  "updated_on": "2026-09-12",
+  "updated_on": "2026-09-13",
   "catalog_version": 3
 }

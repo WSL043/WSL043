@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-12",
+  "date": "2026-09-13",
   "source": "github-graphql",
   "scenes": [
     "bomber",
@@ -9,22 +9,22 @@
     "assembly"
   ],
   "analysis": {
-    "search-comparison.json": "85950b4527003a45b8582d9054d68d03fda8ee2f91fe89983f31b5d5683a0e36",
-    "search-comparison-dark.svg": "3ab6b7a09dd98bb77ab956a5e1545c5eb035dba6b6cd62ee10460df07d5e86b9",
-    "search-comparison-light.svg": "f1e05847bf9957474ac3264583be17c986f0512e2983bc43be8d90369df9777b"
+    "search-comparison.json": "a1470099f86e42919c67ccec080d68dfa03377055fa546381d98286e249f88ca",
+    "search-comparison-dark.svg": "e7c3e28c9c982d29e6831dfe678c2e49a4a8fc57c0e5032facbfc5b8ecbc06cb",
+    "search-comparison-light.svg": "bd6900f5802c0829f01120ccdfa59b0b0686997d4d9d07db63cd2b55e6cc7c62"
   },
   "engine": "svg-v3",
-  "snapshot_sha256": "ec7da1fc1720a542465ff839c2c4a15234f4c829ce175539c91c0ba7c8433353",
+  "snapshot_sha256": "c325b43bc0aa986961c493cf8b71c7e0a7c8ff934f58f2e133548654e5154cfc",
   "assets": {
-    "heatmap-bomber-dark.svg": "7d456e6b13b3a5f85e92fc086da1eabb37f1c0ee6070059bc3c1f310ea739377",
-    "heatmap-bomber-light.svg": "675fbb4d33552f39c72fc2f42fb6a666058a3855a8eeecebf0b32f94d435c493",
-    "heatmap-miners-dark.svg": "4719326d0c4636720701f1c317e5201c7d2f552cfff24844d333cffdc2af252a",
-    "heatmap-miners-light.svg": "7bd6d2f3e2615f4405ffa59cc8423f1e03daec38dcc7e65cd99faf0e1563ae01",
-    "heatmap-link-match-dark.svg": "fa8f211722d9e76865398af6e9c04a08cfd2eba4569fcd89e54498e74609b066",
-    "heatmap-link-match-light.svg": "01939ce48e9df3b34f07555390dfa03653a2de71b7f1f9321371f60eb5bb2728",
-    "heatmap-portal-dark.svg": "edcb2d3a5635442e165c7532ac113786a010dbe318cf7f96c1fd4c0cf959c2c5",
-    "heatmap-portal-light.svg": "9f1dc85934fdec237e6f9733282192e3a916095f16fdbf88f169e68cf085cec1",
-    "heatmap-assembly-dark.svg": "dbdf9b79952a96f73f12688a0f11c7f9b2b6a37dc8e31318cf5018e04198f274",
-    "heatmap-assembly-light.svg": "935914fcf0ae103d6923f346b2f6749c0cc4cf1fe60e2b1fd690a7def700dfe3"
+    "heatmap-bomber-dark.svg": "79423a2cf6e4f2c7dc3b195d5b0571832e81c3ebccffcd31490d04b881d2f0c9",
+    "heatmap-bomber-light.svg": "e7cd4234688692439f1fe0b3925effc69ec69d0c91feefd819718f046be789d3",
+    "heatmap-miners-dark.svg": "3f3159ff570aa64dc5dae51aa03302e71b15282ccff7b6aaa66cb5b054d70f38",
+    "heatmap-miners-light.svg": "6b4f47c53c2fe3bd978adc4ca856637bb2fcdce760472890fb59b74633ae1f5c",
+    "heatmap-link-match-dark.svg": "302db74ab43c152941b61761ef9dd9b896ac237ea6de7f9c7872b4c59df00757",
+    "heatmap-link-match-light.svg": "623e763de3f97c0cb213552090ab2453092c2f78b812fda5bdec238a8733eef3",
+    "heatmap-portal-dark.svg": "d5998c2afc62977b84d3547db2cd25ae7250bf8e2fcc62a444eebd905c50b29c",
+    "heatmap-portal-light.svg": "7a2f8b6039f6ce9a05984380bed0d6b56d1f6a39fde61e885ac5b381484451c4",
+    "heatmap-assembly-dark.svg": "76d9a93e84b29fb623335d5764c54dafd97e13a4cd39c2fb761be2b482a57071",
+    "heatmap-assembly-light.svg": "c9863b25859e9b07bd28b4dba1076b32b24d901062adaeb7bb28853af1f36590"
   }
 }
