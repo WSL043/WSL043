@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Commit Miners
+## Today's Arcade: Contribution Link
 
-Two miners work through the whole calendar. Every ore tile is a real active day.
+Match equal green levels through empty days, with no more than two turns.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-miners-dark.svg">
-    <img src="./assets/arcade/heatmap-miners-light.svg" alt="Commit Miners" width="100%">
+            srcset="./assets/arcade/heatmap-link-match-dark.svg">
+    <img src="./assets/arcade/heatmap-link-match-light.svg" alt="Contribution Link" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-13 UTC</sub></p>
+<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-14 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
