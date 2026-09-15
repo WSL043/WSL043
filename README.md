@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Contribution Link
+## Today's Arcade: Portal Courier
 
-Match equal green levels through empty days, with no more than two turns.
+Your contribution tiles take the long way home, through a pair of portals.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-link-match-dark.svg">
-    <img src="./assets/arcade/heatmap-link-match-light.svg" alt="Contribution Link" width="100%">
+            srcset="./assets/arcade/heatmap-portal-dark.svg">
+    <img src="./assets/arcade/heatmap-portal-light.svg" alt="Portal Courier" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-14 UTC</sub></p>
+<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-15 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
