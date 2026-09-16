@@ -10,11 +10,11 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-NATIVE = ('bomber', 'miners', 'link-match', 'portal', 'assembly')
+NATIVE = ('minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city')
 RETIRED = ('defense', 'pinball', 'laser', 'gravity')
 ARCADE_EXPERIENCES = LEGACY + NATIVE
-CATALOG_VERSION = 3
+CATALOG_VERSION = 4
 EXPERIENCE_DETAILS = {
     'space-shooter': {'title': 'Space Shooter', 'icon': '🚀', 'description': "Today's contribution grid has entered bullet-hell mode.", 'light': './assets/arcade/space-shooter.gif'},
     'breakout': {'title': 'Breakout', 'icon': '🧱', 'description': "A tiny paddle is clearing the year's contribution bricks.", 'light': './assets/arcade/breakout-light.svg', 'dark': './assets/arcade/breakout-dark.svg'},
@@ -28,6 +28,8 @@ for key, title, description in [
     ('link-match', 'Contribution Link', 'Match equal green levels through empty days, with no more than two turns.'),
     ('portal', 'Portal Courier', 'Your contribution tiles take the long way home, through a pair of portals.'),
     ('assembly', 'Magnetic Assembly', 'Your calendar breaks into connected pieces, then clicks back into its exact original shape.'),
+    ('minecraft', 'Minecraft Block Miner', 'Mine your green days into grass blocks, collect them, then rebuild the whole calendar.'),
+    ('lego', 'LEGO Brick Workshop', 'Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.'),
 ]:
     EXPERIENCE_DETAILS[key] = {'title': title, 'icon': '', 'description': description,
         'light': f'./assets/arcade/heatmap-{key}-light.svg', 'dark': f'./assets/arcade/heatmap-{key}-dark.svg'}

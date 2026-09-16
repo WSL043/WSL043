@@ -24,13 +24,15 @@ on:
           - link-match
           - portal
           - assembly
+          - minecraft
+          - lego
       generate_all:
-        description: Refresh all ten experiences including external generators
+        description: Refresh all twelve experiences including external generators
         required: true
         default: false
         type: boolean
       refresh_native:
-        description: Refresh all five SVG experiences from a fresh calendar
+        description: Refresh all seven SVG experiences from a fresh calendar
         required: true
         default: true
         type: boolean

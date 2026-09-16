@@ -11,7 +11,7 @@ import random
 
 Point = tuple[int, int]
 DIRS = ((1, 0), (0, 1), (-1, 0), (0, -1))
-SCENES = ('bomber', 'miners', 'link-match', 'portal', 'assembly')
+SCENES = ('minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 
 
 @dataclass
@@ -240,5 +240,33 @@ def assembly(cal: Calendar, seed: int) -> dict:
     return {'scene': 'assembly', 'pieces': pieces}
 
 
+def minecraft(cal: Calendar, seed: int) -> dict:
+    # Sweep real active days in alternating rows; no invented ore or terrain.
+    rows = list(range(7))
+    random.Random(seed).shuffle(rows)
+    order = [p for y in rows for p in sorted((p for p in cal.active if p[1] == y),
+             reverse=bool(y % 2))]
+    return {'scene': 'minecraft', 'order': order, 'levels': [cal.grid[p] for p in order]}
+
+
+def lego(cal: Calendar, seed: int) -> dict:
+    # Each brick is a straight 1-4 stud run of identical contribution levels.
+    rng = random.Random(seed)
+    remaining, pieces = set(cal.active), []
+    while remaining:
+        first = min(remaining, key=lambda p: (p[1], p[0]))
+        piece = [first]
+        remaining.remove(first)
+        for dx in range(1, rng.randint(1, 4)):
+            p = first[0]+dx, first[1]
+            if p not in remaining or cal.grid[p] != cal.grid[first]:
+                break
+            remaining.remove(p)
+            piece.append(p)
+        pieces.append(piece)
+    rng.shuffle(pieces)
+    return {'scene': 'lego', 'pieces': pieces}
+
+
 PLANNERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
-            'portal': portal, 'assembly': assembly}
+            'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego}
