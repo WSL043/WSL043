@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Portal Courier
+## Today's Arcade: 3D Contribution City 🏙️
 
-Your contribution tiles take the long way home, through a pair of portals.
+Today's commits have been rebuilt as a tiny skyline.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-portal-dark.svg">
-    <img src="./assets/arcade/heatmap-portal-light.svg" alt="Portal Courier" width="100%">
+    <img src="./assets/arcade/3d-city.svg" alt="3D Contribution City" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-15 UTC</sub></p>
+<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-16 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
