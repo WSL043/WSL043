@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Contribution City 🏙️
+## Today's Arcade: Minecraft Block Miner
 
-Today's commits have been rebuilt as a tiny skyline.
+Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-city.svg" alt="3D Contribution City" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
+    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>10 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-16 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-16 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
