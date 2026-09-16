@@ -2,6 +2,8 @@
   "date": "2026-09-16",
   "source": "github-graphql",
   "scenes": [
+    "minecraft",
+    "lego",
     "bomber",
     "miners",
     "link-match",
@@ -14,8 +16,12 @@
     "search-comparison-light.svg": "c6108aaac225a9f124ac68603659c9d7fcbf2797efafe1f46ba60f194a9cd5ad"
   },
   "engine": "svg-v3",
-  "snapshot_sha256": "61d45467a24d47a4971e8397ac8952340aa3f6c86222df248bad3dc6ef2a7c09",
+  "snapshot_sha256": "7aca785dfb5118a128b43613e2d0f840dd14dab97f2a04080d6925d5ab1d2fd9",
   "assets": {
+    "heatmap-minecraft-dark.svg": "2cfd7a75529f13aa82f52b9ba37dd7b9bc964d2cf35c1ca600b42faa55958b3c",
+    "heatmap-minecraft-light.svg": "1f22d66afb83e98b176cd252dbe3ae188e6d0cdef85a1efc4e249950637c5c55",
+    "heatmap-lego-dark.svg": "9ab4b2af174f242e33dcc306c4e8abea49de6e986edc44d17f36fe276f1a49fb",
+    "heatmap-lego-light.svg": "b7fef0e5d8d83b0cb7c86b7d4be52a43da523c12ebc6da8babc4227a5c197118",
     "heatmap-bomber-dark.svg": "1145369c007f7f3b5012cd082308563e69b42b1de0af71b21d008a54ac58d3e3",
     "heatmap-bomber-light.svg": "0d4a40ddb2170f8c534b3dd013026f73fe3769626d9fb1c4f9f49291f9a4d3dc",
     "heatmap-miners-dark.svg": "12dbce07d88e4ad86a1d0225f3f3925d966c43c91db1371a93fc8d60a3818181",
