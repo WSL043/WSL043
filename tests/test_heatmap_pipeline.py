@@ -94,7 +94,7 @@ class DataTests(unittest.TestCase):
         before = copy.deepcopy(snap)
         with tempfile.TemporaryDirectory() as temp:
             manifest = data.build(snap, {'selected': 'assembly', 'date': DAY, 'refresh_native': True}, Path(temp))
-            self.assertEqual(len(manifest['assets']), 10)
+            self.assertEqual(len(manifest['assets']), 2*len(rotation.NATIVE))
             self.assertTrue(all(name.endswith('.svg') for name in manifest['assets']))
             self.assertEqual(set(manifest['analysis']), {'search-comparison-dark.svg', 'search-comparison-light.svg', 'search-comparison.json'})
             self.assertEqual(snap, before)
@@ -115,7 +115,7 @@ class RotationTests(unittest.TestCase):
         selected, state = rotation.choose_next({'current': 'defense', 'remaining': ['pinball', 'laser', 'gravity', 'snake'], 'catalog_version': 2}, random.Random(2))
         self.assertIn(selected, rotation.NATIVE)
         self.assertEqual(set([selected]+state['remaining']), set(rotation.NATIVE+('snake',)))
-        self.assertEqual(state['catalog_version'], 3)
+        self.assertEqual(state['catalog_version'], rotation.CATALOG_VERSION)
 
     def test_three_hundred_complete_bags_no_repeats(self):
         state = {}
@@ -215,7 +215,7 @@ class PublicationTests(unittest.TestCase):
         for name in OLD_GIFS+('space-shooter.gif',):
             (assets/name).write_text('old')
         publish(root, root/'staging')
-        self.assertEqual(len(list(assets.glob('*.svg'))), 12)
+        self.assertEqual(len(list(assets.glob('*.svg'))), 2*len(rotation.NATIVE)+2)
         self.assertTrue((assets/'search-comparison.json').is_file())
         self.assertEqual((assets/'space-shooter.gif').read_text(), 'old')
         self.assertFalse(any((assets/name).exists() for name in OLD_GIFS))

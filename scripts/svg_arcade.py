@@ -16,7 +16,7 @@ THEMES = {
 }
 NAMES = {'bomber': 'Heatmap Bomber', 'miners': 'Commit Miners',
          'link-match': 'Contribution Link', 'portal': 'Portal Courier',
-         'assembly': 'Magnetic Assembly'}
+         'assembly': 'Magnetic Assembly', 'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop'}
 
 
 def num(value):
@@ -331,8 +331,84 @@ def assembly(cal, model, theme):
     return draw
 
 
+def minecraft(cal, model, theme):
+    order = model['order']
+    step = min(.7, 64/max(1, len(order)))
+    finish = 2+len(order)*step
+    draw = Drawing(cal, 'minecraft', theme, finish+6)
+    # Pixel explorer with turquoise shirt, square head and a diamond-coloured pick.
+    sprite = ('<path d="M-5-17h10v9H-5z" fill="#bc865b"/>'
+              '<path d="M-5-19h10v4H-5zM-5-19h3v7H-5z" fill="#513a29"/>'
+              '<path d="M-5-8H5V1H-5z" fill="#29b6ad"/>'
+              '<path d="M-5 1H-1V8H-5zM1 1H5V8H1z" fill="#6465b5"/>'
+              '<path d="M6-5L13-12" stroke="#895e38" stroke-width="2"/>'
+              '<path d="M9-14h7v5" stroke="#64eee2" stroke-width="3" fill="none"/>')
+    start = xy(order[0])
+    base = {'transform': transform(start[0]-12, start[1]+4), 'opacity': '0'}
+    moves = []
+    for i, p in enumerate(order):
+        x, y = xy(p)
+        at = 1.5+i*step
+        moves += [(at, {'transform': transform(x-12, y+4), 'opacity': '1'}),
+                  (at+step*.35, {'transform': transform(x-11, y+3, 1, -12)}),
+                  (at+step*.7, {'transform': transform(x-12, y+4)})]
+        body = (f'<rect x="-6" y="-6" width="12" height="12" fill="{draw.green[cal.grid[p]]}" data-day="{p[0]},{p[1]}"/>'
+                '<path d="M-6-2H6V6H-6z" fill="#805432"/>'
+                '<path d="M-4 0h3v2h-3zM1 3h3v2H1z" fill="#b98452"/>'
+                f'<path d="M-6-6H6v4H-6zM-4-2h2v2h-2zM2-2h2v2H2z" fill="{draw.green[cal.grid[p]]}"/>')
+        home = {'transform': transform(x, y), 'opacity': '1'}
+        dock = (24+(i % cal.cols)*16, 173+(i//cal.cols)*5)
+        back = finish+.6+i/max(1, len(order))*2
+        draw.parts.append(draw.animated(body, [(at, home),
+            (at+step*.4, {'transform': transform(x, y, .9, -8)}),
+            (at+step*.7, {'transform': transform(x, y, .7, 12)}),
+            (at+step+ .3, {'transform': transform(*dock, .55), 'opacity': '1'}),
+            (back, {'transform': transform(*dock, .55)}), (back+.7, home)], home))
+        draw.flash(f'<path d="M{x-4} {y-5}l4 4-2 3 5 3" stroke="#f0f6fc" fill="none"/>', at+step*.2, at+step*.7)
+        draw.spark(p, at+step*.6)
+    moves += [(finish, {'opacity': '0'}), (draw.duration-.1, base)]
+    draw.parts.append(draw.animated(sprite, moves, base))
+    draw.parts.append(f'<text x="24" y="210">MINE / COLLECT / REBUILD</text>')
+    return draw
+
+
+def lego(cal, model, theme):
+    pieces = model['pieces']
+    step = min(.55, 55/max(1, len(pieces)))
+    back = 3+len(pieces)*step
+    draw = Drawing(cal, 'lego', theme, back+5)
+    draw.parts.append(f'<rect x="16" y="172" width="{draw.width-32}" height="22" rx="5" fill="{draw.line}"/>')
+    for x in range(24, draw.width-16, 24):
+        draw.parts.append(f'<circle cx="{x}" cy="188" r="3" fill="{draw.muted}"/>')
+    for i, piece in enumerate(pieces):
+        x, y = xy(piece[0])
+        width = (len(piece)-1)*16+12
+        colour = draw.green[cal.grid[piece[0]]]
+        body = f'<rect x="-6" y="-6" width="{width}" height="12" rx="1" fill="{colour}"/>'
+        body += f'<path d="M-6 3h{width}v3H-6z" fill="#000000" opacity=".25"/>'
+        for j, p in enumerate(piece):
+            # Invisible identity rect follows its own real date within the brick.
+            body += (f'<rect x="{j*16-6}" y="-6" width="12" height="12" fill="none" data-day="{p[0]},{p[1]}"/>'
+                     f'<ellipse cx="{j*16}" cy="-7" rx="4" ry="2" fill="{colour}" stroke="{draw.muted}" stroke-width=".7"/>')
+        home = {'transform': transform(x, y), 'opacity': '1'}
+        at = 1.5+i*step
+        # The first pass feeds a brick to the belt; a small gantry returns it.
+        dock_x = 28+(i % max(1, (cal.cols//4)))*64
+        frames = [(at, home), (at+.3, {'transform': transform(x, y-13)}),
+                  (at+.85, {'transform': transform(dock_x, 178)}),
+                  (at+1.15, {'transform': transform(dock_x+18, 178)}),
+                  (at+1.65, {'transform': transform(x, y-14)}),
+                  (at+1.85, home), (at+1.93, {'transform': transform(x, y, 1.08)}),
+                  (at+2.05, home)]
+        draw.parts.append(draw.animated(body, frames, home))
+        draw.spark(piece[-1], at+1.85, draw.cyan)
+        draw.flash(f'<path d="M{x} 24V{y-16}m-7 0h14" stroke="{draw.cyan}" stroke-width="2" fill="none"/>', at+1.15, at+1.85)
+    draw.parts.append('<text x="24" y="210">BRICK WORKSHOP / SNAP FIT</text>')
+    return draw
+
+
 RENDERERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
-             'portal': portal, 'assembly': assembly}
+             'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego}
 
 
 def render(cal: Calendar, scene: str, seed: int, theme='dark', model=None) -> str:
