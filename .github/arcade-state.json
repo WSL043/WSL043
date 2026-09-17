@@ -1,7 +1,6 @@
 {
-  "current": "minecraft",
+  "current": "lego",
   "remaining": [
-    "lego",
     "bomber",
     "miners",
     "link-match",
@@ -10,6 +9,6 @@
     "breakout"
   ],
   "cycle": 3,
-  "updated_on": "2026-09-16",
+  "updated_on": "2026-09-17",
   "catalog_version": 4
 }

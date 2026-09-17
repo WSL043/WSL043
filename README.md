@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minecraft Block Miner
+## Today's Arcade: LEGO Brick Workshop
 
-Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
+Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
-    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
+            srcset="./assets/arcade/heatmap-lego-dark.svg">
+    <img src="./assets/arcade/heatmap-lego-light.svg" alt="LEGO Brick Workshop" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-16 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-17 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
