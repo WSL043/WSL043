@@ -1,7 +1,6 @@
 {
-  "current": "lego",
+  "current": "bomber",
   "remaining": [
-    "bomber",
     "miners",
     "link-match",
     "portal",
@@ -9,6 +8,6 @@
     "breakout"
   ],
   "cycle": 3,
-  "updated_on": "2026-09-17",
+  "updated_on": "2026-09-18",
   "catalog_version": 4
 }
