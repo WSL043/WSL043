@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: LEGO Brick Workshop
+## Today's Arcade: Heatmap Bomber
 
-Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.
+A tiny bomber finds safe routes through your green days, one wall at a time.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-lego-dark.svg">
-    <img src="./assets/arcade/heatmap-lego-light.svg" alt="LEGO Brick Workshop" width="100%">
+            srcset="./assets/arcade/heatmap-bomber-dark.svg">
+    <img src="./assets/arcade/heatmap-bomber-light.svg" alt="Heatmap Bomber" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-17 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-18 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
