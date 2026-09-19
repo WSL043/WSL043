@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Heatmap Bomber
+## Today's Arcade: Commit Miners
 
-A tiny bomber finds safe routes through your green days, one wall at a time.
+Two miners work through the whole calendar. Every ore tile is a real active day.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-bomber-dark.svg">
-    <img src="./assets/arcade/heatmap-bomber-light.svg" alt="Heatmap Bomber" width="100%">
+            srcset="./assets/arcade/heatmap-miners-dark.svg">
+    <img src="./assets/arcade/heatmap-miners-light.svg" alt="Commit Miners" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-18 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-19 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
