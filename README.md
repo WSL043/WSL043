@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Magnetic Assembly
+## Today's Arcade: Breakout 🧱
 
-Your calendar breaks into connected pieces, then clicks back into its exact original shape.
+A tiny paddle is clearing the year's contribution bricks.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-assembly-dark.svg">
-    <img src="./assets/arcade/heatmap-assembly-light.svg" alt="Magnetic Assembly" width="100%">
+            srcset="./assets/arcade/breakout-dark.svg">
+    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-22 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-23 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
