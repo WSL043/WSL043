@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "source": "github-graphql",
   "scenes": [
     "minecraft",
@@ -11,26 +11,26 @@
     "assembly"
   ],
   "analysis": {
-    "search-comparison.json": "08925cd8faaafdfc7d4313a0c843d4839c4fc578d41261b7fa882583c57a9a1f",
-    "search-comparison-dark.svg": "049a5a572f2c9cbde8c81fd80c44e4a5515805c0e51844f6fc9116ffb2d84fb8",
-    "search-comparison-light.svg": "e474c5495b735aa60a4c2c811ce6ce8283848960b92a39be50c1264120723d7b"
+    "search-comparison.json": "7865dc25921e2b961acee25b5e094ac54a4b86bf621e42f12e2c958150af5b5d",
+    "search-comparison-dark.svg": "f6d371c0bce895f12a0e91f490f958093f9e3ed090c308769733b8ea60023ba4",
+    "search-comparison-light.svg": "25705b631fbace5b69e53d50edd554e965fb312d7a9cacba796796d8e0b1dcd6"
   },
   "engine": "svg-v3",
-  "snapshot_sha256": "d6a157962bdac1ebbc66cdbefd129cc8fd280c8b9bebfeb77e85e68407602836",
+  "snapshot_sha256": "6a8e46367de8044b9f341fc23cfbc672af5b9b70c6a97722c2eaf0f84b3644f9",
   "assets": {
-    "heatmap-minecraft-dark.svg": "87a9a73685176c93b7cd241ca21c1766ae084740683441675279927100583727",
-    "heatmap-minecraft-light.svg": "9df83841a3d0b824fae9358edacd1468604ba392a5a7725f3c83933a14e76774",
-    "heatmap-lego-dark.svg": "a29214fa20108cf6e4096067c07144eca53aba79218ba3c45731ad60df10bcf6",
-    "heatmap-lego-light.svg": "c0764b1f8a349e3aecbcbc0f821cd9761df058528ef1f7af91459622797e9d3d",
-    "heatmap-bomber-dark.svg": "b46c03db1b060573db8502570ebd1a76f85e33a4966c8e308b152a6fa01fe5b3",
-    "heatmap-bomber-light.svg": "3eac44abf26130d2c425f4e453355288d316cc3912d2624bff4efd09ff04c660",
-    "heatmap-miners-dark.svg": "09af57202175b305da05c2af1062097d10665314b8124003358b4fe0a60afc60",
-    "heatmap-miners-light.svg": "ca61549c55065f37a0d1ef4e5bd7abfe4ad7b92fb87e2cd95888d1fe1d9917e9",
-    "heatmap-link-match-dark.svg": "7b44c63571f3274357e5c4570931e43c5bfac1011c6aa7dbde3d6912cf0fbe09",
-    "heatmap-link-match-light.svg": "f1dd46f3e56fe2d187f6661795bf16d6e6bb411ece9005c4e1fb85b61e6f99fc",
-    "heatmap-portal-dark.svg": "8fc6291ef9cf12ccbe653e173471b2fbbffe180e203f21ed251a091782bbd1fe",
-    "heatmap-portal-light.svg": "e676c8fddc55cc419cf5d335d94a8e58fb0f9fc45566fe5ff559e10582797882",
-    "heatmap-assembly-dark.svg": "d7b653af06f111ff47cca4e2e2aa5cafbea8663528541a44dd01d03921629c4d",
-    "heatmap-assembly-light.svg": "5c8edd6f8456f0f694b8d0f6cd11cbfb72acb1a81aea7f7193425b9e70b6dc0c"
+    "heatmap-minecraft-dark.svg": "4ff064b4c71cf5729ae14a8818ff7aee753dcd100825af093dbee895f46ff4bc",
+    "heatmap-minecraft-light.svg": "c4a3f5cda6810866f647ed14d32bda5b87e86ee5844ca9f26dfaefb1f58f8986",
+    "heatmap-lego-dark.svg": "9ee3bbc27e1440bf5e3eb704620deed112dbe090da346834822cefdeff7324f1",
+    "heatmap-lego-light.svg": "5d49d3a099fc223ff88faea116fb22b8505e179b9e0daddff9f0fd2fd5dad5c5",
+    "heatmap-bomber-dark.svg": "57b326be0b61ce861a2b898128fe2a5cb7c95239a64e2489831dd94a77fb3bcb",
+    "heatmap-bomber-light.svg": "e80c74164d10a648dd556904d119851aa7a1a867a2d07d4053398d9c54b16aaa",
+    "heatmap-miners-dark.svg": "6bae47b1c74f4b9dd609682e091d0ce8691b2ed535470817657825bcd62f3d86",
+    "heatmap-miners-light.svg": "b95abb6375799d7de24acc2dcfc216b6ea43d3e7f2762e86daafc47be964aa61",
+    "heatmap-link-match-dark.svg": "8cf81d436b259e482ea7c8fd9930ca835c38981c682e9c3e77e124b20ff4ba57",
+    "heatmap-link-match-light.svg": "9fcadc9947bb44cdfc77ebd368febe1a37f8c0466e416937870df4784642ea0e",
+    "heatmap-portal-dark.svg": "aa6f4c2f709ae467ed5c6d52200bf537ab97a130c617dd90995c131688f4cb82",
+    "heatmap-portal-light.svg": "1f877a6920c36222dac724de38bdccc519c4caa59c27f92ef791a2207262771f",
+    "heatmap-assembly-dark.svg": "b2732e9623bfb477f549b03c7a4e5d7777757e5e0e998d6a77e33a1864b22f3a",
+    "heatmap-assembly-light.svg": "0bc57543e8332243cc8ea71c1368b33b51d0b3638d3a1d2e0eb2bc081d60e6da"
   }
 }

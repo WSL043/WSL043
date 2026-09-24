@@ -1,7 +1,19 @@
 {
-  "current": "breakout",
-  "remaining": [],
-  "cycle": 3,
-  "updated_on": "2026-09-23",
+  "current": "minecraft",
+  "remaining": [
+    "3d-city",
+    "link-match",
+    "maze-chase",
+    "assembly",
+    "portal",
+    "miners",
+    "bomber",
+    "lego",
+    "breakout",
+    "space-shooter",
+    "snake"
+  ],
+  "cycle": 4,
+  "updated_on": "2026-09-24",
   "catalog_version": 4
 }
