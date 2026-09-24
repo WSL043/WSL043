@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Breakout 🧱
+## Today's Arcade: Minecraft Block Miner
 
-A tiny paddle is clearing the year's contribution bricks.
+Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/breakout-dark.svg">
-    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
+            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
+    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-23 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-24 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
