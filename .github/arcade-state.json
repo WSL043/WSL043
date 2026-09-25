@@ -1,7 +1,6 @@
 {
-  "current": "minecraft",
+  "current": "3d-city",
   "remaining": [
-    "3d-city",
     "link-match",
     "maze-chase",
     "assembly",
@@ -14,6 +13,6 @@
     "snake"
   ],
   "cycle": 4,
-  "updated_on": "2026-09-24",
+  "updated_on": "2026-09-25",
   "catalog_version": 4
 }
