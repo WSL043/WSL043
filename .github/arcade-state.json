@@ -1,7 +1,6 @@
 {
-  "current": "3d-city",
+  "current": "link-match",
   "remaining": [
-    "link-match",
     "maze-chase",
     "assembly",
     "portal",
@@ -13,6 +12,6 @@
     "snake"
   ],
   "cycle": 4,
-  "updated_on": "2026-09-25",
+  "updated_on": "2026-09-26",
   "catalog_version": 4
 }
