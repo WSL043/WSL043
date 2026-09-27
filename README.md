@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Contribution Link
+## Today's Arcade: Maze Chase 👻
 
-Match equal green levels through empty days, with no more than two turns.
+Dots, ghosts, and a full year of commits to chase.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-link-match-dark.svg">
-    <img src="./assets/arcade/heatmap-link-match-light.svg" alt="Contribution Link" width="100%">
+            srcset="./assets/arcade/maze-chase-dark.svg">
+    <img src="./assets/arcade/maze-chase-light.svg" alt="Maze Chase" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-26 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-27 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
