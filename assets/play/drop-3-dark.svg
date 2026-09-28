@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 64" role="img" aria-label="Drop a disc in column 3">
+<title>Drop a disc in column 3</title>
+<style></style>
+<rect x="3" y="3" width="94" height="58" rx="12" fill="#141b34" stroke="#59f3ff" stroke-width="3"/><path d="M37 16h26v10h9L50 42 28 26h9z" fill="#59f3ff"/><text x="50" y="56" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace" font-size="13" font-weight="700" fill="#e8ecff" text-anchor="middle" letter-spacing="0" >3</text>
+</svg>

@@ -73,7 +73,7 @@ def force_selection(state, selected):
     return {**state, 'current': selected, 'remaining': [n for n in state['remaining'] if n != selected]}
 
 
-def select_daily(state, day, requested='random', seed=''):
+def select_daily(state, day, requested='random', seed='', voted=None):
     day = valid_day(day)
     previous = state.get('updated_on', '')
     if re.fullmatch(r'\d{4}-\d{2}-\d{2}', previous) and previous > day:
@@ -81,14 +81,16 @@ def select_daily(state, day, requested='random', seed=''):
     if (requested == 'random' and previous == day and state.get('catalog_version') == CATALOG_VERSION
             and state.get('current') in ARCADE_EXPERIENCES):
         return state['current'], clean_state(state)
-    if requested == 'random':
+    if requested == 'random' and voted in ARCADE_EXPERIENCES:
+        selected, result = voted, force_selection(state, voted)
+    elif requested == 'random':
         selected, result = choose_next(state, random.Random(f'{day}:{seed}'))
     else:
         selected, result = requested, force_selection(state, requested)
     return selected, {**result, 'updated_on': day}
 
 
-def render_arcade_block(selected, day=None):
+def render_arcade_block(selected, day=None, voted=False):
     d = EXPERIENCE_DETAILS[selected]
     lines = [f"## Today's Arcade: {d['title']} {d['icon']}".rstrip(), '', d['description'], '',
              '<p align="center">', '  <picture>']
@@ -96,6 +98,8 @@ def render_arcade_block(selected, day=None):
         lines += ['    <source media="(prefers-color-scheme: dark)"', f'            srcset="{d["dark"]}">']
     lines += [f'    <img src="{d["light"]}" alt="{d["title"]}" width="100%">', '  </picture>', '</p>', '']
     stamp = f' · Updated {valid_day(day)} UTC' if day else ''
+    if voted:
+        stamp += ' · 🗳️ picked by visitor vote'
     lines += [f'<p align="center"><sub>{len(ARCADE_EXPERIENCES)} cartridges · a fresh daily draw · no back-to-back repeats{stamp}</sub></p>', '',
               '[Explore the SVG arcade](./ARCADE.md)']
     return '\n'.join(lines)
@@ -119,6 +123,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--state', type=Path, default=Path('.github/arcade-state.json'))
     p.add_argument('--readme', type=Path, default=Path('README.md'))
+    p.add_argument('--votes', type=Path, default=Path('data/votes.json'))
     p.add_argument('--output-dir', type=Path, default=Path('rotation-output'))
     p.add_argument('--seed', default=os.environ.get('GITHUB_REPOSITORY_OWNER', 'WSL043'))
     p.add_argument('--experience', choices=('random',)+ARCADE_EXPERIENCES, default='random')
@@ -127,16 +132,25 @@ def main():
     p.add_argument('--github-output', default=os.environ.get('GITHUB_OUTPUT'))
     p.add_argument('--date', default=os.environ.get('ARCADE_DATE', datetime.now(timezone.utc).date().isoformat()))
     args = p.parse_args()
-    selected, state = select_daily(read_state(args.state), args.date, args.experience, args.seed)
+    voted = None
+    new_day = read_state(args.state).get('updated_on') != args.date
+    if args.experience == 'random' and args.votes.is_file() and new_day:
+        try:
+            from scripts.play import vote_winner
+        except ModuleNotFoundError:
+            from play import vote_winner
+        prior = read_state(args.state)
+        voted = vote_winner(read_state(args.votes), prior.get('current'), random.Random(f'{args.date}:{args.seed}:vote'))
+    selected, state = select_daily(read_state(args.state), args.date, args.experience, args.seed, voted)
     readme = args.readme.read_text(encoding='utf-8')
     native = args.generation_mode == 'all' or args.refresh_native == 'true' or selected in NATIVE
     selection = {'selected': selected, 'mode': args.generation_mode, 'date': args.date,
-                 'refresh_native': args.refresh_native == 'true', 'engine': 'svg-v3',
+                 'refresh_native': args.refresh_native == 'true', 'engine': 'svg-v3', 'voted': voted == selected, 'new_day': new_day,
                  'readme_sha256': hashlib.sha256(readme.encode()).hexdigest()}
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for name, data in [('arcade-state.next.json', state), ('selection.json', selection)]:
         (args.output_dir/name).write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8')
-    (args.output_dir/'README.next.md').write_text(replace_arcade_block(readme, render_arcade_block(selected, args.date)), encoding='utf-8')
+    (args.output_dir/'README.next.md').write_text(replace_arcade_block(readme, render_arcade_block(selected, args.date, voted == selected)), encoding='utf-8')
     if args.github_output:
         with Path(args.github_output).open('a', encoding='utf-8') as out:
             for key, value in {'selected': selected, 'mode': args.generation_mode, 'native': str(native).lower()}.items():

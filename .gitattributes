@@ -1,3 +1,5 @@
 # Keep generated content hashes identical on Windows and Linux checkouts.
 /assets/arcade/*.json text eol=lf
 /assets/arcade/*.svg text eol=lf
+/assets/play/*.svg text eol=lf
+/data/*.json text eol=lf

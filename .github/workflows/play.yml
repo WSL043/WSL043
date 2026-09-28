@@ -1,0 +1,58 @@
+name: Arcade play
+# Visitors open an issue titled "arcade: drop 3" or "arcade: vote snake" from the profile buttons.
+# Every run drains all open arcade issues in order, so nothing is lost if runs queue up.
+on:
+  issues:
+    types: [opened]
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+concurrency:
+  group: arcade-play
+  cancel-in-progress: false
+permissions: {}
+jobs:
+  play:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'issues' || startsWith(github.event.issue.title, 'arcade:'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+      - name: Collect open arcade issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --state open --search 'arcade in:title' --limit 100 \
+            --json number,title,author > issues.json
+          echo "open arcade issues: $(python -c 'import json;print(len(json.load(open("issues.json"))))')"
+      - name: Play the moves
+        run: python -m scripts.play process --issues issues.json --results results.json
+      - name: Commit the new board
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data assets/play
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(play): update arcade board"
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+          done
+          echo 'Could not push; leaving issues open so the next run replays them.'
+          exit 1
+      - name: Answer and close the issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          for r in json.load(open('results.json')):
+              subprocess.run(['gh', 'issue', 'comment', str(r['number']), '--body', r['comment']], check=False)
+              subprocess.run(['gh', 'issue', 'close', str(r['number']), '--reason', 'completed'], check=False)
+          PY

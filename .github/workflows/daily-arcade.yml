@@ -262,15 +262,22 @@ jobs:
           merge-multiple: true
       - name: Reject stale checkout before publishing
         run: |
-          CURRENT="$(git ls-remote origin refs/heads/main | cut -f1)"
-          test "$CURRENT" = "$GITHUB_SHA" || { echo 'main changed during generation; keep the live profile'; exit 1; }
+          # Visitor moves (data/ and assets/play/) may land while we generate; anything else means a stale run.
+          git fetch --quiet --depth=200 origin main
+          CURRENT="$(git rev-parse FETCH_HEAD)"
+          if [ "$CURRENT" != "$GITHUB_SHA" ]; then
+            OTHER="$(git diff --name-only "$GITHUB_SHA" "$CURRENT" | grep -Ev '^(data/|assets/play/)' || true)"
+            test -z "$OTHER" || { echo 'main changed during generation; keep the live profile'; exit 1; }
+            git checkout --quiet "$CURRENT"
+          fi
       - name: Validate every SVG and source snapshot before staging
         run: python scripts/publish_arcade.py
       - name: Commit profile rotation
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md ARCADE.md .github/arcade-state.json assets/arcade
+          git add README.md ARCADE.md .github/arcade-state.json assets/arcade data assets/play
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "chore(profile): refresh full-calendar SVG arcade"
+          git pull --rebase origin main
           git push origin HEAD:main

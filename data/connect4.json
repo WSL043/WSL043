@@ -1,0 +1,21 @@
+{
+  "game": 1,
+  "grid": [
+    ".......",
+    ".......",
+    ".......",
+    ".......",
+    ".......",
+    "......."
+  ],
+  "last": null,
+  "players": {},
+  "record": {
+    "bot": 0,
+    "draws": 0,
+    "visitors": 0
+  },
+  "status": "playing",
+  "win": [],
+  "winner": null
+}

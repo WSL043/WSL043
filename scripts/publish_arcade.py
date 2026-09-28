@@ -10,10 +10,12 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 try:
     from scripts.rotate_arcade import ARCADE_EXPERIENCES, NATIVE
+    from scripts.play import load_json, new_state, render_all, reset_votes, save_json
     from scripts.svg_models import Calendar
     from scripts.search_race import ANALYSIS_FILES, comparison, render_comparison
 except ModuleNotFoundError:
     from rotate_arcade import ARCADE_EXPERIENCES, NATIVE
+    from play import load_json, new_state, render_all, reset_votes, save_json
     from svg_models import Calendar
     from search_race import ANALYSIS_FILES, comparison, render_comparison
 
@@ -142,6 +144,11 @@ def publish(root, staging):
     for source, destination in copies+[(next_readme, root/'README.md'), (next_state, root/'.github'/'arcade-state.json')]:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
+    if selection.get('new_day'):
+        # A new day starts a fresh ballot; the Connect Four game carries on untouched.
+        save_json(root/'data'/'votes.json', reset_votes(selection['date']))
+        render_all(load_json(root/'data'/'connect4.json', None) or new_state(), load_json(root/'data'/'votes.json', None),
+                   root/'assets'/'play', current=selected)
     if set(native) == set(NATIVE):
         for name in OLD_GIFS:
             (root/'assets'/'arcade'/name).unlink(missing_ok=True)
