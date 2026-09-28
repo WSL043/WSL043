@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Maze Chase 👻
+## Today's Arcade: Magnetic Assembly
 
-Dots, ghosts, and a full year of commits to chase.
+Your calendar breaks into connected pieces, then clicks back into its exact original shape.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/maze-chase-dark.svg">
-    <img src="./assets/arcade/maze-chase-light.svg" alt="Maze Chase" width="100%">
+            srcset="./assets/arcade/heatmap-assembly-dark.svg">
+    <img src="./assets/arcade/heatmap-assembly-light.svg" alt="Magnetic Assembly" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-27 UTC</sub></p>
+<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-28 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
