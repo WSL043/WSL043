@@ -10,6 +10,8 @@
   <a href="mailto:wangsr043@gmail.com">Say hello</a>
 </p>
 
+<p align="center"><a href="https://github.com/WSL043?tab=repositories"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/now-playing-dark.svg"><img src="./assets/showcase/now-playing-light.svg" alt="Now playing: the repository I pushed to most recently" width="100%"></picture></a></p>
+
 <!-- ARCADE:START -->
 ## Today's Arcade: Magnetic Assembly
 
@@ -30,15 +32,15 @@ Your calendar breaks into connected pieces, then clicks back into its exact orig
 
 ## Selected projects
 
-The products and systems I keep building, testing, and refining.
+The products and systems I keep building, testing, and refining. Cards redraw themselves every day.
 
-| Project | What I work on |
-| --- | --- |
-| [**DSH Portable**](https://github.com/WSL043/DSH-Portable) | A portable desktop distribution for Windows, macOS, and Linux. Runtime packaging, independent app / kernel updates, plugin integration, and preserving user data through upgrades. |
-| [**Codex Subscription for DSH**](https://github.com/WSL043/dsh-codex-subscription) | Subscription integration covering authentication, models, usage, search, and images. Account-state reconciliation, stale-response isolation, and diagnosable failure handling. |
-| [**LoudEase**](https://github.com/WSL043/loudease) | Local audio normalization for Chrome. An AudioWorklet DSP pipeline with gated loudness measurement, bounded quiet-detail lift, and look-ahead limiting. [Chrome Web Store](https://chromewebstore.google.com/detail/gdkaclfjhmenjhoemdkjlpafdhengjog) · Public beta. |
-| [**Updated Again**](https://github.com/WSL043/updated-again) | A self-updating software toy with signed daily capsules, a shared Web / PWA / Tauri update protocol, local rollback, and automated release recovery. [Try it](https://wsl043.github.io/updated-again/) · Developer preview. |
-| [**Agent Skills Neutral**](https://github.com/WSL043/agent-skills-neutral) | A vendor-neutral reasoning and workflow library. Compact runtime bundles, source provenance, held-out evaluation, and evidence-gated workflow evolution. |
+<p align="center">
+<a href="https://github.com/WSL043/DSH-Portable"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-DSH-Portable-dark.svg"><img src="./assets/showcase/card-DSH-Portable-light.svg" alt="DSH Portable" width="49%"></picture></a><a href="https://github.com/WSL043/dsh-codex-subscription"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-dsh-codex-subscription-dark.svg"><img src="./assets/showcase/card-dsh-codex-subscription-light.svg" alt="Codex Subscription for DSH" width="49%"></picture></a>
+<a href="https://github.com/WSL043/loudease"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-loudease-dark.svg"><img src="./assets/showcase/card-loudease-light.svg" alt="LoudEase" width="49%"></picture></a><a href="https://github.com/WSL043/updated-again"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-updated-again-dark.svg"><img src="./assets/showcase/card-updated-again-light.svg" alt="Updated Again" width="49%"></picture></a>
+<a href="https://github.com/WSL043/agent-skills-neutral"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-agent-skills-neutral-dark.svg"><img src="./assets/showcase/card-agent-skills-neutral-light.svg" alt="Agent Skills Neutral" width="49%"></picture></a><a href="https://github.com/WSL043?tab=repositories"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/card-more-dark.svg"><img src="./assets/showcase/card-more-light.svg" alt="Browse the whole workshop" width="49%"></picture></a>
+</p>
+
+<p align="center"><sub><a href="https://chromewebstore.google.com/detail/gdkaclfjhmenjhoemdkjlpafdhengjog">LoudEase on the Chrome Web Store</a> · <a href="https://wsl043.github.io/updated-again/">Try Updated Again</a></sub></p>
 
 [Design decisions and implementation notes →](./ENGINEERING.md)
 
