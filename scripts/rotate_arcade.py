@@ -12,10 +12,13 @@ from pathlib import Path
 
 NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
           'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
-LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city')
+NEW_LEGACY = ('3d-green', '3d-season', '3d-night', '3d-night-green', '3d-rainbow',
+              'galaga', 'bobble', 'bomberman', 'minesweeper', 'bricks',
+              'platformer', 'invaders', 'tetris', 'rain', 'life')
+LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city') + NEW_LEGACY
 RETIRED = ('defense', 'pinball', 'laser', 'gravity')
 ARCADE_EXPERIENCES = LEGACY + NATIVE
-CATALOG_VERSION = 5
+CATALOG_VERSION = 6
 EXPERIENCE_DETAILS = {
     'space-shooter': {'title': 'Space Shooter', 'icon': '🚀', 'description': "Today's contribution grid has entered bullet-hell mode.", 'light': './assets/arcade/space-shooter.gif'},
     'breakout': {'title': 'Breakout', 'icon': '🧱', 'description': "A tiny paddle is clearing the year's contribution bricks.", 'light': './assets/arcade/breakout-light.svg', 'dark': './assets/arcade/breakout-dark.svg'},
@@ -23,6 +26,28 @@ EXPERIENCE_DETAILS = {
     'maze-chase': {'title': 'Maze Chase', 'icon': '👻', 'description': 'Dots, ghosts, and a full year of commits to chase.', 'light': './assets/arcade/maze-chase-light.svg', 'dark': './assets/arcade/maze-chase-dark.svg'},
     '3d-city': {'title': '3D Contribution City', 'icon': '🏙️', 'description': "Today's commits have been rebuilt as a tiny skyline.", 'light': './assets/arcade/3d-city.svg'},
 }
+for key, title, icon, description in [
+    ('3d-green', '3D Contribution Bars', '🟩', 'Your year as isometric 3D bars that grow in shades of green.'),
+    ('3d-season', '3D Seasons', '🍃', 'Isometric 3D bars whose colours follow the seasons of the year.'),
+    ('3d-night', '3D Night View', '🌃', 'A night-time isometric plate of your year.'),
+    ('3d-night-green', '3D Night Green', '🌲', 'Green isometric bars on a night-time plate.'),
+    ('3d-rainbow', '3D Rainbow Night', '🌈', 'Night-mode 3D bars on a rainbow-lit plate.'),
+]:
+    EXPERIENCE_DETAILS[key] = {'title': title, 'icon': icon, 'description': description, 'light': f'./assets/arcade/{key}.svg'}
+for key, title, icon, description in [
+    ('galaga', 'Galaga', '👾', 'A fighter clears your contribution grid, one wave at a time.'),
+    ('bobble', 'Puzzle Bobble', '🫧', 'Bubbles in your contribution colours get popped by a bubble launcher.'),
+    ('bomberman', 'Bomberman', '💣', 'A bomber blasts through the green days of your year.'),
+    ('minesweeper', 'Minesweeper', '🚩', 'Your contribution grid gets swept, flag by flag.'),
+    ('bricks', 'Brick Breaker', '🏓', 'A paddle and ball chew through your contribution bricks.'),
+    ('platformer', 'Platformer', '🍄', 'A hero hops across your green days as platforms, collecting coins on the way to the flag.'),
+    ('invaders', 'Space Invaders', '👽', 'Your active days become invaders and a cannon shoots them down.'),
+    ('tetris', 'Falling Blocks', '🧩', 'Tetris-style pieces stack up until the year is complete.'),
+    ('rain', 'Digital Rain', '🌧️', 'Code rain cascades down and reveals your active days.'),
+    ('life', 'Game of Life', '🧬', "Conway's Game of Life seeded with your year."),
+]:
+    EXPERIENCE_DETAILS[key] = {'title': title, 'icon': icon, 'description': description,
+                               'light': f'./assets/arcade/{key}-light.svg', 'dark': f'./assets/arcade/{key}-dark.svg'}
 for key, title, description in [
     ('bomber', 'Heatmap Bomber', 'A tiny bomber finds safe routes through your green days, one wall at a time.'),
     ('miners', 'Commit Miners', 'Two miners work through the whole calendar. Every ore tile is a real active day.'),
@@ -55,7 +80,11 @@ def clean_state(state):
         current = None
     remaining = list(dict.fromkeys(n for n in state.get('remaining', []) if n in ARCADE_EXPERIENCES and n != current))
     if (state.get('current') is not None or state.get('remaining')) and state.get('catalog_version') != CATALOG_VERSION:
-        remaining = [n for n in NATIVE if n != current]+[n for n in remaining if n not in NATIVE]
+        known = set(remaining)|{current}
+        fresh_legacy = [n for n in NEW_LEGACY if n not in known]
+        random.Random(f'catalog-{CATALOG_VERSION}').shuffle(fresh_legacy)
+        remaining = ([n for n in NATIVE if n != current]+[n for n in fresh_legacy if n != current]
+                     +[n for n in remaining if n not in NATIVE and n not in NEW_LEGACY])
     return {**state, 'current': current, 'remaining': remaining,
             'cycle': max(0, int(state.get('cycle', 0))), 'catalog_version': CATALOG_VERSION}
 

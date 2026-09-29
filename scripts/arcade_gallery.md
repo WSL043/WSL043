@@ -119,9 +119,21 @@
   <img src="./assets/arcade/heatmap-claw-light.svg?v=autoplay-1" alt="抓娃娃机：机械爪逐个抓取活跃日期再放回" width="100%">
 </picture>
 
+## 外部生成器与致谢
+
+除了原生 SVG 引擎，抽卡池里还有 15 个来自开源生成器的玩法。它们都用固定提交号引用，作业只有只读权限，输出文件先落到临时目录，通过校验后才提交。
+
+| 生成器 | 许可 | 用到的玩法 |
+| --- | --- | --- |
+| [yoshi389111/github-profile-3d-contrib](https://github.com/yoshi389111/github-profile-3d-contrib) | MIT | 3D 贡献日历的 6 种主题：乐高方块、绿色生长、四季、夜景、夜景绿色、夜景彩虹。生成器会在旁边附带雷达图、语言环形图和统计文字，`scripts/trim_3d.py` 把它们去掉，只保留 3D 日历。 |
+| [abozanona/pacman-contribution-graph](https://github.com/abozanona/pacman-contribution-graph) | 见上游仓库 | Pac-Man（迷宫追逐）、Galaga、泡泡龙、炸弹人、扫雷、打砖块。 |
+| [Emanuel0428/contrib-arcade](https://github.com/Emanuel0428/contrib-arcade) | MIT | 平台跳跃、太空侵略者、俄罗斯方块式下落、数字雨、生命游戏。 |
+
+原有的 Space Shooter、Breakout、Snake 仍来自各自的上游项目。
+
 ## 每天更新什么
 
-原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上这里十三种，共 **18 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
+原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上上面 15 个外部玩法和这里十三种原生 SVG，共 **33 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
 
 正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这十三种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这十三张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
 
