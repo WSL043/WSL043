@@ -2,9 +2,6 @@ import json
 import unittest
 from pathlib import Path
 
-import re
-
-from scripts.svg_arcade import RENDERERS
 from scripts.svg_models import PLANNERS, Calendar
 
 FIXTURE = Path(__file__).parent/'fixtures'/'heatmap.json'
@@ -52,24 +49,30 @@ class NewSceneTests(unittest.TestCase):
         pads = PLANNERS['fireworks'](calendar(), 3)['pads']
         self.assertEqual(len(pads), len(set(pads)))
 
-    def test_skyline_rises_from_a_real_day_in_distance_order(self):
+    def test_isocity_rises_from_a_real_day_and_keeps_every_day_once(self):
         cal = calendar()
-        model = PLANNERS['skyline'](cal, 3)
+        model = PLANNERS['isocity'](cal, 3)
         self.assertIn(model['origin'], cal.active)
         self.assertEqual(model['order'][0], model['origin'])
         self.assertCountEqual(model['order'], cal.active)
+        for cell, _ in model['trees']:
+            self.assertEqual(cal.grid[cell], 0)
 
-    def test_perspective_scenes_approach_the_camera_monotonically(self):
+    def test_isodrop_has_one_cube_per_level_of_every_active_day(self):
         cal = calendar()
-        for name, gates in (('tunnel', cal.cols), ('neondrive', len(cal.active))):
-            draw = RENDERERS[name](cal, PLANNERS[name](cal, 3), 'dark')
-            approaching = 0
-            for track in draw.tracks:
-                scales = [float(m.group(1)) for _, props in sorted(track.items())[:-1]
-                          if 'transform' in props and (m := re.search(r'scale\(([\d.]+)\)', props['transform']))]
-                if len(scales) > 12 and all(b >= a-1e-9 for a, b in zip(scales, scales[1:])):
-                    approaching += 1
-            self.assertGreaterEqual(approaching, gates, name)
+        drops = PLANNERS['isodrop'](cal, 3)['drops']
+        self.assertEqual(len(drops), sum(cal.grid[p] for p in cal.active))
+        for p in cal.active:
+            self.assertEqual(sorted(k for q, k in drops if q == p), list(range(cal.grid[p])))
+
+    def test_layout_covers_the_calendar_without_overlap(self):
+        from scripts.svg_iso import layout, dims
+        for cols in (52, 53, 54):
+            cells = layout(cols)
+            self.assertEqual(len(cells), cols*7)
+            self.assertEqual(len(set(cells.values())), cols*7)
+            gx, gy, _ = dims(cols)
+            self.assertTrue(all(0 <= x < gx and 0 <= y < gy for x, y in cells.values()))
 
 
 if __name__ == '__main__':

@@ -11,10 +11,12 @@ from pathlib import Path
 try:
     from scripts.rotate_arcade import ARCADE_EXPERIENCES, NATIVE
     from scripts.svg_models import Calendar
+    from scripts.svg_arcade import HEIGHTS
     from scripts.search_race import ANALYSIS_FILES, comparison, render_comparison
 except ModuleNotFoundError:
     from rotate_arcade import ARCADE_EXPERIENCES, NATIVE
     from svg_models import Calendar
+    from svg_arcade import HEIGHTS
     from search_race import ANALYSIS_FILES, comparison, render_comparison
 
 ASSET_MAP = {
@@ -49,7 +51,7 @@ def validate_svg(path, scene, snapshot):
             if name.lower().startswith('on') or name.lower().endswith('href'):
                 raise ValueError('SVG contains an executable attribute')
     cal = Calendar.from_snapshot(snapshot)
-    if root.tag != namespace+'svg' or root.get('viewBox') != f'0 0 {cal.cols*16+48} 216':
+    if root.tag != namespace+'svg' or root.get('viewBox') != f'0 0 {cal.cols*16+48} {HEIGHTS.get(scene, 216)}':
         raise ValueError('SVG must display the whole calendar')
     meta_node = root.find(namespace+'metadata')
     if meta_node is None:

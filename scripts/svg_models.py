@@ -10,9 +10,11 @@ from datetime import date
 import math
 import random
 
+from scripts.svg_iso import layout
+
 Point = tuple[int, int]
 DIRS = ((1, 0), (0, 1), (-1, 0), (0, -1))
-SCENES = ('skyline', 'neondrive', 'tunnel', 'fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
+SCENES = ('isocity', 'isodrop', 'fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
           'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 
 
@@ -338,35 +340,39 @@ def claw(cal: Calendar, seed: int) -> dict:
     return {'scene': 'claw', 'order': order, 'levels': [cal.grid[p] for p in order]}
 
 
-def skyline(cal: Calendar, seed: int) -> dict:
-    # Towers rise in a wave from one real active day; window lights and sky details come from the seed.
+def isocity(cal: Calendar, seed: int) -> dict:
+    # The year as four city districts. Towers rise in a wave from one real active day; trees, traffic and
+    # sky details are decoration that never sits on an active plot.
     rng = random.Random(seed)
+    cells = layout(cal.cols)
     active = cal.active
     origin = rng.choice(active) if active else (0, 0)
-    order = sorted(active, key=lambda p: (math.hypot((p[0] - origin[0]) * 1.0, (p[1] - origin[1]) * 2.2), p))
-    return {'scene': 'skyline', 'origin': origin, 'order': order, 'levels': [cal.grid[p] for p in order],
-            'windows': [rng.getrandbits(12) for _ in order],
-            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(16)],
-            'beams': [rng.random() * 6.28, rng.random() * 6.28], 'plane': rng.choice((-1, 1))}
+    ox, oy = cells.get(origin, (0, 0))
+    order = sorted(active, key=lambda p: (math.hypot(cells[p][0] - ox, cells[p][1] - oy), p))
+    empty = [p for p in sorted(cells) if not cal.grid[p] and p not in cal.missing]
+    return {'scene': 'isocity', 'origin': origin, 'order': order, 'levels': [cal.grid[p] for p in order],
+            'windows': [rng.getrandbits(16) for _ in order],
+            'trees': [(p, rng.randint(0, 2)) for p in empty if rng.random() < .12],
+            'cars': [{'axis': axis, 'dir': direction, 'phase': rng.random() * 8, 'colour': rng.randrange(4),
+                      'speed': rng.choice((2.4, 3.0, 3.6))}
+                     for axis in ('x', 'y') for direction in (1, -1, 1)],
+            'clouds': [(rng.random(), rng.random()) for _ in range(4)],
+            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(22)]}
 
 
-def neondrive(cal: Calendar, seed: int) -> dict:
-    # Perspective road: weeks are depth, weekdays are lanes. Seed picks speed, sway and the star field.
+def isodrop(cal: Calendar, seed: int) -> dict:
+    # Each active day is a stack of one cube per level, dropped from the sky one cube at a time.
     rng = random.Random(seed)
-    return {'scene': 'neondrive', 'speed': rng.choice((1.1, 1.25, 1.4)),
-            'phases': [rng.random() * 6.28 for _ in range(4)],
-            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(18)]}
-
-
-def tunnel(cal: Calendar, seed: int) -> dict:
-    # Every week is a seven-sided gate; the camera flies through all of them with a gentle sway and roll.
-    rng = random.Random(seed)
-    return {'scene': 'tunnel', 'speed': rng.choice((1.0, 1.15, 1.3)),
-            'phases': [rng.random() * 6.28 for _ in range(6)],
-            'stars': [(rng.random() * 6.2832, rng.uniform(6, 26), rng.uniform(2.4, 4.6), rng.random()) for _ in range(40)]}
+    cells = layout(cal.cols)
+    drops = [(p, k) for p in cal.active for k in range(cal.grid[p])]
+    rng.shuffle(drops)
+    empty = [p for p in sorted(cells) if not cal.grid[p] and p not in cal.missing]
+    return {'scene': 'isodrop', 'drops': drops, 'trees': [(p, rng.randint(0, 2)) for p in empty if rng.random() < .12], 'clouds': [(rng.random(), rng.random()) for _ in range(4)],
+            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(22)],
+            'wave': rng.choice((0, 1, 2, 3))}
 
 
 PLANNERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
             'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego,
             'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw,
-            'skyline': skyline, 'neondrive': neondrive, 'tunnel': tunnel}
+            'isocity': isocity, 'isodrop': isodrop}

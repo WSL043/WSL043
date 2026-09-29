@@ -7,7 +7,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from scripts.svg_models import Calendar, PLANNERS, DIRS, blast, link_path
-from scripts.svg_arcade import RENDERERS, render
+from scripts.svg_arcade import HEIGHTS, RENDERERS, render
 from scripts.publish_arcade import validate_svg
 
 FIXTURE = Path(__file__).parent/'fixtures'/'heatmap.json'
@@ -160,7 +160,7 @@ class ModelTests(unittest.TestCase):
                     self.assertFalse(any(model['final'].values()))
                 raw = render(cal, name, 4, model=model)
                 self.assertLess(len(raw.encode()), 3_000_000)
-                self.assertIn('viewBox="0 0 912 216"', raw)
+                self.assertIn(f'viewBox="0 0 912 {HEIGHTS.get(name, 216)}"', raw)
 
 
 class RenderingTests(unittest.TestCase):
@@ -174,7 +174,7 @@ class RenderingTests(unittest.TestCase):
                     path = Path(directory)/'test.svg'
                     path.write_text(raw, encoding='utf-8')
                     validate_svg(path, name, snapshot)
-                    self.assertIn('viewBox="0 0 896 216"', raw)
+                    self.assertIn(f'viewBox="0 0 896 {HEIGHTS.get(name, 216)}"', raw)
                     for forbidden in ('<image', '<script', '<foreignObject', 'base64', '.gif', '@import'):
                         self.assertNotIn(forbidden, raw)
 
