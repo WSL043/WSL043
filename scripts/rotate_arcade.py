@@ -10,11 +10,12 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-NATIVE = ('minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
+NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
+          'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city')
 RETIRED = ('defense', 'pinball', 'laser', 'gravity')
 ARCADE_EXPERIENCES = LEGACY + NATIVE
-CATALOG_VERSION = 4
+CATALOG_VERSION = 5
 EXPERIENCE_DETAILS = {
     'space-shooter': {'title': 'Space Shooter', 'icon': '🚀', 'description': "Today's contribution grid has entered bullet-hell mode.", 'light': './assets/arcade/space-shooter.gif'},
     'breakout': {'title': 'Breakout', 'icon': '🧱', 'description': "A tiny paddle is clearing the year's contribution bricks.", 'light': './assets/arcade/breakout-light.svg', 'dark': './assets/arcade/breakout-dark.svg'},
@@ -30,6 +31,12 @@ for key, title, description in [
     ('assembly', 'Magnetic Assembly', 'Your calendar breaks into connected pieces, then clicks back into its exact original shape.'),
     ('minecraft', 'Minecraft Block Miner', 'Mine your green days into grass blocks, collect them, then rebuild the whole calendar.'),
     ('lego', 'LEGO Brick Workshop', 'Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.'),
+    ('fireworks', 'Firework Show', 'The calendar goes dark, then rockets relight every active day in a burst of colour.'),
+    ('domino', 'Domino Ripple', 'One tap sends a shock wave through the year: every tile topples, then stands back up.'),
+    ('dust', 'Pixel Dust', 'Your green days crumble into drifting dust, then pull themselves back together.'),
+    ('sorter', 'Level Sorter', 'Every active day flies into the bin for its level, revealing your real activity histogram.'),
+    ('synth', 'Heatmap Synth', 'A playhead sweeps the year like a sequencer; every green day pulses as it plays.'),
+    ('claw', 'Claw Machine', 'A claw plucks your contribution days one by one, then drops them back in place.'),
 ]:
     EXPERIENCE_DETAILS[key] = {'title': title, 'icon': '', 'description': description,
         'light': f'./assets/arcade/heatmap-{key}-light.svg', 'dark': f'./assets/arcade/heatmap-{key}-dark.svg'}
