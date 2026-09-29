@@ -65,11 +65,65 @@
   <img src="./assets/arcade/heatmap-miners-light.svg?v=autoplay-1" alt="SVG 采矿小队：双矿工将完整贡献热图开采完毕" width="100%">
 </picture>
 
+## 烟花秀 · Firework Show
+
+日历先熄灯，再由五个发射台随机打出烟花，逐个点亮每一个真实的活跃日期，颜色等级不变。每日种子改变发射台与点亮顺序；没有多出任何一天。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-fireworks-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-fireworks-light.svg?v=autoplay-1" alt="烟花秀：黑场后火箭逐个点亮真实活跃日期" width="100%">
+</picture>
+
+## 多米诺涟漪 · Domino Ripple
+
+从一个真实活跃日期出发，冲击波按距离推倒整年的格子，倒下再依次扶起。涟漪圈的半径就是格子间的实际距离，格子身份和颜色不变。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-domino-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-domino-light.svg?v=autoplay-1" alt="多米诺涟漪：冲击波推倒并扶起整张热图" width="100%">
+</picture>
+
+## 像素尘埃 · Pixel Dust
+
+从左到右，绿格子化作飘散的碎屑，再一格一格聚回原位。飘散方向和旋转由每日种子决定，聚回时颜色与位置完全复原。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-dust-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-dust-light.svg?v=autoplay-1" alt="像素尘埃：热图化作粉尘再重新聚合" width="100%">
+</picture>
+
+## 等级分拣 · Level Sorter
+
+每个活跃日期飞进对应等级的收纳格，底部四个格子的数量就是你真实的活跃等级分布，随后全部飞回原位。不新增日期，也不改变等级。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-sorter-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-sorter-light.svg?v=autoplay-1" alt="等级分拣：日期按活跃等级飞入四个收纳格" width="100%">
+</picture>
+
+## 热图合成器 · Heatmap Synth
+
+播放头以三种速度、来回扫过整年，被扫到的绿格子脉冲发亮，下方每周一根音柱，高度等于当周真实活跃等级之和。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-synth-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-synth-light.svg?v=autoplay-1" alt="热图合成器：播放头扫过热图，格子与音柱随之脉冲" width="100%">
+</picture>
+
+## 抓娃娃机 · Claw Machine
+
+天车爪沿轨道移动，只抓每列最上面的格子，避免穿过其他格子；抓起后运到右下奖品箱，全部抓完再逐格放回原位。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-claw-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-claw-light.svg?v=autoplay-1" alt="抓娃娃机：机械爪逐个抓取活跃日期再放回" width="100%">
+</picture>
+
 ## 每天更新什么
 
-原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上这里七种，共 **12 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
+原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上这里十三种，共 **18 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
 
-正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这七种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这七张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
+正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这十三种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这十三张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
 
 数据决定每个格子的位置及 0–4 活跃等级；账号、UTC 日期和玩法决定动作种子。它是每日生成的快照动画，不是刷新浏览器就实时抓数据。同色等级内的贡献次数增加不一定改变地图，也不保证每次日期种子变化都肉眼明显。没有新增活跃日时不会凭空填格；没有任何活跃日时显示空日历。
 
@@ -77,13 +131,13 @@
 
 ## 画面与边界
 
-这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的七种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
+这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的十三种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
 
 仍然是自动播放的热图演出，不支持按键操作。小游戏不修改真实贡献记录。墙耐久、矿粒和配对规则属于模拟规则，不是精确提交次数；仅使用可访问的日期和等级，不展示私有仓库内容。
 
 ## 维护
 
-Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新七种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
+Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新十三种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
 
 只有发布作业有 `contents: write`。提交前检查源日期、SHA-256、矢量元素白名单、完整日历画幅与主分支是否被更新；不强制推送。项目介绍不改。原生 SVG 引擎只用 Python 标准库；飞船等原有外部生成器保留各自依赖。
 
