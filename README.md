@@ -13,19 +13,19 @@
 <p align="center"><a href="https://github.com/WSL043?tab=repositories"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/showcase/now-playing-dark.svg"><img src="./assets/showcase/now-playing-light.svg" alt="Now playing: the repository I pushed to most recently" width="100%"></picture></a></p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Portal Courier
+## Today's Arcade: Firework Show
 
-Your contribution tiles take the long way home, through a pair of portals.
+The calendar goes dark, then rockets relight every active day in a burst of colour.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-portal-dark.svg">
-    <img src="./assets/arcade/heatmap-portal-light.svg" alt="Portal Courier" width="100%">
+            srcset="./assets/arcade/heatmap-fireworks-dark.svg">
+    <img src="./assets/arcade/heatmap-fireworks-light.svg" alt="Firework Show" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>12 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-29 UTC</sub></p>
+<p align="center"><sub>33 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-29 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
