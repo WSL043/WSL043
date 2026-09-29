@@ -7,11 +7,13 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
 from datetime import date
+import math
 import random
 
 Point = tuple[int, int]
 DIRS = ((1, 0), (0, 1), (-1, 0), (0, -1))
-SCENES = ('minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
+SCENES = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
+          'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 
 
 @dataclass
@@ -268,5 +270,74 @@ def lego(cal: Calendar, seed: int) -> dict:
     return {'scene': 'lego', 'pieces': pieces}
 
 
+def fireworks(cal: Calendar, seed: int) -> dict:
+    # Rockets relight real active days in a shuffled order from five launch pads.
+    rng = random.Random(seed)
+    order = cal.active[:]
+    rng.shuffle(order)
+    pads = sorted(rng.sample(range(2, max(8, cal.cols - 2)), 5))
+    return {'scene': 'fireworks', 'order': order, 'levels': [cal.grid[p] for p in order], 'pads': pads}
+
+
+def domino(cal: Calendar, seed: int) -> dict:
+    # A shock wave from one real active day topples every tile by distance, then stands them up again.
+    rng = random.Random(seed)
+    active = cal.active
+    origin = rng.choice(active) if active else (0, 0)
+    order = sorted(active, key=lambda p: (math.hypot(p[0] - origin[0], p[1] - origin[1]), p))
+    return {'scene': 'domino', 'origin': origin, 'order': order, 'lean': rng.choice((-1, 1)),
+            'levels': [cal.grid[p] for p in order]}
+
+
+def dust(cal: Calendar, seed: int) -> dict:
+    # Left-to-right disintegration with per-tile drift; the same tiles re-form afterwards.
+    rng = random.Random(seed)
+    order = sorted(cal.active, key=lambda p: (p[0] + rng.random() * 6, p[1]))
+    drift = [(rng.randint(18, 44), -rng.randint(8, 34), rng.choice((-1, 1)) * rng.randint(60, 200)) for _ in order]
+    return {'scene': 'dust', 'order': order, 'drift': drift, 'levels': [cal.grid[p] for p in order]}
+
+
+def sorter(cal: Calendar, seed: int) -> dict:
+    # Each active day flies into the bin of its own level; bin counts are the real level histogram.
+    rng = random.Random(seed)
+    order = cal.active[:]
+    rng.shuffle(order)
+    counts, slots = [0, 0, 0, 0], []
+    for p in order:
+        level = cal.grid[p] - 1
+        slots.append((level, counts[level]))
+        counts[level] += 1
+    return {'scene': 'sorter', 'order': order, 'slots': slots, 'counts': counts}
+
+
+def synth(cal: Calendar, seed: int) -> dict:
+    # A playhead sweeps the whole calendar three times at different tempos and directions.
+    rng = random.Random(seed)
+    direction = rng.choice((1, -1))
+    passes = []
+    for tempo in rng.sample((0.12, 0.16, 0.2, 0.24), 3):
+        passes.append({'dir': direction, 'tempo': tempo})
+        direction = -direction
+    return {'scene': 'synth', 'passes': passes}
+
+
+def claw(cal: Calendar, seed: int) -> dict:
+    # Nearest-neighbour route over tiles that are the top of their column, so the claw never passes through one.
+    rng = random.Random(seed)
+    remaining = set(cal.active)
+    order, current = [], None
+    while remaining:
+        free = sorted(p for p in remaining if not any((p[0], y) in remaining for y in range(p[1])))
+        if current is None:
+            nxt = rng.choice(free)
+        else:
+            nxt = min(free, key=lambda p: (abs(p[0] - current[0]) + .5 * abs(p[1] - current[1]), p))
+        order.append(nxt)
+        remaining.remove(nxt)
+        current = nxt
+    return {'scene': 'claw', 'order': order, 'levels': [cal.grid[p] for p in order]}
+
+
 PLANNERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
-            'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego}
+            'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego,
+            'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw}

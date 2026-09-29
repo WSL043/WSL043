@@ -114,7 +114,7 @@ class RotationTests(unittest.TestCase):
     def test_migration_removes_retired_and_prioritizes_svg(self):
         selected, state = rotation.choose_next({'current': 'defense', 'remaining': ['pinball', 'laser', 'gravity', 'snake'], 'catalog_version': 2}, random.Random(2))
         self.assertIn(selected, rotation.NATIVE)
-        self.assertEqual(set([selected]+state['remaining']), set(rotation.NATIVE+('snake',)))
+        self.assertEqual(set([selected]+state['remaining']), set(rotation.NATIVE+('snake',)+rotation.NEW_LEGACY))
         self.assertEqual(state['catalog_version'], rotation.CATALOG_VERSION)
 
     def test_three_hundred_complete_bags_no_repeats(self):
