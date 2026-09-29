@@ -119,11 +119,38 @@
   <img src="./assets/arcade/heatmap-claw-light.svg?v=autoplay-1" alt="抓娃娃机：机械爪逐个抓取活跃日期再放回" width="100%">
 </picture>
 
+## 等距天际线 · Isometric Skyline
+
+整年长成一座 3D 城市：塔楼从一个真实活跃日出发按距离逐层升起，等级越高楼越高，窗户依次点亮，夜空里探照灯来回扫射、飞机划过，最后楼群收回地面。每个格子仍是一个真实日期。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-skyline-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-skyline-light.svg?v=autoplay-1" alt="等距天际线：贡献日长成立体城市" width="100%">
+</picture>
+
+## 霓虹公路 · Neon Drive
+
+合成波风格的第一人称公路：每一周是一段路，周几是七条车道，活跃日是路上的霓虹方块，远处山脉就是你每周真实的活跃总量。路面网格随车身左右摇摆产生透视，路边的月份路牌随车驶过。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-neondrive-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-neondrive-light.svg?v=autoplay-1" alt="霓虹公路：透视公路穿过整年贡献" width="100%">
+</picture>
+
+## 曲速隧道 · Warp Tunnel
+
+每一周是一道七边形闸门，周几对应七个顶点，活跃日发光成块。镜头带着轻微摇摆与翻滚穿越全部 53 道闸门，远小近大的真透视，月份起点的闸门更亮并标注月份。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-tunnel-dark.svg?v=autoplay-1">
+  <img src="./assets/arcade/heatmap-tunnel-light.svg?v=autoplay-1" alt="曲速隧道：穿越每周一道的七边形闸门" width="100%">
+</picture>
+
 ## 每天更新什么
 
-原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上这里十三种，共 **18 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
+原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上这里十六种，共 **21 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
 
-正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这十三种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这十三张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
+正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这十六种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这十六张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
 
 数据决定每个格子的位置及 0–4 活跃等级；账号、UTC 日期和玩法决定动作种子。它是每日生成的快照动画，不是刷新浏览器就实时抓数据。同色等级内的贡献次数增加不一定改变地图，也不保证每次日期种子变化都肉眼明显。没有新增活跃日时不会凭空填格；没有任何活跃日时显示空日历。
 
@@ -131,13 +158,13 @@
 
 ## 画面与边界
 
-这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的十三种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
+这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的十六种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
 
 仍然是自动播放的热图演出，不支持按键操作。小游戏不修改真实贡献记录。墙耐久、矿粒和配对规则属于模拟规则，不是精确提交次数；仅使用可访问的日期和等级，不展示私有仓库内容。
 
 ## 维护
 
-Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新十三种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
+Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新十六种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
 
 只有发布作业有 `contents: write`。提交前检查源日期、SHA-256、矢量元素白名单、完整日历画幅与主分支是否被更新；不强制推送。项目介绍不改。原生 SVG 引擎只用 Python 标准库；飞船等原有外部生成器保留各自依赖。
 

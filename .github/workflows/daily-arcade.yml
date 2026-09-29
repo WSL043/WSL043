@@ -26,6 +26,9 @@ on:
           - assembly
           - minecraft
           - lego
+          - skyline
+          - neondrive
+          - tunnel
           - fireworks
           - domino
           - dust
@@ -33,12 +36,12 @@ on:
           - synth
           - claw
       generate_all:
-        description: Refresh all eighteen experiences including external generators
+        description: Refresh all twenty-one experiences including external generators
         required: true
         default: false
         type: boolean
       refresh_native:
-        description: Refresh all thirteen SVG experiences from a fresh calendar
+        description: Refresh all sixteen SVG experiences from a fresh calendar
         required: true
         default: true
         type: boolean

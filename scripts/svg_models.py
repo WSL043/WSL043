@@ -12,7 +12,7 @@ import random
 
 Point = tuple[int, int]
 DIRS = ((1, 0), (0, 1), (-1, 0), (0, -1))
-SCENES = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
+SCENES = ('skyline', 'neondrive', 'tunnel', 'fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
           'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 
 
@@ -338,6 +338,35 @@ def claw(cal: Calendar, seed: int) -> dict:
     return {'scene': 'claw', 'order': order, 'levels': [cal.grid[p] for p in order]}
 
 
+def skyline(cal: Calendar, seed: int) -> dict:
+    # Towers rise in a wave from one real active day; window lights and sky details come from the seed.
+    rng = random.Random(seed)
+    active = cal.active
+    origin = rng.choice(active) if active else (0, 0)
+    order = sorted(active, key=lambda p: (math.hypot((p[0] - origin[0]) * 1.0, (p[1] - origin[1]) * 2.2), p))
+    return {'scene': 'skyline', 'origin': origin, 'order': order, 'levels': [cal.grid[p] for p in order],
+            'windows': [rng.getrandbits(12) for _ in order],
+            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(16)],
+            'beams': [rng.random() * 6.28, rng.random() * 6.28], 'plane': rng.choice((-1, 1))}
+
+
+def neondrive(cal: Calendar, seed: int) -> dict:
+    # Perspective road: weeks are depth, weekdays are lanes. Seed picks speed, sway and the star field.
+    rng = random.Random(seed)
+    return {'scene': 'neondrive', 'speed': rng.choice((1.1, 1.25, 1.4)),
+            'phases': [rng.random() * 6.28 for _ in range(4)],
+            'stars': [(rng.random(), rng.random(), rng.random() * 3) for _ in range(18)]}
+
+
+def tunnel(cal: Calendar, seed: int) -> dict:
+    # Every week is a seven-sided gate; the camera flies through all of them with a gentle sway and roll.
+    rng = random.Random(seed)
+    return {'scene': 'tunnel', 'speed': rng.choice((1.0, 1.15, 1.3)),
+            'phases': [rng.random() * 6.28 for _ in range(6)],
+            'stars': [(rng.random() * 6.2832, rng.uniform(6, 26), rng.uniform(2.4, 4.6), rng.random()) for _ in range(40)]}
+
+
 PLANNERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
             'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego,
-            'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw}
+            'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw,
+            'skyline': skyline, 'neondrive': neondrive, 'tunnel': tunnel}

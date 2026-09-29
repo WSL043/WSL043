@@ -10,7 +10,7 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
+NATIVE = ('skyline', 'neondrive', 'tunnel', 'fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw',
           'minecraft', 'lego', 'bomber', 'miners', 'link-match', 'portal', 'assembly')
 LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city')
 RETIRED = ('defense', 'pinball', 'laser', 'gravity')
@@ -31,6 +31,9 @@ for key, title, description in [
     ('assembly', 'Magnetic Assembly', 'Your calendar breaks into connected pieces, then clicks back into its exact original shape.'),
     ('minecraft', 'Minecraft Block Miner', 'Mine your green days into grass blocks, collect them, then rebuild the whole calendar.'),
     ('lego', 'LEGO Brick Workshop', 'Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.'),
+    ('skyline', 'Isometric Skyline', 'Your year rises as a 3D city: towers grow in a wave, windows light up, searchlights sweep the night.'),
+    ('neondrive', 'Neon Drive', 'A synthwave road trip through your contribution year, with your weekly activity as the mountain range.'),
+    ('tunnel', 'Warp Tunnel', 'Fly through a tunnel of weekly gates in true perspective, with every active day glowing on the walls.'),
     ('fireworks', 'Firework Show', 'The calendar goes dark, then rockets relight every active day in a burst of colour.'),
     ('domino', 'Domino Ripple', 'One tap sends a shock wave through the year: every tile topples, then stands back up.'),
     ('dust', 'Pixel Dust', 'Your green days crumble into drifting dust, then pull themselves back together.'),

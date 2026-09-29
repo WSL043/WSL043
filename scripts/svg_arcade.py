@@ -15,11 +15,13 @@ THEMES = {
     'light': ('#ffffff', '#ebedf0', '#d0d7de', '#57606a',
               ('#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39')),
 }
+FONT = 'ui-monospace,monospace'
 NAMES = {'bomber': 'Heatmap Bomber', 'miners': 'Commit Miners',
          'link-match': 'Contribution Link', 'portal': 'Portal Courier',
          'assembly': 'Magnetic Assembly', 'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop',
          'fireworks': 'Firework Show', 'domino': 'Domino Ripple', 'dust': 'Pixel Dust',
-         'sorter': 'Level Sorter', 'synth': 'Heatmap Synth', 'claw': 'Claw Machine'}
+         'sorter': 'Level Sorter', 'synth': 'Heatmap Synth', 'claw': 'Claw Machine',
+         'skyline': 'Isometric Skyline', 'neondrive': 'Neon Drive', 'tunnel': 'Warp Tunnel'}
 
 
 def num(value):
@@ -639,9 +641,272 @@ def claw(cal, model, theme):
     return draw
 
 
+def mix(colour, other, amount):
+    a = [int(colour[i:i+2], 16) for i in (1, 3, 5)]
+    b = [int(other[i:i+2], 16) for i in (1, 3, 5)]
+    return '#'+''.join(f'{round(x+(y-x)*amount):02x}' for x, y in zip(a, b))
+
+
+def depth_samples(far, near, count):
+    """Geometrically spaced depths: scale = 1/depth changes by a constant ratio between samples."""
+    return [far*(near/far)**(k/count) for k in range(count+1)]
+
+
+def month_starts(cal):
+    names = ('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
+    result, last = {}, None
+    for x, raw in enumerate(cal.weeks):
+        month = date.fromisoformat(raw).month
+        if month != last:
+            result[x] = names[month-1]
+            last = month
+    return result
+
+
+def skyline(cal, model, theme):
+    dark = theme == 'dark'
+    order, windows, n = model['order'], model['windows'], len(model['order'])
+    sweep = min(14, 4+n*.1)
+    rise0 = 1.5
+    hold0 = rise0+sweep+1.3
+    fall0 = hold0+10
+    finish = fall0+sweep*.8+1.2
+    draw = Drawing(cal, 'skyline', theme, finish+1.5)
+    w = draw.width
+    ground = {p: (24+16*p[0], 68+17*p[1]) for p in cal.grid if p not in cal.missing}
+    # Sky: banded dusk, stars, and a moon (or sun by day).
+    sky = ('#0b1330', '#101a3d', '#172250', '#22306a') if dark else ('#bfe3ff', '#d3ecff', '#e6f4ff', '#f5faff')
+    for i, colour in enumerate(sky):
+        draw.parts.append(f'<rect x="0" y="{i*17}" width="{w}" height="18" fill="{colour}"/>')
+    draw.parts.append(f'<rect x="0" y="66" width="{w}" height="150" fill="{"#0f1626" if dark else "#dfe9f5"}"/>')
+    for sx, sy, phase in model['stars']:
+        star = f'<circle cx="{num(30+sx*(w-60))}" cy="{num(6+sy*40)}" r="1" fill="{"#e8ecff" if dark else "#ffffff"}"/>'
+        draw.parts.append(draw.animated(star, [(phase+1, {'opacity': '.25'}), (phase+2, {'opacity': '1'}), (phase+3, {'opacity': '.25'})], {'opacity': '.6'}))
+    moon = '#e8ecff' if dark else '#ffd166'
+    draw.parts.append(f'<circle cx="{w-70}" cy="30" r="11" fill="{moon}"/><circle cx="{w-74}" cy="27" r="2.4" fill="{mix(moon, "#8b95c9", .35)}"/>'
+                      f'<circle cx="{w-66}" cy="34" r="1.8" fill="{mix(moon, "#8b95c9", .35)}"/>')
+    plate = ''.join(f'M{x-6} {y}h12l4 -4h-12z' for x, y in ground.values())
+    draw.parts.append(f'<path d="{plate}" fill="{draw.empty}"/>')
+    for i, (p, level, bits) in enumerate(zip(order, model['levels'], windows)):
+        x, y = ground[p]
+        height = level*9.5
+        rise = rise0+i/max(1, n)*sweep
+        fall = fall0+i/max(1, n)*sweep*.8
+        front = draw.green[level]
+        squash = lambda s: f'translate({num(x)}px,{num(y)}px) rotate(0deg) scale(1,{num(max(.001, s))})'
+        base_scale = {'transform': squash(.001)}
+        curve = [(rise, .001), (rise+.7, 1.14), (rise+1.05, 1), (fall, 1), (fall+.8, .001)]
+        draw.parts.append(draw.animated(
+            f'<rect x="-6" y="{num(-height)}" width="12" height="{num(height)}" fill="{front}" data-day="{p[0]},{p[1]}"/>',
+            [(t, {'transform': squash(s)}) for t, s in curve], base_scale))
+        draw.parts.append(draw.animated(
+            f'<path d="M6 0L10 -4V{num(-height-4)}L6 {num(-height)}z" fill="{mix(front, "#000000", .38)}"/>',
+            [(t, {'transform': squash(s)}) for t, s in curve], base_scale))
+        top = f'<path d="M-6 0H6L10 -4H-2z" fill="{mix(front, "#ffffff", .32)}"/>'
+        top_at = lambda s: f'translate({num(x)}px,{num(y-height*s)}px) rotate(0deg) scale(1)'
+        draw.parts.append(draw.animated(top, [(t, {'transform': top_at(s)}) for t, s in curve], {'transform': top_at(0)}))
+        panes, row = [], 0
+        for yy in range(-4, int(-height+2), -5):
+            for k, xx in enumerate((-4, 1)):
+                if bits >> ((row*2+k) % 12) & 1:
+                    panes.append(f'M{xx} {yy}h2.6v-2.6h-2.6z')
+            row += 1
+        if panes:
+            lit = rise+1.4
+            body = f'<path d="{"".join(panes)}" fill="#ffd166"/>'
+            at = {'transform': f'translate({num(x)}px,{num(y)}px)'}
+            draw.parts.append(draw.animated(body, [(lit, {**at, 'opacity': '0'}), (lit+.25, {**at, 'opacity': '1'}),
+                                                   (lit+5+(bits % 5), {**at, 'opacity': '.45'}), (lit+5.6+(bits % 5), {**at, 'opacity': '1'}),
+                                                   (fall, {**at, 'opacity': '1'}), (fall+.3, {**at, 'opacity': '0'})],
+                                             {**at, 'opacity': '0'}))
+    for k, phase in enumerate(model['beams']):
+        bx = w*(.22+.56*k)
+        beam = f'<path d="M0 0L-12 -120H12z" fill="#ffffff" opacity="{".13" if dark else ".35"}"/>'
+        frames = [(hold0+j*.5, {'transform': f'translate({num(bx)}px,164px) rotate({num(30*math.sin(phase+j*.55*(1 if k else -1)))}deg)', 'opacity': '1'})
+                  for j in range(int(9/.5)+1)]
+        base = {'transform': f'translate({num(bx)}px,164px) rotate(0deg)', 'opacity': '0'}
+        draw.parts.append(draw.animated(beam, [(hold0-.4, base)]+frames+[(fall0, {**frames[-1][1], 'opacity': '0'})], base))
+    d = model['plane']
+    start, end = (-20, w+20) if d == 1 else (w+20, -20)
+    plane = ('<ellipse rx="8" ry="2.2" fill="#c9d1d9"/><path d="M-6 0L-11 -5L-8 0z" fill="#c9d1d9"/>'
+             '<circle cx="9" cy="0" r="1.3" fill="#ff5c5c"/>')
+    fly0 = hold0+1
+    draw.parts.append(draw.animated(plane, [
+        (fly0, {'transform': f'translate({start}px,26px) scale({d},1)', 'opacity': '1'}),
+        (fly0+7, {'transform': f'translate({end}px,20px) scale({d},1)', 'opacity': '1'}),
+        (fly0+7.1, {'transform': f'translate({end}px,20px) scale({d},1)', 'opacity': '0'})],
+        {'transform': f'translate({start}px,26px) scale({d},1)', 'opacity': '0'}))
+    draw.parts.append(caption('SKYLINE / BUILD THE YEAR'))
+    return draw
+
+
+def neondrive(cal, model, theme):
+    cols, dark = cal.cols, theme == 'dark'
+    v, dfar, dnear = model['speed'], 15., .8
+    end = .05+(cols-1+dfar-dnear)/v
+    draw = Drawing(cal, 'neondrive', theme, end+2)
+    w = draw.width
+    vpx, vpy, focal, cam_h = w/2, 90, 170., .62
+    pink, cyan = ('#ff2e97', '#22d3ee') if dark else ('#c0166f', '#0a8fb0')
+    p1, p2, p3, p4 = model['phases']
+
+    def sway(t):
+        return .38*math.sin(6.2832*t/9+p1)+.17*math.sin(6.2832*t/5.3+p2)
+
+    sky = ('#090418', '#150a35', '#2a0f52', '#4a1268', '#7a1a78', '#b02a7d') if dark else ('#ffd6ec', '#ffddef', '#ffe4d6', '#ffecc7', '#fff3cf', '#fff8dd')
+    band = vpy/len(sky)
+    for i, colour in enumerate(sky):
+        draw.parts.append(f'<rect x="0" y="{num(i*band)}" width="{w}" height="{num(band+1)}" fill="{colour}"/>')
+    for sx, sy, phase in model['stars']:
+        star = f'<circle cx="{num(sx*w)}" cy="{num(sy*44+6)}" r="1" fill="#ffffff"/>'
+        draw.parts.append(draw.animated(star, [(phase+1, {'opacity': '.3'}), (phase+2, {'opacity': '1'}), (phase+3, {'opacity': '.3'})], {'opacity': '.7' if dark else '.0'}))
+    sun_r, sun_y = 38, vpy-4
+    draw.parts.append(f'<circle cx="{num(vpx)}" cy="{sun_y}" r="{sun_r}" fill="{"#ff9f45" if dark else "#ffb347"}"/>')
+    for k in range(7):
+        dy = 4+k*5
+        half = math.sqrt(max(0, sun_r**2-dy**2))
+        draw.parts.append(f'<rect x="{num(vpx-half)}" y="{sun_y+dy}" width="{num(2*half)}" height="{num(1+k*.55)}" fill="{sky[-1]}"/>')
+    sums = [sum(cal.grid[c, r] for r in range(7)) for c in range(cols)]
+    peak = max(max(sums), 1)
+    ridge = ''.join(f'L{24+16*c} {num(vpy-4-24*sums[c]/peak)}' for c in range(cols))
+    draw.parts.append(f'<path d="M0 {vpy}L0 {vpy-4}{ridge}L{w} {vpy-4}L{w} {vpy}z" fill="{"#1a0838" if dark else "#e9c9f7"}" stroke="{pink}" stroke-width="1.2" stroke-linejoin="round"/>')
+    draw.parts.append(f'<rect x="0" y="{vpy}" width="{w}" height="{216-vpy}" fill="{"#0a0420" if dark else "#f7e9ff"}"/>')
+    # Ground grid: lateral camera sway is an exact horizontal shear about the horizon.
+    bottom = focal*cam_h/(216-vpy)
+    lines = ''.join(f'M0 0L{num(focal*x/bottom)} {216-vpy}' for x in range(-9, 10))
+    road = f'M{num(-3.5*focal/bottom)} {216-vpy}L0 0L{num(3.5*focal/bottom)} {216-vpy}z'
+    times = [(i+1)*.5 for i in range(int((end+1.5)/.5))]
+    shear = [math.degrees(math.atan2(-sway(t), cam_h)) for t in times]
+    grid_body = (f'<path d="{road}" fill="{pink}" opacity=".07"/><path d="{lines}" stroke="{pink}" stroke-width="1" opacity=".55" fill="none"/>')
+    frames = [(t, {'transform': f'translate({num(vpx)}px,{vpy}px) skewX({num(a)}deg)'}) for t, a in zip(times, shear)]
+    rest = {'transform': f'translate({num(vpx)}px,{vpy}px) skewX({num(shear[0])}deg)'}
+    draw.parts.append(draw.animated(grid_body, frames+[(draw.duration-.02, rest)], rest))
+    ds = depth_samples(dfar, dnear, 22)
+    for k in range(cols+int(dfar)+1):
+        line = f'<rect x="{-w}" y="0" width="{3*w}" height="1" fill="{pink}"/>'
+        frames = []
+        for d in ds:
+            t = .05+(k+dfar-d)/v
+            frames.append((t, {'transform': f'translate(0px,{num(vpy+focal*cam_h/d)}px) rotate(0deg) scale(1,{num(min(2.6, max(.7, 2.4/d)))})',
+                               'opacity': num(max(0, min(.9, (dfar-d)/4, (d-dnear)/.5)))}))
+        if frames[-1][0] < 0 or frames[0][0] > end+1.9:
+            continue
+        frames = [(min(t, end+1.9), pr) for t, pr in frames]
+        draw.parts.append(draw.animated(line, frames, {'transform': f'translate(0px,{vpy}px) rotate(0deg) scale(1,.7)', 'opacity': '0'}))
+    signs = month_starts(cal)
+    items = [('sign', c) for c in signs]+[('tile', p) for p in cal.active]
+    for kind, item in sorted(items, key=lambda it: -(it[1] if it[0] == 'sign' else it[1][0])):
+        c = item if kind == 'sign' else item[0]
+        if kind == 'sign':
+            x_world = -4.4
+            body = (f'<path d="M0 0V{-.75*focal}" stroke="{cyan}" stroke-width="5"/>'
+                    f'<text x="0" y="{-.82*focal}" font-family="{FONT}" font-size="{.42*focal}" font-weight="700" fill="{cyan}" text-anchor="middle" style="fill:{cyan}">{signs[c]}</text>')
+        else:
+            x_world = item[1]-3
+            level = cal.grid[item]
+            half, hgt = .36*focal, .46*focal
+            colour = mix(draw.green[level], '#7dffb3', .3) if dark else draw.green[level]
+            body = (f'<rect x="{num(-half-9)}" y="{num(-hgt-9)}" width="{num(2*half+18)}" height="{num(hgt+9)}" rx="10" fill="{cyan}" opacity=".22"/>'
+                    f'<rect x="{num(-half)}" y="{num(-hgt)}" width="{num(2*half)}" height="{num(hgt)}" fill="{colour}" stroke="{cyan}" stroke-width="5" data-day="{item[0]},{item[1]}"/>'
+                    f'<path d="M{num(-half)} {num(-hgt)}l7 -14h{num(2*half-14)}l7 14z" fill="{mix(colour, "#ffffff", .35)}"/>')
+        frames = []
+        for d in ds:
+            t = .05+(c+dfar-d)/v
+            cx = sway(t)
+            appear = max(0, min(1, (dfar-d)/4))
+            leave = max(0, min(1, (d-.8)/.35)) if d < 1.15 else 1
+            frames.append((t, {'transform': f'translate({num(vpx+focal*(x_world-cx)/d)}px,{num(vpy+focal*cam_h/d)}px) rotate(0deg) scale({num(1/d)})',
+                               'opacity': num(min(appear, leave))}))
+        draw.parts.append(draw.animated(body, frames, {'transform': f'translate({vpx}px,{vpy}px) rotate(0deg) scale(.05)', 'opacity': '0'}))
+    # Retro car, seen from behind; it leans into the sway.
+    car = (f'<rect x="-30" y="-9" width="60" height="12" rx="4" fill="{pink}"/>'
+           f'<path d="M-20 -9L-13 -20H13L20 -9z" fill="{mix(pink, "#000000", .35)}"/>'
+           '<rect x="-27" y="-7" width="11" height="5" rx="2" fill="#ff3b3b"/><rect x="16" y="-7" width="11" height="5" rx="2" fill="#ff3b3b"/>'
+           '<rect x="-27" y="3" width="10" height="5" rx="1.5" fill="#111"/><rect x="17" y="3" width="10" height="5" rx="1.5" fill="#111"/>')
+    tilt = [(t, {'transform': f'translate({num(vpx+sway(t)*-3)}px,198px) rotate({num(-sway(t)*3)}deg)'}) for t in times]
+    rest_car = dict(tilt[0][1])
+    draw.parts.append(draw.animated(car, tilt+[(draw.duration-.02, rest_car)], rest_car))
+    draw.parts.append(caption('NEON DRIVE / CRUISE THE YEAR'))
+    return draw
+
+
+def tunnel(cal, model, theme):
+    cols, dark = cal.cols, theme == 'dark'
+    v, dfar, dnear, steps = model['speed'], 18., .34, 18
+    end = .05+(cols-1+dfar-dnear)/v
+    draw = Drawing(cal, 'tunnel', theme, end+2)
+    w = draw.width
+    cxs, cys, radius, focal = w/2, 106, 62., 2.1
+    a1, a2, a3, a4, a5, a6 = model['phases']
+    if not dark:
+        draw.parts.append(f'<rect x="0" y="0" width="{w}" height="216" fill="#0d1230"/>')
+    else:
+        draw.parts.append(f'<rect x="0" y="0" width="{w}" height="216" fill="#05070f"/>')
+
+    def cam(t):
+        return (26*math.sin(6.2832*t/11+a1)+12*math.sin(6.2832*t/4.7+a2),
+                18*math.sin(6.2832*t/8.3+a3)+9*math.sin(6.2832*t/3.9+a4),
+                7*math.sin(6.2832*t/13+a5)+3*math.sin(6.2832*t/5.1+a6))
+    palette = (draw.cyan, draw.accent, '#b98cff', '#7dff9b', '#ff8fa3')
+    signs = month_starts(cal)
+    # Stars streak outward from the vanishing point in repeating cycles.
+    for angle, r0, cycle, phase in model['stars']:
+        ca, sa = math.cos(angle), math.sin(angle)
+        frames, t = [], .1+phase*cycle
+        while t+cycle < end+1.9:
+            for u, op in ((0, 0), (.35, .55), (.75, .95), (1, 0)):
+                r = r0+(360-r0)*u**2.4
+                frames.append((t+u*cycle, {'transform': f'translate({num(cxs+ca*r)}px,{num(cys+sa*r*.62)}px) rotate({num(math.degrees(angle))}deg) scale({num(.4+u*1.6)})', 'opacity': num(op)}))
+            t += cycle
+        if frames:
+            base = {'transform': f'translate({num(cxs)}px,{cys}px) rotate(0deg) scale(.4)', 'opacity': '0'}
+            draw.parts.append(draw.animated(f'<rect x="-5" y="-.6" width="10" height="1.2" rx=".6" fill="{"#ffffff"}"/>', frames, base))
+    ds = depth_samples(dfar, dnear, steps)
+    colour_by_week, current = {}, -1
+    for x in range(cols):
+        if x in signs:
+            current += 1
+        colour_by_week[x] = palette[max(current, 0) % len(palette)]
+    for c in range(cols-1, -1, -1):
+        tint = colour_by_week[c]
+        verts = [(radius*math.cos(math.radians(-90+r*360/7)), radius*math.sin(math.radians(-90+r*360/7))) for r in range(7)]
+        frame = 'M'+'L'.join(f'{num(x)} {num(y)}' for x, y in verts)+'z'
+        spokes = ''.join(f'M{num(x)} {num(y)}L{num(x*.8)} {num(y*.8)}' for x, y in verts)
+        body = [f'<path d="{frame}" fill="none" stroke="{tint}" stroke-width="{4 if c in signs else 2.4}" stroke-linejoin="round" opacity=".85"/>',
+                f'<path d="{spokes}" stroke="{tint}" stroke-width="1.6" opacity=".45" fill="none"/>']
+        for r, (x, y) in enumerate(verts):
+            if (c, r) in cal.missing:
+                continue
+            angle = -90+r*360/7+90
+            level = cal.grid[c, r]
+            if level:
+                body.append(f'<g transform="translate({num(x)} {num(y)}) rotate({num(angle)})">'
+                            f'<rect x="-13" y="-13" width="26" height="26" rx="5" fill="{tint}" opacity=".25"/>'
+                            f'<rect x="-9" y="-9" width="18" height="18" rx="2.5" fill="{draw.green[level]}" stroke="{tint}" stroke-width="1.6" data-day="{c},{r}"/></g>')
+            else:
+                body.append(f'<rect x="{num(x-3)}" y="{num(y-3)}" width="6" height="6" rx="1" fill="{tint}" opacity=".4"/>')
+        if c in signs:
+            body.append(f'<text x="0" y="{-radius-14}" font-family="{FONT}" font-size="15" font-weight="700" fill="{tint}" text-anchor="middle" style="fill:{tint}">{signs[c]}</text>')
+        frames = []
+        for d in ds:
+            t = .05+(c+dfar-d)/v
+            camx, camy, roll = cam(t)
+            s = focal/d
+            rad = math.radians(roll)
+            tx = cxs-s*(camx*math.cos(rad)-camy*math.sin(rad))
+            ty = cys-s*(camx*math.sin(rad)+camy*math.cos(rad))
+            appear = max(0, min(1, (dfar-d)/6))
+            leave = max(0, min(1, (d-dnear)/.3)) if d < .65 else 1
+            frames.append((t, {'transform': transform(tx, ty, s, roll), 'opacity': num(min(appear, leave))}))
+        draw.parts.append(draw.animated(''.join(body), frames, {'transform': transform(cxs, cys, .05, 0), 'opacity': '0'}))
+    draw.parts.append(caption('WARP / FLY THROUGH THE YEAR'))
+    return draw
+
+
 RENDERERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
              'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego,
-             'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw}
+             'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw,
+             'skyline': skyline, 'neondrive': neondrive, 'tunnel': tunnel}
 
 
 def render(cal: Calendar, scene: str, seed: int, theme='dark', model=None) -> str:

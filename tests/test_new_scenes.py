@@ -2,6 +2,9 @@ import json
 import unittest
 from pathlib import Path
 
+import re
+
+from scripts.svg_arcade import RENDERERS
 from scripts.svg_models import PLANNERS, Calendar
 
 FIXTURE = Path(__file__).parent/'fixtures'/'heatmap.json'
@@ -48,6 +51,25 @@ class NewSceneTests(unittest.TestCase):
     def test_fireworks_pads_are_distinct_columns(self):
         pads = PLANNERS['fireworks'](calendar(), 3)['pads']
         self.assertEqual(len(pads), len(set(pads)))
+
+    def test_skyline_rises_from_a_real_day_in_distance_order(self):
+        cal = calendar()
+        model = PLANNERS['skyline'](cal, 3)
+        self.assertIn(model['origin'], cal.active)
+        self.assertEqual(model['order'][0], model['origin'])
+        self.assertCountEqual(model['order'], cal.active)
+
+    def test_perspective_scenes_approach_the_camera_monotonically(self):
+        cal = calendar()
+        for name, gates in (('tunnel', cal.cols), ('neondrive', len(cal.active))):
+            draw = RENDERERS[name](cal, PLANNERS[name](cal, 3), 'dark')
+            approaching = 0
+            for track in draw.tracks:
+                scales = [float(m.group(1)) for _, props in sorted(track.items())[:-1]
+                          if 'transform' in props and (m := re.search(r'scale\(([\d.]+)\)', props['transform']))]
+                if len(scales) > 12 and all(b >= a-1e-9 for a, b in zip(scales, scales[1:])):
+                    approaching += 1
+            self.assertGreaterEqual(approaching, gates, name)
 
 
 if __name__ == '__main__':
