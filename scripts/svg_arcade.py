@@ -5,6 +5,7 @@ from datetime import date
 from html import escape
 import hashlib
 import json
+import math
 from pathlib import Path
 from scripts.svg_models import Calendar, PLANNERS, DIRS
 
@@ -16,7 +17,9 @@ THEMES = {
 }
 NAMES = {'bomber': 'Heatmap Bomber', 'miners': 'Commit Miners',
          'link-match': 'Contribution Link', 'portal': 'Portal Courier',
-         'assembly': 'Magnetic Assembly', 'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop'}
+         'assembly': 'Magnetic Assembly', 'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop',
+         'fireworks': 'Firework Show', 'domino': 'Domino Ripple', 'dust': 'Pixel Dust',
+         'sorter': 'Level Sorter', 'synth': 'Heatmap Synth', 'claw': 'Claw Machine'}
 
 
 def num(value):
@@ -407,8 +410,238 @@ def lego(cal, model, theme):
     return draw
 
 
+def lone_tile(draw, p, frames):
+    """One real active day as a single tile track; every frame states all animated properties."""
+    x, y = xy(p)
+    normal = {'transform': transform(x, y), 'opacity': '1', 'fill': draw.green[draw.cal.grid[p]]}
+    tile = f'<rect x="-6" y="-6" width="12" height="12" rx="2" data-day="{p[0]},{p[1]}"/>'
+    draw.parts.append(draw.animated(tile, [(t, {**normal, **props}) for t, props in frames], normal))
+    return normal
+
+
+def caption(text):
+    return f'<text x="24" y="211">{text}</text>'
+
+
+def fireworks(cal, model, theme):
+    order, n = model['order'], len(model['order'])
+    step = min(.3, 50/max(1, n))
+    first, fly = 2.4, .55
+    finish = first+n*step+fly+1.4
+    draw = Drawing(cal, 'fireworks', theme, finish+4)
+    colours = (draw.accent, draw.cyan, '#ff8fa3' if theme == 'dark' else '#cf222e')
+    pads = [xy((c, 0))[0] for c in model['pads']]
+    for x in pads:
+        draw.parts.append(f'<rect x="{x-8}" y="198" width="16" height="5" rx="2" fill="{draw.line}"/>')
+    for i, p in enumerate(order):
+        x, y = xy(p)
+        at = first+i*step
+        boom = at+fly
+        colour = colours[i % 3]
+        dark = {'opacity': '0', 'transform': transform(x, y, .7)}
+        lit = {'opacity': '1', 'transform': transform(x, y, 1.45)}
+        blackout = .9+x/draw.width*.7
+        lone_tile(draw, p, [(blackout, {}), (blackout+.35, dark), (boom-.02, dark), (boom, lit),
+                            (boom+.4, {'transform': transform(x, y, 1)})])
+        pad = min(pads, key=lambda v: abs(v-x))
+        angle = math.degrees(math.atan2(x-pad, 198-y))
+        rocket = (f'<circle r="2.4" fill="{colour}"/>'
+                  f'<path d="M0 2v10" stroke="{colour}" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>')
+        draw.parts.append(draw.animated(rocket, [
+            (at, {'transform': transform(pad, 196, 1, angle), 'opacity': '1'}),
+            (boom, {'transform': transform(x, y, 1, angle), 'opacity': '1'}),
+            (boom+.04, {'opacity': '0', 'transform': transform(x, y, 1, angle)})],
+            {'transform': transform(pad, 196, 1, angle), 'opacity': '0'}))
+        ring = f'<circle r="5" fill="none" stroke="{colour}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>'
+        draw.parts.append(draw.animated(ring, [
+            (boom, {'transform': transform(x, y, .3), 'opacity': '.95'}),
+            (boom+.45, {'transform': transform(x, y, 2.4), 'opacity': '0'})],
+            {'transform': transform(x, y, .3), 'opacity': '0'}))
+        draw.spark(p, boom, colour)
+    draw.parts.append(caption('FIREWORKS / RELIGHT THE YEAR'))
+    return draw
+
+
+def domino(cal, model, theme):
+    order, origin, lean = model['order'], model['origin'], model['lean']
+    speed, fall0 = .11, 1.8
+    dist = {p: math.hypot(p[0]-origin[0], p[1]-origin[1]) for p in order}
+    far = max(dist.values(), default=0)
+    rise0 = fall0+far*speed+3
+    finish = rise0+far*speed+1.2
+    draw = Drawing(cal, 'domino', theme, finish+3)
+    for p in order:
+        x, y = xy(p)
+        fall, rise = fall0+dist[p]*speed, rise0+dist[p]*speed
+        down = {'transform': transform(x+4*lean, y+4, .92, 84*lean), 'opacity': '.45'}
+        lone_tile(draw, p, [(fall, {}), (fall+.14, {'transform': transform(x+2*lean, y+2, 1, 38*lean)}),
+                            (fall+.32, down), (rise, down),
+                            (rise+.16, {'transform': transform(x+lean, y+1, 1.05, 30*lean), 'opacity': '.8'}),
+                            (rise+.34, {'transform': transform(x, y, 1.12)}), (rise+.5, {})])
+    ox, oy = xy(origin)
+    for start, colour in ((fall0, draw.accent), (rise0, draw.cyan)):
+        ring = f'<circle r="1" fill="none" stroke="{colour}" stroke-width="2" vector-effect="non-scaling-stroke"/>'
+        draw.parts.append(draw.animated(ring, [
+            (start, {'transform': transform(ox, oy, .5), 'opacity': '.9'}),
+            (start+far*speed+.3, {'transform': transform(ox, oy, far*16+24), 'opacity': '0'})],
+            {'transform': transform(ox, oy, .5), 'opacity': '0'}))
+    draw.spark(origin, fall0, draw.accent)
+    draw.parts.append(caption('DOMINO / RIPPLE EFFECT'))
+    return draw
+
+
+def dust(cal, model, theme):
+    order, drift, n = model['order'], model['drift'], len(model['order'])
+    sweep = min(22, max(6, n*.12))
+    snap0 = 2
+    back0 = snap0+sweep+3.5
+    finish = back0+sweep+1.8
+    draw = Drawing(cal, 'dust', theme, finish+3)
+    for i, (p, (dx, dy, rot)) in enumerate(zip(order, drift)):
+        x, y = xy(p)
+        gone = snap0+i/max(1, n)*sweep
+        back = back0+i/max(1, n)*sweep
+        away = {'transform': transform(x+dx, y+dy, .25, rot), 'opacity': '0'}
+        near = {'transform': transform(x-dx*.4, y-dy*.4+8, .25, -rot*.5), 'opacity': '0'}
+        lone_tile(draw, p, [(gone, {}), (gone+.25, {'transform': transform(x+3, y-2, .95, 6), 'opacity': '.8'}),
+                            (gone+1.2, away), (back, near),
+                            (back+.9, {'transform': transform(x, y, 1.1)}), (back+1.05, {})])
+        mote = f'<rect x="-1.5" y="-1.5" width="3" height="3" fill="{draw.green[cal.grid[p]]}"/>'
+        draw.parts.append(draw.animated(mote, [
+            (gone+.1, {'transform': transform(x, y), 'opacity': '.9'}),
+            (gone+1.5, {'transform': transform(x+dx*1.9, y+dy*1.5, .6, rot*2), 'opacity': '0'})],
+            {'transform': transform(x, y), 'opacity': '0'}))
+        draw.spark(p, back+.9, draw.cyan)
+    draw.parts.append(caption('PIXEL DUST / SNAP AND REFORM'))
+    return draw
+
+
+def sorter(cal, model, theme):
+    order, slots, counts = model['order'], model['slots'], model['counts']
+    n = len(order)
+    step = min(.22, 45/max(1, n))
+    out0 = 2
+    back0 = out0+n*step+4
+    finish = back0+n*step+1.6
+    draw = Drawing(cal, 'sorter', theme, finish+3)
+    gap = 12
+    binw = (draw.width-48-3*gap)/4
+    peak = max(counts)
+    # Largest mini-tile pitch at which the fullest bin still fits in about five rows.
+    pitch = next((m for m in (8, 7, 6, 5, 4.4) if int((binw-10)/m)*int(34/m) >= peak), 4.4)
+    per_row = max(1, int((binw-10)/pitch))
+    mini = (pitch-.9)/12
+    for b in range(4):
+        x0 = 24+b*(binw+gap)
+        draw.parts.append(f'<rect x="{num(x0)}" y="160" width="{num(binw)}" height="42" rx="5" fill="{draw.empty}" stroke="{draw.line}" stroke-width="1.5"/>')
+        draw.parts.append(f'<text x="{num(x0)}" y="213">LEVEL {b+1} · {counts[b]} days</text>')
+    for i, (p, (b, k)) in enumerate(zip(order, slots)):
+        home = xy(p)
+        slot = (24+b*(binw+gap)+8+pitch/2+(k % per_row)*pitch, 197-pitch/2-(k//per_row)*pitch)
+        out, back = out0+i*step, back0+(n-1-i)*step
+        frames = [(out, {})]
+        for j in range(1, 7):
+            t = ease(j/6)
+            pt = bezier(home, (home[0], 150), (slot[0], 150), slot, t)
+            frames.append((out+j/6*.9, {'transform': transform(*pt, 1+(mini-1)*t, 180*t)}))
+        frames.append((back, {'transform': transform(*slot, mini, 180)}))
+        for j in range(1, 7):
+            t = ease(j/6)
+            pt = bezier(slot, (slot[0], 152), (home[0], 152), home, t)
+            frames.append((back+j/6*.9, {'transform': transform(*pt, mini+(1-mini)*t, 180*(1-t))}))
+        lone_tile(draw, p, frames+[(back+1.0, {'transform': transform(*home, 1.08)}), (back+1.15, {})])
+        draw.spark(p, back+.95, draw.cyan)
+    return draw
+
+
+def synth(cal, model, theme):
+    cols = cal.cols
+    sweeps, clock = [], 1.5
+    for ps in model['passes']:
+        sweeps.append((clock, ps['dir'], ps['tempo']))
+        clock += cols*ps['tempo']+1.2
+    finish = clock+.6
+    draw = Drawing(cal, 'synth', theme, finish+2)
+    xs = [xy((c, 0))[0] for c in range(cols)]
+    frames = []
+    for start, direction, tempo in sweeps:
+        a, b = (xs[0], xs[-1]) if direction == 1 else (xs[-1], xs[0])
+        frames += [(start-.05, {'transform': transform(a, 38), 'opacity': '0'}), (start, {'transform': transform(a, 38), 'opacity': '1'}),
+                   (start+cols*tempo, {'transform': transform(b, 38), 'opacity': '1'}),
+                   (start+cols*tempo+.2, {'transform': transform(b, 38), 'opacity': '0'})]
+    head = (f'<rect x="-6" y="0" width="12" height="118" fill="{draw.cyan}" opacity=".16"/>'
+            f'<rect x="-1.2" y="0" width="2.4" height="118" rx="1" fill="{draw.cyan}"/>')
+    draw.parts.append(draw.animated(head, frames, {'transform': transform(xs[0], 38), 'opacity': '0'}))
+    sums = [sum(cal.grid[c, r] for r in range(7)) for c in range(cols)]
+    peak = max(max(sums), 1)
+    for c in range(cols):
+        height = max(3, 24*sums[c]/peak)
+        base = {'transform': f'translate({num(xs[c])}px,200px) rotate(0deg) scale(1,1)', 'opacity': '.35'}
+        bar = f'<rect x="-3.5" y="{num(-height)}" width="7" height="{num(height)}" rx="2" fill="{draw.accent}"/>'
+        bar_frames = []
+        for start, direction, tempo in sweeps:
+            hit = start+(c if direction == 1 else cols-1-c)*tempo
+            pulse = {'transform': f'translate({num(xs[c])}px,200px) rotate(0deg) scale(1,1.5)', 'opacity': '1'}
+            bar_frames += [(hit-.02, base), (hit+.05, pulse), (hit+.4, base)]
+        draw.parts.append(draw.animated(bar, bar_frames, base))
+    for p in cal.active:
+        x, y = xy(p)
+        pulses = []
+        for start, direction, tempo in sweeps:
+            hit = start+(p[0] if direction == 1 else cols-1-p[0])*tempo
+            pulses += [(hit-.02, {}), (hit+.04, {'transform': transform(x, y, 1.55), 'fill': draw.cyan}), (hit+.3, {})]
+        lone_tile(draw, p, pulses)
+    draw.parts.append(caption('SYNTH / PLAY THE YEAR'))
+    return draw
+
+
+def claw(cal, model, theme):
+    order, n = model['order'], len(model['order'])
+    s = min(.9, 60/max(1, n))
+    first = 1.5
+    finish = first+n*s+.8
+    draw = Drawing(cal, 'claw', theme, finish+5)
+    chute = draw.width-30
+    draw.parts.append(f'<rect x="16" y="14" width="{draw.width-32}" height="3" rx="1.5" fill="{draw.line}"/>')
+    draw.parts.append(f'<rect x="{chute-20}" y="174" width="40" height="32" rx="5" fill="{draw.empty}" stroke="{draw.line}" stroke-width="1.5"/>')
+    draw.parts.append(f'<text x="{chute-20}" y="213">PRIZES</text>')
+    head_frames, cable_frames = [], []
+
+    def place(t, x, yh):
+        head_frames.append((t, {'transform': transform(x, yh), 'opacity': '1'}))
+        cable_frames.append((t, {'transform': f'translate({num(x)}px,15px) rotate(0deg) scale(1,{num(max(1, yh-15))})', 'opacity': '1'}))
+
+    for i, p in enumerate(order):
+        x, y = xy(p)
+        t = first+i*s
+        place(t, chute, 22)
+        place(t+.3*s, x, 22)
+        place(t+.5*s, x, y-9)
+        place(t+.56*s, x, y-9)
+        place(t+.78*s, x, 22)
+        place(t+s, chute, 22)
+        restore = finish+.8+i/max(1, n)*1.4
+        pop = {'opacity': '0', 'transform': transform(x, y+5, .35)}
+        lone_tile(draw, p, [(t+.5*s, {}), (t+.56*s, {'transform': transform(x, y)}),
+                            (t+.78*s, {'transform': transform(x, 31)}), (t+s, {'transform': transform(chute, 31)}),
+                            (t+s+.18, {'transform': transform(chute, 190, .7)}), (t+s+.26, {'opacity': '0', 'transform': transform(chute, 190, .7)}),
+                            (restore, pop), (restore+.04, {**pop, 'opacity': '.45'}), (restore+.4, {})])
+        draw.spark(p, t+.53*s, draw.accent)
+    place(finish, chute, 22)
+    head_frames.append((finish+.4, {'transform': transform(chute, 22), 'opacity': '0'}))
+    cable_frames.append((finish+.4, {'transform': f'translate({num(chute)}px,15px) rotate(0deg) scale(1,7)', 'opacity': '0'}))
+    cable = f'<rect x="-.6" y="0" width="1.2" height="1" fill="{draw.muted}"/>'
+    prongs = (f'<rect x="-6" y="-3" width="12" height="5" rx="2" fill="{draw.accent}"/>'
+              f'<path d="M-6 2L-8 10M6 2L8 10" stroke="{draw.accent}" stroke-width="2" stroke-linecap="round" fill="none"/>')
+    draw.parts.append(draw.animated(cable, cable_frames, {'transform': f'translate({num(chute)}px,15px) rotate(0deg) scale(1,7)', 'opacity': '0'}))
+    draw.parts.append(draw.animated(prongs, head_frames, {'transform': transform(chute, 22), 'opacity': '0'}))
+    draw.parts.append(caption('CLAW MACHINE / GRAB EVERY DAY'))
+    return draw
+
+
 RENDERERS = {'bomber': bomber, 'miners': miners, 'link-match': links,
-             'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego}
+             'portal': portal, 'assembly': assembly, 'minecraft': minecraft, 'lego': lego,
+             'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw}
 
 
 def render(cal: Calendar, scene: str, seed: int, theme='dark', model=None) -> str:

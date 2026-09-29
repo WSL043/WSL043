@@ -19,8 +19,10 @@ except ModuleNotFoundError:
 
 ASSET_MAP = {
     'space-shooter': (('space-shooter.gif', 'space-shooter.gif'),),
-    **{s: tuple((f'{s}-{t}.svg', f'{s}-{t}.svg') for t in ('light', 'dark')) for s in ('breakout', 'snake', 'maze-chase')},
-    '3d-city': (('3d-city.svg', '3d-city.svg'),),
+    **{s: tuple((f'{s}-{t}.svg', f'{s}-{t}.svg') for t in ('light', 'dark'))
+       for s in ('breakout', 'snake', 'maze-chase', 'galaga', 'bobble', 'bomberman', 'minesweeper', 'bricks',
+                 'platformer', 'invaders', 'tetris', 'rain', 'life')},
+    **{s: ((f'{s}.svg', f'{s}.svg'),) for s in ('3d-city', '3d-green', '3d-season', '3d-night', '3d-night-green', '3d-rainbow')},
     **{s: tuple((f'heatmap-{s}-{t}.svg', f'heatmap-{s}-{t}.svg') for t in ('light', 'dark')) for s in NATIVE},
 }
 OLD_GIFS = tuple(f'heatmap-{s}-{t}.gif' for s in ('bomber', 'miners', 'defense', 'pinball', 'laser', 'gravity') for t in ('light', 'dark'))
