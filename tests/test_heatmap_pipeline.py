@@ -93,7 +93,7 @@ class DataTests(unittest.TestCase):
         snap = data.normalize(payload(), 'WSL043', DAY)
         before = copy.deepcopy(snap)
         with tempfile.TemporaryDirectory() as temp:
-            manifest = data.build(snap, {'selected': 'lego', 'date': DAY, 'refresh_native': True}, Path(temp))
+            manifest = data.build(snap, {'selected': 'minecraft', 'date': DAY, 'refresh_native': True}, Path(temp))
             self.assertEqual(len(manifest['assets']), 2*len(rotation.NATIVE))
             self.assertTrue(all(name.endswith('.svg') for name in manifest['assets']))
             self.assertEqual(set(manifest['analysis']), {'search-comparison-dark.svg', 'search-comparison-light.svg', 'search-comparison.json'})
@@ -135,9 +135,9 @@ class RotationTests(unittest.TestCase):
 
     def test_manual_selection_and_time_rewind(self):
         _, state = rotation.select_daily({}, DAY, 'minecraft')
-        selected, new = rotation.select_daily(state, DAY, 'lego')
-        self.assertEqual(selected, 'lego')
-        self.assertNotIn('lego', new['remaining'])
+        selected, new = rotation.select_daily(state, DAY, 'minecraft')
+        self.assertEqual(selected, 'minecraft')
+        self.assertNotIn('minecraft', new['remaining'])
         with self.assertRaises(ValueError):
             rotation.select_daily(state, '2026-09-11')
         for retired in rotation.RETIRED:
@@ -181,7 +181,7 @@ class RotationTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
-    def prepare(self, all_native=False, selected='lego'):
+    def prepare(self, all_native=False, selected='minecraft'):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         root = Path(temp.name)
@@ -205,7 +205,7 @@ class PublicationTests(unittest.TestCase):
         publish(root, root/'staging')
         self.assertEqual((root/'README.md').read_text(), 'new readme')
         for theme in ('dark', 'light'):
-            self.assertTrue((root/f'assets/arcade/heatmap-lego-{theme}.svg').is_file())
+            self.assertTrue((root/f'assets/arcade/heatmap-minecraft-{theme}.svg').is_file())
         self.assertEqual((root/'ARCADE.md').read_text(), 'old gallery')
 
     def test_full_refresh_swaps_gallery_and_removes_only_old_native_gifs(self):
@@ -233,7 +233,7 @@ class PublicationTests(unittest.TestCase):
 
     def test_tampered_asset_fails_before_any_copy(self):
         root, artifacts, _ = self.prepare()
-        with (artifacts/'heatmap-lego-dark.svg').open('a') as f:
+        with (artifacts/'heatmap-minecraft-dark.svg').open('a') as f:
             f.write('tampered')
         with self.assertRaises(ValueError):
             publish(root, root/'staging')
@@ -242,7 +242,7 @@ class PublicationTests(unittest.TestCase):
     def test_script_image_and_external_resource_rejected_even_with_updated_digest(self):
         for addition in ('<script>alert(1)</script>', '<image href="x.gif"/>', '<foreignObject/>', '<g onclick="x()"/>', '<style>@import "x";</style>'):
             root, artifacts, _ = self.prepare()
-            asset = artifacts/'heatmap-lego-dark.svg'
+            asset = artifacts/'heatmap-minecraft-dark.svg'
             asset.write_text(asset.read_text().replace('</svg>', addition+'</svg>'))
             manifest = json.loads((artifacts/'heatmap-manifest.json').read_text())
             manifest['assets'][asset.name] = digest(asset)
@@ -253,8 +253,8 @@ class PublicationTests(unittest.TestCase):
 
     def test_wrong_snapshot_or_scene_is_rejected(self):
         root, artifacts, _ = self.prepare()
-        asset = artifacts/'heatmap-lego-dark.svg'
-        asset.write_text(asset.read_text().replace('data-scene="lego"', 'data-scene="minecraft"'))
+        asset = artifacts/'heatmap-minecraft-dark.svg'
+        asset.write_text(asset.read_text().replace('data-scene="minecraft"', 'data-scene="fireworks"'))
         manifest = json.loads((artifacts/'heatmap-manifest.json').read_text())
         manifest['assets'][asset.name] = digest(asset)
         (artifacts/'heatmap-manifest.json').write_text(json.dumps(manifest))

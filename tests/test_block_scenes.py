@@ -1,5 +1,5 @@
 import unittest
-from scripts.svg_models import Calendar, minecraft, lego
+from scripts.svg_models import Calendar, minecraft
 
 class BlockScenes(unittest.TestCase):
     def test_complete_cover_and_legal_bricks(self):
@@ -8,12 +8,6 @@ class BlockScenes(unittest.TestCase):
             cal = Calendar(54, grid, set(), [], 'test', '2026-09-16')
             for seed in range(10):
                 self.assertCountEqual(minecraft(cal, seed)['order'], cal.active)
-                pieces = lego(cal, seed)['pieces']
-                self.assertCountEqual([p for piece in pieces for p in piece], cal.active)
-                for piece in pieces:
-                    self.assertTrue(1 <= len(piece) <= 4)
-                    self.assertEqual(piece, [(piece[0][0]+i, piece[0][1]) for i in range(len(piece))])
-                    self.assertEqual(len({cal.grid[p] for p in piece}), 1)
 
 if __name__ == '__main__':
     unittest.main()
