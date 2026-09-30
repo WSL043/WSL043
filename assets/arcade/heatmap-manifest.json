@@ -22,12 +22,12 @@
     "search-comparison-light.svg": "4401162b5435018571f104db7c1d9d4683a1d0ce7e10597171d93cf0e7b5632e"
   },
   "engine": "svg-v3",
-  "snapshot_sha256": "fa3f82f5bbaee5640efb60aad5a89d6bb2b1e4e5025ad5affb662999b96436c0",
+  "snapshot_sha256": "8aba0590fd7f3d6d95d5139ee437f7a5bb3b297c5c0c83c6e21f0dd6d0bf8bec",
   "assets": {
     "heatmap-fireworks-dark.svg": "c10fe44b26f1a716c651d1235244af72b332ac77a1f7e2351907170cf662190e",
     "heatmap-fireworks-light.svg": "0c09c68bad2800a889f4fd06115c05cc384304aaf57d43733f3fb340dd9322d0",
-    "heatmap-domino-dark.svg": "f657aea47130b8cb5711b3ce73d3a38b22bbf23054aa9f1fed21fa6d2ef03836",
-    "heatmap-domino-light.svg": "bee8cd93ec7a9a525c27fd3986d59ac73dcd6efc7b00d1fc45c317a2dd0e4886",
+    "heatmap-domino-dark.svg": "bb758fb24e47b615dd3e2168a6e1bcf0df4a8c634838917853d09efc65b6dc00",
+    "heatmap-domino-light.svg": "cf95d381606cb2fc08c56ac83dba02ad3fbe1e83ec3ed7282df95a5920eafa1b",
     "heatmap-dust-dark.svg": "2f3ed837b3c9d1bfb15c5c8d1991f7bfca1594129092da44795401c1adb7e28d",
     "heatmap-dust-light.svg": "4b50d9e7f577bbab13f46a2baa061924e3a9990c954c245a002cde004d25f479",
     "heatmap-sorter-dark.svg": "b1ca99bee850dd6f3060c6ff89216fad66e6787492a88684515e914031809273",
