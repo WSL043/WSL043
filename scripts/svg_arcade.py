@@ -270,10 +270,10 @@ def lego(cal, model, theme):
     draw.parts.append(f'<rect x="12" y="170" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="192" width="{w-24}" height="4" fill="{draw.line}"/>'
                       f'<rect x="12" y="174" width="{w-24}" height="18" fill="{tint(draw.line, .25, "#000000")}"/>')
     ribs = ''.join(f'<rect x="{x}" y="176" width="3" height="14"/>' for x in range(-16, w+16, 16))
-    cycles = int(draw.duration)
+    # The belt moves 16px per third of a second, the same speed a docked brick rides it at.
     rib_frames = []
-    for k in range(cycles):
-        rib_frames += [(k+.02, {'transform': 'translate(0px,0px)'}), (k+1.0, {'transform': 'translate(16px,0px)'})]
+    for k in range(int(draw.duration*3)):
+        rib_frames += [(k/3+.01, {'transform': 'translate(0px,0px)'}), ((k+1)/3, {'transform': 'translate(16px,0px)'})]
     draw.parts.append(draw.animated(f'<g fill="{draw.muted}" opacity=".45">{ribs}</g>', rib_frames, {'transform': 'translate(0px,0px)'}))
     for x in (16, w-16):
         draw.parts.append(f'<rect x="{x-5}" y="172" width="10" height="22" fill="{draw.muted}"/><rect x="{x-3}" y="176" width="6" height="14" fill="{draw.line}"/>')
@@ -290,11 +290,12 @@ def lego(cal, model, theme):
                      f'<rect x="{j*16+2}" y="-8" width="1" height="2" fill="{low}"/>')
         home = {'transform': transform(x, y), 'opacity': '1'}
         at = 1.5+i*step
-        dock_x = 28+(i % max(1, (cal.cols//4)))*64
+        # The brick drops straight down from its own column onto the belt (kept clear of the end rollers).
+        dock_x = max(28, min(x, w-34-width))
         lift = y-13
         frames = [(at, home), (at+.3, {'transform': transform(x, lift)}),
                   (at+.85, {'transform': transform(dock_x, 178)}),
-                  (at+1.15, {'transform': transform(dock_x+18, 178)}),
+                  (at+1.15, {'transform': transform(dock_x+14, 178)}),
                   (at+1.65, {'transform': transform(x, y-14)}),
                   (at+1.85, home), (at+1.93, {'transform': transform(x, y, 1.08)}),
                   (at+2.05, home)]
@@ -305,7 +306,7 @@ def lego(cal, model, theme):
         hx = lambda px, py: (f'translate({num(px)}px,{num(py)}px) rotate(0deg) scale(1)',
                              f'translate({num(px)}px,8px) rotate(0deg) scale(1,{num(max(1, py-8))})')
         pts = [(at+.02, cx, lift-9, '1'), (at+.3, cx, lift-9, '1'), (at+.85, cx2, 169, '1'), (at+1.0, cx2+0, 169, '0'),
-               (at+1.5, cx2+18, 160, '0'), (at+1.66, cx, y-23, '1'), (at+1.85, cx, y-9, '1'), (at+1.95, cx, y-30, '0')]
+               (at+1.5, cx2+14, 160, '0'), (at+1.66, cx, y-23, '1'), (at+1.85, cx, y-9, '1'), (at+1.95, cx, y-30, '0')]
         clamp = f'<rect x="-4" y="0" width="8" height="3" fill="{draw.muted}"/><rect x="-1" y="-3" width="2" height="3" fill="{draw.muted}"/>'
         wire = f'<rect x="0" y="0" width="1" height="1" fill="{draw.muted}"/>'
         first = hx(cx, 20)
