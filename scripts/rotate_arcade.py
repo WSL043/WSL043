@@ -10,14 +10,14 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw', 'minecraft', 'lego')
+NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw', 'minecraft')
 NEW_LEGACY = ('3d-green', '3d-season', '3d-night', '3d-night-green', '3d-rainbow',
               'galaga', 'bobble', 'bomberman', 'minesweeper', 'platformer', 'rain')
 LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city') + NEW_LEGACY
 RETIRED = ('defense', 'pinball', 'laser', 'gravity', 'bomber', 'miners', 'link-match', 'portal', 'assembly',
-           'invaders', 'tetris', 'life', 'bricks')
+           'invaders', 'tetris', 'life', 'bricks', 'lego')
 ARCADE_EXPERIENCES = LEGACY + NATIVE
-CATALOG_VERSION = 7
+CATALOG_VERSION = 8
 EXPERIENCE_DETAILS = {
     'space-shooter': {'title': 'Space Shooter', 'icon': '🚀', 'description': "Today's contribution grid has entered bullet-hell mode.", 'light': './assets/arcade/space-shooter.gif'},
     'breakout': {'title': 'Breakout', 'icon': '🧱', 'description': "A tiny paddle is clearing the year's contribution bricks.", 'light': './assets/arcade/breakout-light.svg', 'dark': './assets/arcade/breakout-dark.svg'},
@@ -45,7 +45,6 @@ for key, title, icon, description in [
                                'light': f'./assets/arcade/{key}-light.svg', 'dark': f'./assets/arcade/{key}-dark.svg'}
 for key, title, description in [
     ('minecraft', 'Minecraft Block Miner', 'Mine your green days into grass blocks, collect them, then rebuild the whole calendar.'),
-    ('lego', 'LEGO Brick Workshop', 'Studded bricks ride the conveyor, lift into place, and click your contribution calendar back together.'),
     ('fireworks', 'Firework Show', 'The calendar goes dark, then rockets relight every active day in a burst of colour.'),
     ('domino', 'Domino Run', 'A steel ball tips the first domino and the whole year topples in a chain, pips and all, then stands back up.'),
     ('dust', 'Pixel Dust', 'Your green days crumble into drifting dust, then pull themselves back together.'),

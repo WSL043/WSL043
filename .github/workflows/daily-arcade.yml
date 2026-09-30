@@ -20,7 +20,6 @@ on:
           - maze-chase
           - 3d-city
           - minecraft
-          - lego
           - fireworks
           - domino
           - dust
@@ -39,7 +38,7 @@ on:
           - platformer
           - rain
       generate_all:
-        description: Refresh all twenty-four experiences including external generators
+        description: Refresh all twenty-three experiences including external generators
         required: true
         default: false
         type: boolean

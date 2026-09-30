@@ -10,7 +10,7 @@ import math
 import random
 
 Point = tuple[int, int]
-SCENES = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw', 'minecraft', 'lego')
+SCENES = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw', 'minecraft')
 
 
 @dataclass
@@ -60,25 +60,6 @@ def minecraft(cal: Calendar, seed: int) -> dict:
     order = [p for y in rows for p in sorted((p for p in cal.active if p[1] == y),
              reverse=bool(y % 2))]
     return {'scene': 'minecraft', 'order': order, 'levels': [cal.grid[p] for p in order]}
-
-
-def lego(cal: Calendar, seed: int) -> dict:
-    # Each brick is a straight 1-4 stud run of identical contribution levels.
-    rng = random.Random(seed)
-    remaining, pieces = set(cal.active), []
-    while remaining:
-        first = min(remaining, key=lambda p: (p[1], p[0]))
-        piece = [first]
-        remaining.remove(first)
-        for dx in range(1, rng.randint(1, 4)):
-            p = first[0]+dx, first[1]
-            if p not in remaining or cal.grid[p] != cal.grid[first]:
-                break
-            remaining.remove(p)
-            piece.append(p)
-        pieces.append(piece)
-    rng.shuffle(pieces)
-    return {'scene': 'lego', 'pieces': pieces}
 
 
 def fireworks(cal: Calendar, seed: int) -> dict:
@@ -149,5 +130,5 @@ def claw(cal: Calendar, seed: int) -> dict:
     return {'scene': 'claw', 'order': order, 'levels': [cal.grid[p] for p in order]}
 
 
-PLANNERS = {'minecraft': minecraft, 'lego': lego,
+PLANNERS = {'minecraft': minecraft, 
             'fireworks': fireworks, 'domino': domino, 'dust': dust, 'sorter': sorter, 'synth': synth, 'claw': claw}

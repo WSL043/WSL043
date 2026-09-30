@@ -11,15 +11,6 @@
   <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="我的世界风格 · Minecraft Block Miner" width="100%">
 </picture>
 
-## LEGO 风格 · Brick Workshop
-
-同一行、同一活跃等级的相邻日期组成 1–4 凸点积木。积木抬起、进入传送带，再由吊臂装回原来的日期，落位时轻轻弹一下。凸点和积木侧面是装饰，贡献等级和格子身份不变。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-lego-dark.svg">
-  <img src="./assets/arcade/heatmap-lego-light.svg" alt="LEGO 风格 · Brick Workshop" width="100%">
-</picture>
-
 ## 烟花秀 · Firework Show
 
 日历先熄灯，再由五个发射台随机打出烟花，逐个点亮每一个真实的活跃日期，颜色等级不变。每日种子改变发射台与点亮顺序；没有多出任何一天。

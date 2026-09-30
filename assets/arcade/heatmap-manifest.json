@@ -8,8 +8,7 @@
     "sorter",
     "synth",
     "claw",
-    "minecraft",
-    "lego"
+    "minecraft"
   ],
   "analysis": {
     "search-comparison.json": "d0bc0ec8b2983e9737c11e0ed3a1e5d36e7785d0c803bb3ae3bb3bebccdbaeb3",
@@ -32,8 +31,6 @@
     "heatmap-claw-dark.svg": "e753fa903b37e2a411e7004b35acf9ac6c47cb09c0778c93bd70f446ab24b990",
     "heatmap-claw-light.svg": "69e423b43bb217983ee195b372c417a5e4a5770fe2cc6eba590697aba07aead9",
     "heatmap-minecraft-dark.svg": "04e7a379e6887a5773e64b7b9aec5a5427c909af48a3483815475cc24d43b6dc",
-    "heatmap-minecraft-light.svg": "9ff7a2cb6ef579c59fe3731245c8a7802c22a11bf9fe9d3539b51029460ae84e",
-    "heatmap-lego-dark.svg": "06cdbbd8d0dad61f7c9c36b23e918ecac29a35910cd9b9d1cfd686342cebcefa",
-    "heatmap-lego-light.svg": "c960dbbd46360068519b80810bdc7484328bb6ba8025c648da1376e15f0e3177"
+    "heatmap-minecraft-light.svg": "9ff7a2cb6ef579c59fe3731245c8a7802c22a11bf9fe9d3539b51029460ae84e"
   }
 }
