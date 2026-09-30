@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Firework Show
+## Today's Arcade: Domino Ripple
 
-The calendar goes dark, then rockets relight every active day in a burst of colour.
+One tap sends a shock wave through the year: every tile topples, then stands back up.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-fireworks-dark.svg">
-    <img src="./assets/arcade/heatmap-fireworks-light.svg" alt="Firework Show" width="100%">
+            srcset="./assets/arcade/heatmap-domino-dark.svg">
+    <img src="./assets/arcade/heatmap-domino-light.svg" alt="Domino Ripple" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>33 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-29 UTC</sub></p>
+<p align="center"><sub>33 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-30 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
