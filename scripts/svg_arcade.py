@@ -16,7 +16,7 @@ THEMES = {
     'light': ('#ffffff', '#ebedf0', '#d0d7de', '#57606a',
               ('#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39')),
 }
-NAMES = {'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop',
+NAMES = {'minecraft': 'Minecraft Block Miner', 
          'fireworks': 'Firework Show', 'domino': 'Domino Run', 'dust': 'Pixel Dust',
          'sorter': 'Level Sorter', 'synth': 'Heatmap Synth', 'claw': 'Claw Machine'}
 
@@ -248,72 +248,6 @@ def minecraft(cal, model, theme):
     moves += [(finish, {'opacity': '0'}), (draw.duration-.1, base)]
     draw.parts.append(draw.animated(sprite, moves, base))
     draw.parts.append('<text x="24" y="197">MINE / COLLECT / REBUILD</text>')
-    return draw
-
-
-def lego(cal, model, theme):
-    pieces = model['pieces']
-    n = len(pieces)
-    step = min(.55, 55/max(1, n))
-    back = 3+n*step
-    draw = Drawing(cal, 'lego', theme, back+5)
-    draw.css.append('svg{shape-rendering:crispEdges}')
-    w = draw.width
-    dark = theme == 'dark'
-    plate, plate_edge = ('#1a2740', '#2c3d5e') if dark else ('#d9e4f4', '#b7c8e2')
-    # A studded baseplate under the calendar.
-    studs = ''.join(f'<rect x="{x}" y="{y}" width="6" height="2"/>' for x in range(20, w-20, 16) for y in (33, 148))
-    draw.backdrop.append(f'<rect x="12" y="30" width="{w-24}" height="124" fill="{plate}"/><rect x="12" y="30" width="{w-24}" height="2" fill="{plate_edge}"/>'
-                         f'<rect x="12" y="152" width="{w-24}" height="2" fill="{plate_edge}"/><g fill="{plate_edge}">{studs}</g>')
-    # Overhead rail for the hoists and a conveyor belt with scrolling ribs.
-    draw.parts.append(f'<rect x="12" y="4" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="4" width="{w-24}" height="1" fill="{draw.muted}" opacity=".6"/>')
-    draw.parts.append(f'<rect x="12" y="170" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="192" width="{w-24}" height="4" fill="{draw.line}"/>'
-                      f'<rect x="12" y="174" width="{w-24}" height="18" fill="{tint(draw.line, .25, "#000000")}"/>')
-    ribs = ''.join(f'<rect x="{x}" y="176" width="3" height="14"/>' for x in range(-16, w+16, 16))
-    # The belt moves 16px per third of a second, the same speed a docked brick rides it at.
-    rib_frames = []
-    for k in range(int(draw.duration*3)):
-        rib_frames += [(k/3+.01, {'transform': 'translate(0px,0px)'}), ((k+1)/3, {'transform': 'translate(16px,0px)'})]
-    draw.parts.append(draw.animated(f'<g fill="{draw.muted}" opacity=".45">{ribs}</g>', rib_frames, {'transform': 'translate(0px,0px)'}))
-    for x in (16, w-16):
-        draw.parts.append(f'<rect x="{x-5}" y="172" width="10" height="22" fill="{draw.muted}"/><rect x="{x-3}" y="176" width="6" height="14" fill="{draw.line}"/>')
-    for i, piece in enumerate(pieces):
-        x, y = int(xy(piece[0])[0]), int(xy(piece[0])[1])
-        width = (len(piece)-1)*16+12
-        colour = draw.green[cal.grid[piece[0]]]
-        high, low = tint(colour, .35), tint(colour, .35, '#000000')
-        body = (f'<rect x="-6" y="-6" width="{width}" height="12" fill="{colour}"/><rect x="-6" y="-6" width="{width}" height="2" fill="{high}"/>'
-                f'<rect x="-6" y="4" width="{width}" height="2" fill="{low}"/><rect x="-6" y="-6" width="1" height="12" fill="{high}"/>')
-        for j, p in enumerate(piece):
-            body += (f'<rect x="{j*16-6}" y="-6" width="12" height="12" fill="none" data-day="{p[0]},{p[1]}"/>'
-                     f'<rect x="{j*16-3}" y="-9" width="6" height="3" fill="{colour}"/><rect x="{j*16-3}" y="-9" width="6" height="1" fill="{high}"/>'
-                     f'<rect x="{j*16+2}" y="-8" width="1" height="2" fill="{low}"/>')
-        home = {'transform': transform(x, y), 'opacity': '1'}
-        at = 1.5+i*step
-        # The brick drops straight down from its own column onto the belt (kept clear of the end rollers).
-        dock_x = max(28, min(x, w-34-width))
-        lift = y-13
-        frames = [(at, home), (at+.3, {'transform': transform(x, lift)}),
-                  (at+.85, {'transform': transform(dock_x, 178)}),
-                  (at+1.15, {'transform': transform(dock_x+14, 178)}),
-                  (at+1.65, {'transform': transform(x, y-14)}),
-                  (at+1.85, home), (at+1.93, {'transform': transform(x, y, 1.08)}),
-                  (at+2.05, home)]
-        draw.parts.append(draw.animated(body, frames, home))
-        # A hoist: trolley on the rail, cable and clamp follow the brick on both trips.
-        cx = x+width/2-6
-        cx2 = dock_x+width/2-6
-        hx = lambda px, py: (f'translate({num(px)}px,{num(py)}px) rotate(0deg) scale(1)',
-                             f'translate({num(px)}px,8px) rotate(0deg) scale(1,{num(max(1, py-8))})')
-        pts = [(at+.02, cx, lift-9, '1'), (at+.3, cx, lift-9, '1'), (at+.85, cx2, 169, '1'), (at+1.0, cx2+0, 169, '0'),
-               (at+1.5, cx2+14, 160, '0'), (at+1.66, cx, y-23, '1'), (at+1.85, cx, y-9, '1'), (at+1.95, cx, y-30, '0')]
-        clamp = f'<rect x="-4" y="0" width="8" height="3" fill="{draw.muted}"/><rect x="-1" y="-3" width="2" height="3" fill="{draw.muted}"/>'
-        wire = f'<rect x="0" y="0" width="1" height="1" fill="{draw.muted}"/>'
-        first = hx(cx, 20)
-        draw.parts.append(draw.animated(clamp, [(t, {'transform': hx(px, py)[0], 'opacity': op}) for t, px, py, op in pts], {'transform': first[0], 'opacity': '0'}))
-        draw.parts.append(draw.animated(wire, [(t, {'transform': hx(px, py)[1], 'opacity': op}) for t, px, py, op in pts], {'transform': first[1], 'opacity': '0'}))
-        pixel_puff(draw, x+width/2-6, y-9, at+1.85, draw.cyan)
-    draw.parts.append('<text x="24" y="211">BRICK WORKSHOP / SNAP FIT</text>')
     return draw
 
 
@@ -731,7 +665,7 @@ def claw(cal, model, theme):
     return draw
 
 
-RENDERERS = {'minecraft': minecraft, 'lego': lego, 'fireworks': fireworks, 'domino': domino, 'dust': dust,
+RENDERERS = {'minecraft': minecraft,  'fireworks': fireworks, 'domino': domino, 'dust': dust,
              'sorter': sorter, 'synth': synth, 'claw': claw}
 
 
