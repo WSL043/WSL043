@@ -6,6 +6,7 @@ from html import escape
 import hashlib
 import json
 import math
+import random
 from pathlib import Path
 from scripts.svg_models import Calendar, PLANNERS, DIRS
 
@@ -50,7 +51,7 @@ class Drawing:
         self.accent = '#f2cc60' if theme == 'dark' else '#9a6700'
         self.cyan = '#79e0f2' if theme == 'dark' else '#0969da'
         self.width = cal.cols * 16 + 48
-        self.css, self.parts, self.tracks = [], [], []
+        self.css, self.parts, self.tracks, self.backdrop = [], [], [], []
 
     def animated(self, body, frames, base):
         # Each track explicitly returns to its first state; no cut on loop wrap.
@@ -148,7 +149,7 @@ class Drawing:
                 '<style>'+styles+''.join(self.css)+'</style>'
                 f'<rect width="100%" height="100%" fill="{self.bg}"/>'+''.join(months)+
                 '<g class="still">'+self.static_grid(True)+'</g><g class="motion">'+
-                self.static_grid()+''.join(self.parts)+'</g></svg>')
+                ''.join(self.backdrop)+self.static_grid()+''.join(self.parts)+'</g></svg>')
 
 
 def bomber(cal, model, theme):
@@ -423,42 +424,120 @@ def caption(text):
     return f'<text x="24" y="211">{text}</text>'
 
 
+def budget(n, total, low, high):
+    """Particles per tile so a full 54-week calendar stays well inside the file-size limit."""
+    return max(low, min(high, total//max(1, n)))
+
+
+def stepped(frames):
+    """Hard steps for pixel motion: every state holds until just before the next keyframe."""
+    out = []
+    for i, (t, props) in enumerate(frames):
+        if i:
+            out.append((t-.002, frames[i-1][1]))
+        out.append((t, props))
+    return out
+
+
+def tint(colour, amount, other='#ffffff'):
+    a = [int(colour[i:i+2], 16) for i in (1, 3, 5)]
+    b = [int(other[i:i+2], 16) for i in (1, 3, 5)]
+    return '#'+''.join(f'{round(x+(y-x)*amount):02x}' for x, y in zip(a, b))
+
+
+def palette2(theme):
+    if theme == 'dark':
+        return dict(building='#151d33', building_dim='#1d2742', window='#ffd166', rail='#1b2438', rail_edge='#28334d',
+                    ivory='#f3efe4', ivory_side='#cbc5b2', pip='#20242c', outline='#0d1117',
+                    fire=('#ff9d3d', '#4cc9f0', '#ff6b8b', '#b48cff', '#ffe066'),
+                    led=('#3fb950', '#f2cc60', '#ff6b6b'), steel=('#aeb8c6', '#5c6675', '#ffffff', '#7b8696'))
+    return dict(building='#c5d1e6', building_dim='#b3c1da', window='#f2a900', rail='#e3e9f3', rail_edge='#cfd8e8',
+                ivory='#fbf9f2', ivory_side='#d0cab6', pip='#20242c', outline='#4c4a40',
+                fire=('#e8590c', '#0b7285', '#c2255c', '#7048e8', '#e67700'),
+                led=('#2da44e', '#bf8700', '#cf222e'), steel=('#8c96a5', '#4b5565', '#ffffff', '#6b7686'))
+
+
+def pixel_puff(draw, x, y, t, colour, span=.36):
+    """A four-square puff that expands in hard steps and vanishes."""
+    body = ''.join(f'<rect x="{dx-1}" y="{dy-1}" width="2" height="2" fill="{colour}"/>' for dx, dy in ((-2, -2), (2, -2), (-2, 2), (2, 2)))
+    at = lambda s: f'translate({int(x)}px,{int(y)}px) rotate(0deg) scale({s})'
+    draw.parts.append(draw.animated(body, stepped([(t, {'transform': at(1), 'opacity': '1'}), (t+span/3, {'transform': at(1.8), 'opacity': '.8'}),
+                                                   (t+2*span/3, {'transform': at(2.6), 'opacity': '.45'}), (t+span, {'transform': at(2.6), 'opacity': '0'})]),
+                                    {'transform': at(1), 'opacity': '0'}))
+
+
 def fireworks(cal, model, theme):
     order, n = model['order'], len(model['order'])
+    p2 = palette2(theme)
     step = min(.3, 50/max(1, n))
-    first, fly = 2.4, .55
-    finish = first+n*step+fly+1.4
+    first, fly, hop = 2.4, .56, .09
+    finish = first+n*step+fly+1.6
     draw = Drawing(cal, 'fireworks', theme, finish+4)
-    colours = (draw.accent, draw.cyan, '#ff8fa3' if theme == 'dark' else '#cf222e')
-    pads = [xy((c, 0))[0] for c in model['pads']]
-    for x in pads:
-        draw.parts.append(f'<rect x="{x-8}" y="198" width="16" height="5" rx="2" fill="{draw.line}"/>')
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    # A pixel skyline: buildings on a 4px grid with 2x2 windows, a few of them lit.
+    rng = random.Random(n*31+len(model['pads']))
+    dim, lit, x = '', '', 4
+    roofs = ''
+    while x < draw.width-8:
+        w = 4*rng.randint(3, 6)
+        h = 4*rng.randint(3, 9)
+        roofs += f'M{x} {216-h}h{w}V216H{x}z'
+        for wy in range(216-h+4, 212, 6):
+            for wx in range(x+3, x+w-3, 5):
+                if rng.random() < .16:
+                    lit += f'M{wx} {wy}h2v2h-2z'
+                else:
+                    dim += f'M{wx} {wy}h2v2h-2z'
+        x += w+4*rng.randint(0, 1)
+    skyline = (f'<path d="{roofs}" fill="{p2["building"]}"/><path d="{dim}" fill="{p2["building_dim"]}"/>')
+    twinkle = f'<path d="{lit}" fill="{p2["window"]}"/>'
+    fire = p2['fire']
+    pieces = 16 if n <= 50 else (8 if n <= 110 else (4 if n <= 200 else 0))
+    hops = 8 if n <= 200 else 4
+    rings = ((4, 9, 14, 18), (7, 13, 19, 24))
+    drop = (0, 0, 2, 5)
+    fade = ('1', '1', '.85', '.45')
+    grow = (1.3, 1.2, 1, .75)
     for i, p in enumerate(order):
-        x, y = xy(p)
+        x, y = int(xy(p)[0]), int(xy(p)[1])
         at = first+i*step
         boom = at+fly
-        colour = colours[i % 3]
-        dark = {'opacity': '0', 'transform': transform(x, y, .7)}
-        lit = {'opacity': '1', 'transform': transform(x, y, 1.45)}
+        colour = fire[i % 5]
         blackout = .9+x/draw.width*.7
-        lone_tile(draw, p, [(blackout, {}), (blackout+.35, dark), (boom-.02, dark), (boom, lit),
-                            (boom+.4, {'transform': transform(x, y, 1)})])
-        pad = min(pads, key=lambda v: abs(v-x))
-        angle = math.degrees(math.atan2(x-pad, 198-y))
-        rocket = (f'<circle r="2.4" fill="{colour}"/>'
-                  f'<path d="M0 2v10" stroke="{colour}" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>')
-        draw.parts.append(draw.animated(rocket, [
-            (at, {'transform': transform(pad, 196, 1, angle), 'opacity': '1'}),
-            (boom, {'transform': transform(x, y, 1, angle), 'opacity': '1'}),
-            (boom+.04, {'opacity': '0', 'transform': transform(x, y, 1, angle)})],
-            {'transform': transform(pad, 196, 1, angle), 'opacity': '0'}))
-        ring = f'<circle r="5" fill="none" stroke="{colour}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>'
-        draw.parts.append(draw.animated(ring, [
-            (boom, {'transform': transform(x, y, .3), 'opacity': '.95'}),
-            (boom+.45, {'transform': transform(x, y, 2.4), 'opacity': '0'})],
-            {'transform': transform(x, y, .3), 'opacity': '0'}))
-        draw.spark(p, boom, colour)
-    draw.parts.append(caption('FIREWORKS / RELIGHT THE YEAR'))
+        base_dark = {'opacity': '0', 'transform': transform(x, y, .7)}
+        lone_tile(draw, p, stepped([(blackout, {}), (blackout+.1, base_dark),
+                                    (boom, {'opacity': '1', 'fill': '#ffffff', 'transform': transform(x, y, 1.3)}),
+                                    (boom+hop, {'fill': tint(draw.green[cal.grid[p]], .5), 'transform': transform(x, y, 1.15)}),
+                                    (boom+2*hop, {})]))
+        rocket = ''.join(f'<rect x="-1" y="{k*2+1}" width="2" height="2" fill="{colour}" opacity="{o}"/>' for k, o in enumerate(('.9', '.6', '.35', '.15')))
+        rocket += '<rect x="-1" y="-1" width="2" height="2" fill="#ffffff"/>'
+        ys = [round(196+(y-196)*(1-(1-(k+1)/hops)**2)) for k in range(hops)]
+        frames = [(at, {'transform': transform(x, 196), 'opacity': '1'})]+[(at+fly*(k+1)/hops, {'transform': transform(x, ys[k]), 'opacity': '1'}) for k in range(hops)]
+        frames.append((boom+.02, {'transform': transform(x, y), 'opacity': '0'}))
+        draw.parts.append(draw.animated(rocket, stepped(frames), {'transform': transform(x, 196), 'opacity': '0'}))
+        flash = '<rect x="-2" y="-2" width="4" height="4" fill="#ffffff"/>'
+        draw.parts.append(draw.animated(flash, stepped([(boom, {'transform': transform(x, y, 1), 'opacity': '1'}), (boom+hop, {'transform': transform(x, y, 1.6), 'opacity': '.8'}),
+                                                        (boom+2*hop, {'transform': transform(x, y, 1.6), 'opacity': '0'})]),
+                                          {'transform': transform(x, y, 1), 'opacity': '0'}))
+        for ring, radii in enumerate(rings[:(1 if pieces < 16 else 2) if pieces else 0]):
+            count = 8 if pieces >= 8 else 4
+            for k in range(count):
+                angle = math.tau*(k+.5*ring)/count
+                own = colour if ring == 0 else tint(colour, .5)
+                bit = '<rect x="-1.5" y="-1.5" width="3" height="3"/>'
+                shades = ('#ffffff', tint(own, .45), own, tint(own, .25, '#000000'))
+                frames = []
+                for j in range(4):
+                    px = x+round(math.cos(angle)*radii[j])
+                    py = y+round(math.sin(angle)*radii[j])+drop[j]
+                    frames.append((boom+j*hop, {'transform': transform(px, py, grow[j]), 'opacity': fade[j], 'fill': shades[j]}))
+                frames.append((boom+4*hop, {'transform': transform(x+round(math.cos(angle)*radii[3]), y+round(math.sin(angle)*radii[3])+6), 'opacity': '0'}))
+                draw.parts.append(draw.animated(bit, stepped(frames), {'transform': transform(x, y), 'opacity': '0', 'fill': '#ffffff'}))
+    draw.parts.append(skyline)
+    beat = [(t, {'opacity': '1' if int(t) % 2 else '.35'}) for t in [k*1.3+1 for k in range(int(finish/1.3))]]
+    if beat:
+        draw.parts.append(draw.animated(twinkle, stepped(beat), {'opacity': '.35'}))
+    draw.parts.append('<text x="24" y="170">FIREWORKS / RELIGHT THE YEAR</text>')
     return draw
 
 
@@ -466,34 +545,45 @@ PIPS = {1: ((0, 0),), 2: ((-2.2, -1.8), (2.2, 1.8)), 3: ((-2.4, -1.8), (0, 0), (
         4: ((-2.2, -1.8), (2.2, -1.8), (-2.2, 1.8), (2.2, 1.8))}
 
 
-def luminance(colour):
-    r, g, b = (int(colour[i:i+2], 16) for i in (1, 3, 5))
-    return .2126*r+.7152*g+.0722*b
-
-
-def domino_body(fill, level, side, identity=''):
-    """A double-N domino (N pips on each half) drawn relative to the bottom corner it pivots on."""
+def domino_body(p2, accent, level, side, identity=''):
+    """An ivory double-N domino with a coloured base stripe, drawn relative to the bottom corner it pivots on."""
     x0 = -9 if side == 1 else 0
-    pip = '#ffffff' if luminance(fill) < 140 else '#0d1117'
     pips = ''
     for cy in (-11.25, -3.75):
         for dx, dy in PIPS[level]:
             pips += f'M{num(x0+4.5+dx+1.05)} {num(cy+dy)}a1.05 1.05 0 1 0 -2.1 0a1.05 1.05 0 1 0 2.1 0z'
-    return (f'<rect x="{x0}" y="-15" width="9" height="15" rx="1.8" fill="{fill}" stroke="#0d1117" stroke-opacity=".55" stroke-width=".8" {identity}/>'
-            f'<path d="M{x0+.9} -7.5H{x0+8.1}" stroke="{pip}" stroke-opacity=".55" stroke-width=".7"/>'
-            f'<path d="{pips}" fill="{pip}"/>')
+    return (f'<path d="M{x0+9} -15l2.2 -2.2V-2.2L{x0+9} 0z" fill="{p2["ivory_side"]}" stroke="{p2["outline"]}" stroke-opacity=".5" stroke-width=".6"/>'
+            f'<path d="M{x0} -15l2.2 -2.2h9L{x0+9} -15z" fill="#ffffff" stroke="{p2["outline"]}" stroke-opacity=".5" stroke-width=".6"/>'
+            f'<rect x="{x0}" y="-15" width="9" height="15" rx="1.6" fill="{p2["ivory"]}" stroke="{p2["outline"]}" stroke-opacity=".7" stroke-width=".8" {identity}/>'
+            f'<path d="M{x0+.9} -7.5H{x0+8.1}" stroke="{p2["pip"]}" stroke-opacity=".45" stroke-width=".7"/>'
+            f'<path d="{pips}" fill="{p2["pip"]}"/>'
+            f'<rect x="{x0+1}" y="-2.6" width="7" height="1.7" rx=".8" fill="{accent}"/>')
+
+
+def pixel_ball(p2):
+    steel = p2['steel']
+    cells = ((-2, -4, 4, 2), (-4, -2, 8, 4), (-2, 2, 4, 2))
+    body = ''.join(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{steel[0]}"/>' for x, y, w, h in cells)
+    return (body+f'<rect x="-2" y="-4" width="4" height="2" fill="{steel[2]}" opacity=".5"/>'
+            f'<rect x="-4" y="-2" width="2" height="2" fill="{steel[2]}"/><rect x="0" y="0" width="4" height="2" fill="{steel[3]}"/>'
+            f'<rect x="-2" y="2" width="4" height="2" fill="{steel[1]}"/>')
 
 
 def domino(cal, model, theme):
     order, n, side = model['order'], len(model['order']), model['dir']
+    p2 = palette2(theme)
     step = min(.12, 26/max(1, n))
     first = 2.6
     down_end = first+n*step+.7
     rise0 = down_end+3
     finish = rise0+n*step*.55+1.2
     draw = Drawing(cal, 'domino', theme, finish+2)
+    rails = ''.join(f'M16 {xy((0, r))[1]-8}h{draw.width-32}v16h-{draw.width-32}z' for r in range(7))
+    edges = ''.join(f'M16 {xy((0, r))[1]+7}h{draw.width-32}v1h-{draw.width-32}z' for r in range(7))
+    draw.backdrop.append(f'<path d="{rails}" fill="{p2["rail"]}"/><path d="{edges}" fill="{p2["rail_edge"]}"/>')
     shadows = ''.join(f'M{num(xy(p)[0]-5)} {xy(p)[1]+7.6}a5 1.4 0 1 0 10 0a5 1.4 0 1 0 -10 0z' for p in order)
-    draw.parts.append(f'<path d="{shadows}" fill="#000000" opacity="{".3" if theme == "dark" else ".16"}"/>')
+    draw.parts.append(f'<path d="{shadows}" fill="#000000" opacity="{".38" if theme == "dark" else ".2"}"/>')
+    puffs = n <= 160
     for i, p in enumerate(order):
         x, y = xy(p)
         pivot = (x+4.5*side, y+7.5)
@@ -501,48 +591,57 @@ def domino(cal, model, theme):
         fall = first+i*step
         rise = rise0+(n-1-i)*step*.55
         flat = 84
-        body = domino_body(draw.green[cal.grid[p]], cal.grid[p], side, f'data-day="{p[0]},{p[1]}"')
+        body = domino_body(p2, draw.green[cal.grid[p]] if theme == 'light' else draw.green[max(2, cal.grid[p])], cal.grid[p], side, f'data-day="{p[0]},{p[1]}"')
         frames = [(fall, {'transform': at(0)}), (fall+.16, {'transform': at(20)}), (fall+.3, {'transform': at(58)}),
                   (fall+.4, {'transform': at(flat)}), (fall+.47, {'transform': at(flat-5)}), (fall+.55, {'transform': at(flat)}),
                   (rise, {'transform': at(flat)}), (rise+.25, {'transform': at(28)}), (rise+.42, {'transform': at(-5)}), (rise+.55, {'transform': at(0)})]
         draw.parts.append(draw.animated(body, frames, {'transform': at(0)}))
-        if i % 3 == 0:
-            draw.spark((p[0]+side, p[1]), fall+.4, draw.accent)
-    # A steel ball rolls in from the edge and starts the chain.
+        if puffs and i % 2 == 0:
+            pixel_puff(draw, pivot[0]+4*side, pivot[1]-1, fall+.4, tint(p2['ivory'], .0, '#ffffff') if theme == 'dark' else '#8f8a78')
     x0, y0 = xy(order[0])
-    ball = ('<circle r="3.4" fill="#c9d1d9"/><circle cx="-1" cy="-1.1" r="1.1" fill="#ffffff"/>')
     edge = -14 if side == 1 else draw.width+14
-    hit_x = x0-9*side
-    frames = [(first-1.6, {'transform': transform(edge, y0+3.1, 1, 0), 'opacity': '1'}),
-              (first-.05, {'transform': transform(hit_x, y0+3.1, 1, 360*side), 'opacity': '1'}),
-              (first+.4, {'transform': transform(hit_x+3*side, y0+3.1, 1, 400*side), 'opacity': '0'})]
-    draw.parts.append(draw.animated(ball, frames, {'transform': transform(edge, y0+3.1, 1, 0), 'opacity': '0'}))
+    hit_x = int(x0-11*side)
+    draw.parts.append(draw.animated(pixel_ball(p2), [
+        (first-1.6, {'transform': transform(edge, y0+3), 'opacity': '1'}),
+        (first-.05, {'transform': transform(hit_x, y0+3), 'opacity': '1'}),
+        (first+.02, {'transform': transform(hit_x+2*side, y0+3), 'opacity': '1'}),
+        (first+.4, {'transform': transform(hit_x+5*side, y0+3), 'opacity': '0'})],
+        {'transform': transform(edge, y0+3), 'opacity': '0'}))
     draw.parts.append(caption('DOMINO / CHAIN REACTION'))
     return draw
 
 
 def dust(cal, model, theme):
-    order, drift, n = model['order'], model['drift'], len(model['order'])
+    order, n = model['order'], len(model['order'])
     sweep = min(22, max(6, n*.12))
     snap0 = 2
     back0 = snap0+sweep+3.5
     finish = back0+sweep+1.8
     draw = Drawing(cal, 'dust', theme, finish+3)
-    for i, (p, (dx, dy, rot)) in enumerate(zip(order, drift)):
-        x, y = xy(p)
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    quads = ((-3, -3), (3, -3), (-3, 3), (3, 3)) if n <= 160 else ((-3, 0), (3, 0))
+    size = 6 if n <= 160 else 6
+    hop = .17
+    fade = ('1', '1', '1', '.8', '.55', '.25', '0')
+    for i, p in enumerate(order):
+        x, y = int(xy(p)[0]), int(xy(p)[1])
         gone = snap0+i/max(1, n)*sweep
         back = back0+i/max(1, n)*sweep
-        away = {'transform': transform(x+dx, y+dy, .25, rot), 'opacity': '0'}
-        near = {'transform': transform(x-dx*.4, y-dy*.4+8, .25, -rot*.5), 'opacity': '0'}
-        lone_tile(draw, p, [(gone, {}), (gone+.25, {'transform': transform(x+3, y-2, .95, 6), 'opacity': '.8'}),
-                            (gone+1.2, away), (back, near),
-                            (back+.9, {'transform': transform(x, y, 1.1)}), (back+1.05, {})])
-        mote = f'<rect x="-1.5" y="-1.5" width="3" height="3" fill="{draw.green[cal.grid[p]]}"/>'
-        draw.parts.append(draw.animated(mote, [
-            (gone+.1, {'transform': transform(x, y), 'opacity': '.9'}),
-            (gone+1.5, {'transform': transform(x+dx*1.9, y+dy*1.5, .6, rot*2), 'opacity': '0'})],
-            {'transform': transform(x, y), 'opacity': '0'}))
-        draw.spark(p, back+.9, draw.cyan)
+        colour = draw.green[cal.grid[p]]
+        lone_tile(draw, p, stepped([(gone, {}), (gone+.05, {'opacity': '0'}), (back+.3, {'opacity': '1', 'fill': '#ffffff'}), (back+.3+hop, {})]))
+        rng = random.Random(i*977+13)
+        for q, (ox, oy) in enumerate(quads):
+            wind, lift, sag = rng.uniform(4, 8), rng.uniform(3, 6), rng.uniform(.5, 1.0)
+            shade = tint(colour, .16 if (q % 2) else .0, '#ffffff') if q != 2 else tint(colour, .18, '#000000')
+            bit = f'<rect x="{-size//2}" y="{-size//2}" width="{size}" height="{size}" fill="{shade}"/>'
+            t0 = gone+.03+q*.06+rng.uniform(0, .12)
+            path = [(x+ox+round(wind*j*(1+.12*j)), y+oy+round(-lift*j+sag*j*j)) for j in range(7)]
+            frames = [(t0+j*hop, {'transform': transform(px, py), 'opacity': fade[j]}) for j, (px, py) in enumerate(path)]
+            frames += [(back-.34, {'transform': transform(path[3][0], path[3][1]), 'opacity': '0'}),
+                       (back-.17, {'transform': transform(path[1][0], path[1][1]), 'opacity': '.7'}),
+                       (back, {'transform': transform(x+ox, y+oy), 'opacity': '1'}),
+                       (back+.3, {'transform': transform(x+ox, y+oy), 'opacity': '0'})]
+            draw.parts.append(draw.animated(bit, stepped(frames), {'transform': transform(x+ox, y+oy), 'opacity': '0'}))
     draw.parts.append(caption('PIXEL DUST / SNAP AND REFORM'))
     return draw
 
@@ -555,73 +654,89 @@ def sorter(cal, model, theme):
     back0 = out0+n*step+4
     finish = back0+n*step+1.6
     draw = Drawing(cal, 'sorter', theme, finish+3)
-    gap = 12
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    gap = 14
     binw = (draw.width-48-3*gap)/4
     peak = max(counts)
-    # Largest mini-tile pitch at which the fullest bin still fits in about five rows.
     pitch = next((m for m in (8, 7, 6, 5, 4.4) if int((binw-10)/m)*int(34/m) >= peak), 4.4)
     per_row = max(1, int((binw-10)/pitch))
     mini = (pitch-.9)/12
+    accents = ('#3fae6a', '#37c26f', '#4ade80', '#86efac') if theme == 'dark' else ('#3a9d5d', '#22863a', '#1a7f37', '#116329')
     for b in range(4):
-        x0 = 24+b*(binw+gap)
-        draw.parts.append(f'<rect x="{num(x0)}" y="160" width="{num(binw)}" height="42" rx="5" fill="{draw.empty}" stroke="{draw.line}" stroke-width="1.5"/>')
-        draw.parts.append(f'<text x="{num(x0)}" y="213">LEVEL {b+1} · {counts[b]} days</text>')
+        x0 = round(24+b*(binw+gap))
+        accent = accents[b]
+        w = round(binw)
+        draw.parts.append(f'<rect x="{x0}" y="156" width="{w}" height="46" fill="{accent}" opacity=".10"/>')
+        draw.parts.append(f'<path d="M{x0} 156h{w}v46h-{w}zM{x0+2} 158v42h{w-4}v-42z" fill="{accent}" fill-rule="evenodd"/>')
+        draw.parts.append(f'<rect x="{x0+w//2-18}" y="152" width="36" height="6" fill="{accent}"/>')
+        draw.parts.append(f'<text x="{x0+2}" y="214" style="fill:{accent};font-weight:700">LEVEL {b+1}</text>')
+        draw.parts.append(f'<text x="{x0+w-2}" y="214" text-anchor="end" style="fill:{draw.muted};font-weight:700">{counts[b]} DAYS</text>')
     for i, (p, (b, k)) in enumerate(zip(order, slots)):
-        home = xy(p)
-        slot = (24+b*(binw+gap)+8+pitch/2+(k % per_row)*pitch, 197-pitch/2-(k//per_row)*pitch)
+        home = (int(xy(p)[0]), int(xy(p)[1]))
+        slot = (round(24+b*(binw+gap)+8+pitch/2+(k % per_row)*pitch), round(198-pitch/2-(k//per_row)*pitch))
         out, back = out0+i*step, back0+(n-1-i)*step
         frames = [(out, {})]
         for j in range(1, 7):
             t = ease(j/6)
-            pt = bezier(home, (home[0], 150), (slot[0], 150), slot, t)
-            frames.append((out+j/6*.9, {'transform': transform(*pt, 1+(mini-1)*t, 180*t)}))
-        frames.append((back, {'transform': transform(*slot, mini, 180)}))
+            pt = bezier(home, (home[0], 150), (slot[0], 148), slot, t)
+            frames.append((out+j/6*.9, {'transform': transform(round(pt[0]), round(pt[1]), 1+(mini-1)*t)}))
+        frames.append((back, {'transform': transform(*slot, mini)}))
         for j in range(1, 7):
             t = ease(j/6)
-            pt = bezier(slot, (slot[0], 152), (home[0], 152), home, t)
-            frames.append((back+j/6*.9, {'transform': transform(*pt, mini+(1-mini)*t, 180*(1-t))}))
+            pt = bezier(slot, (slot[0], 150), (home[0], 150), home, t)
+            frames.append((back+j/6*.9, {'transform': transform(round(pt[0]), round(pt[1]), mini+(1-mini)*t)}))
         lone_tile(draw, p, frames+[(back+1.0, {'transform': transform(*home, 1.08)}), (back+1.15, {})])
-        draw.spark(p, back+.95, draw.cyan)
+        pixel_puff(draw, slot[0], slot[1]-2, out+.9, accents[b])
     return draw
 
 
 def synth(cal, model, theme):
     cols = cal.cols
+    p2 = palette2(theme)
     sweeps, clock = [], 1.5
     for ps in model['passes']:
         sweeps.append((clock, ps['dir'], ps['tempo']))
         clock += cols*ps['tempo']+1.2
     finish = clock+.6
     draw = Drawing(cal, 'synth', theme, finish+2)
-    xs = [xy((c, 0))[0] for c in range(cols)]
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    xs = [int(xy((c, 0))[0]) for c in range(cols)]
     frames = []
     for start, direction, tempo in sweeps:
         a, b = (xs[0], xs[-1]) if direction == 1 else (xs[-1], xs[0])
-        frames += [(start-.05, {'transform': transform(a, 38), 'opacity': '0'}), (start, {'transform': transform(a, 38), 'opacity': '1'}),
-                   (start+cols*tempo, {'transform': transform(b, 38), 'opacity': '1'}),
-                   (start+cols*tempo+.2, {'transform': transform(b, 38), 'opacity': '0'})]
-    head = (f'<rect x="-6" y="0" width="12" height="118" fill="{draw.cyan}" opacity=".16"/>'
-            f'<rect x="-1.2" y="0" width="2.4" height="118" rx="1" fill="{draw.cyan}"/>')
+        mk = lambda x, op: {'transform': transform(x, 38), 'opacity': op}
+        frames += [(start-.05, mk(a, '0')), (start, mk(a, '1')), (start+cols*tempo, mk(b, '1')), (start+cols*tempo+.2, mk(b, '0'))]
+    tip = ''.join(f'<rect x="{-3+k}" y="{k*1-2}" width="{6-2*k}" height="1" fill="{draw.cyan}"/>' for k in range(3))
+    tip_b = ''.join(f'<rect x="{-3+k}" y="{118+1-k}" width="{6-2*k}" height="1" fill="{draw.cyan}"/>' for k in range(3))
+    head = f'<rect x="-8" y="0" width="16" height="118" fill="{draw.cyan}" opacity=".10"/><rect x="-1" y="0" width="2" height="118" fill="{draw.cyan}"/>{tip}{tip_b}'
     draw.parts.append(draw.animated(head, frames, {'transform': transform(xs[0], 38), 'opacity': '0'}))
     sums = [sum(cal.grid[c, r] for r in range(7)) for c in range(cols)]
     peak = max(max(sums), 1)
+    seg_colours = [p2['led'][0]]*5+[p2['led'][1]]*2+[p2['led'][2]]*2
+    draw.parts.append(f'<rect x="20" y="201" width="{draw.width-40}" height="1" fill="{draw.line}"/>')
     for c in range(cols):
-        height = max(3, 24*sums[c]/peak)
-        base = {'transform': f'translate({num(xs[c])}px,200px) rotate(0deg) scale(1,1)', 'opacity': '.35'}
-        bar = f'<rect x="-3.5" y="{num(-height)}" width="7" height="{num(height)}" rx="2" fill="{draw.accent}"/>'
-        bar_frames = []
-        for start, direction, tempo in sweeps:
-            hit = start+(c if direction == 1 else cols-1-c)*tempo
-            pulse = {'transform': f'translate({num(xs[c])}px,200px) rotate(0deg) scale(1,1.5)', 'opacity': '1'}
-            bar_frames += [(hit-.02, base), (hit+.05, pulse), (hit+.4, base)]
-        draw.parts.append(draw.animated(bar, bar_frames, base))
-    for p in cal.active:
-        x, y = xy(p)
+        count = max(1, round(9*sums[c]/peak)) if sums[c] else 0
+        if not count:
+            draw.parts.append(f'<rect x="{xs[c]-3}" y="199" width="6" height="2" fill="{draw.line}"/>')
+            continue
+        segs = ''.join(f'<rect x="-3" y="{-3*(k+1)}" width="6" height="2" fill="{seg_colours[k]}"/>' for k in range(count))
+        base = {'transform': transform(xs[c], 200), 'opacity': '.45'}
         pulses = []
         for start, direction, tempo in sweeps:
+            hit = start+(c if direction == 1 else cols-1-c)*tempo
+            pulses += [(hit-.02, base), (hit, {'transform': base['transform'], 'opacity': '1'}), (hit+.28, base)]
+        draw.parts.append(draw.animated(segs, stepped(pulses), base))
+    for p in cal.active:
+        x, y = int(xy(p)[0]), int(xy(p)[1])
+        pulses, ping = [], []
+        for start, direction, tempo in sweeps:
             hit = start+(p[0] if direction == 1 else cols-1-p[0])*tempo
-            pulses += [(hit-.02, {}), (hit+.04, {'transform': transform(x, y, 1.55), 'fill': draw.cyan}), (hit+.3, {})]
-        lone_tile(draw, p, pulses)
+            pulses += [(hit-.02, {}), (hit, {'transform': transform(x, y, 1.3), 'fill': tint(draw.green[cal.grid[p]], .55)}), (hit+.14, {})]
+            ping += [(hit, {'transform': transform(x, y, 1), 'opacity': '.9'}), (hit+.1, {'transform': transform(x, y, 1.35), 'opacity': '.7'}),
+                     (hit+.2, {'transform': transform(x, y, 1.7), 'opacity': '.4'}), (hit+.3, {'transform': transform(x, y, 1.7), 'opacity': '0'})]
+        lone_tile(draw, p, stepped(pulses))
+        ring = f'<rect x="-6" y="-6" width="12" height="12" fill="none" stroke="{draw.cyan}" stroke-width="1"/>'
+        draw.parts.append(draw.animated(ring, stepped(ping), {'transform': transform(x, y, 1), 'opacity': '0'}))
     draw.parts.append(caption('SYNTH / PLAY THE YEAR'))
     return draw
 
@@ -632,40 +747,62 @@ def claw(cal, model, theme):
     first = 1.5
     finish = first+n*s+.8
     draw = Drawing(cal, 'claw', theme, finish+5)
-    chute = draw.width-30
-    draw.parts.append(f'<rect x="16" y="14" width="{draw.width-32}" height="3" rx="1.5" fill="{draw.line}"/>')
-    draw.parts.append(f'<rect x="{chute-20}" y="174" width="40" height="32" rx="5" fill="{draw.empty}" stroke="{draw.line}" stroke-width="1.5"/>')
-    draw.parts.append(f'<text x="{chute-20}" y="213">PRIZES</text>')
-    head_frames, cable_frames = [], []
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    w = draw.width
+    binw, bin_x = 150, w-24-150
+    chute = bin_x+binw//2
+    pitch = 5.6
+    per_row = int((binw-10)/pitch)
+    mini = (pitch-.9)/12
+    draw.parts.append(f'<rect x="12" y="3" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="3" width="{w-24}" height="1" fill="{draw.muted}" opacity=".5"/>'
+                      f'<rect x="12" y="1" width="3" height="8" fill="{draw.muted}"/><rect x="{w-15}" y="1" width="3" height="8" fill="{draw.muted}"/>')
+    draw.parts.append(f'<rect x="{bin_x}" y="168" width="{binw}" height="38" fill="{draw.accent}" opacity=".10"/>')
+    draw.parts.append(f'<path d="M{bin_x} 168h{binw}v38h-{binw}zM{bin_x+2} 170v34h{binw-4}v-34z" fill="{draw.accent}" fill-rule="evenodd"/>')
+    draw.parts.append(''.join(f'<rect x="{bin_x+k*binw//5}" y="170" width="1" height="34" fill="{draw.accent}" opacity=".25"/>' for k in range(1, 5)))
+    draw.parts.append(f'<rect x="{chute-16}" y="164" width="32" height="5" fill="{draw.accent}"/>')
+    draw.parts.append(f'<text x="{bin_x}" y="215" style="fill:{draw.accent};font-weight:700">PRIZES</text>')
+    head_frames, cable_frames, prong_frames, car_frames = [], [], [], []
 
-    def place(t, x, yh):
+    def place(t, x, yh, closed):
+        x = round(x)
         head_frames.append((t, {'transform': transform(x, yh), 'opacity': '1'}))
-        cable_frames.append((t, {'transform': f'translate({num(x)}px,15px) rotate(0deg) scale(1,{num(max(1, yh-15))})', 'opacity': '1'}))
+        cable_frames.append((t, {'transform': f'translate({x}px,7px) rotate(0deg) scale(1,{num(max(1, yh-7))})', 'opacity': '1'}))
+        prong_frames.append((t, {'transform': f'translate({x}px,{yh}px) rotate(0deg) scale({.5 if closed else 1},1)', 'opacity': '1'}))
+        car_frames.append((t, {'transform': transform(x, 5), 'opacity': '1'}))
 
     for i, p in enumerate(order):
-        x, y = xy(p)
+        x, y = int(xy(p)[0]), int(xy(p)[1])
         t = first+i*s
-        place(t, chute, 22)
-        place(t+.3*s, x, 22)
-        place(t+.5*s, x, y-9)
-        place(t+.56*s, x, y-9)
-        place(t+.78*s, x, 22)
-        place(t+s, chute, 22)
-        restore = finish+.8+i/max(1, n)*1.4
-        pop = {'opacity': '0', 'transform': transform(x, y+5, .35)}
-        lone_tile(draw, p, [(t+.5*s, {}), (t+.56*s, {'transform': transform(x, y)}),
-                            (t+.78*s, {'transform': transform(x, 31)}), (t+s, {'transform': transform(chute, 31)}),
-                            (t+s+.18, {'transform': transform(chute, 190, .7)}), (t+s+.26, {'opacity': '0', 'transform': transform(chute, 190, .7)}),
-                            (restore, pop), (restore+.04, {**pop, 'opacity': '.45'}), (restore+.4, {})])
-        draw.spark(p, t+.53*s, draw.accent)
-    place(finish, chute, 22)
-    head_frames.append((finish+.4, {'transform': transform(chute, 22), 'opacity': '0'}))
-    cable_frames.append((finish+.4, {'transform': f'translate({num(chute)}px,15px) rotate(0deg) scale(1,7)', 'opacity': '0'}))
-    cable = f'<rect x="-.6" y="0" width="1.2" height="1" fill="{draw.muted}"/>'
-    prongs = (f'<rect x="-6" y="-3" width="12" height="5" rx="2" fill="{draw.accent}"/>'
-              f'<path d="M-6 2L-8 10M6 2L8 10" stroke="{draw.accent}" stroke-width="2" stroke-linecap="round" fill="none"/>')
-    draw.parts.append(draw.animated(cable, cable_frames, {'transform': f'translate({num(chute)}px,15px) rotate(0deg) scale(1,7)', 'opacity': '0'}))
-    draw.parts.append(draw.animated(prongs, head_frames, {'transform': transform(chute, 22), 'opacity': '0'}))
+        slot = (round(bin_x+8+pitch/2+(i % per_row)*pitch), round(202-pitch/2-(i//per_row)*pitch))
+        place(t, chute, 22, False)
+        place(t+.3*s, x, 22, False)
+        place(t+.5*s, x, y-9, False)
+        place(t+.56*s, x, y-9, True)
+        place(t+.78*s, x, 22, True)
+        place(t+s, chute, 22, True)
+        back = finish+.8+(n-1-i)/max(1, n)*3
+        frames = [(t+.5*s, {}), (t+.56*s, {'transform': transform(x, y)}), (t+.78*s, {'transform': transform(x, 31)}),
+                  (t+s, {'transform': transform(chute, 31)}), (t+s+.22, {'transform': transform(chute, 150, .8)}),
+                  (t+s+.5, {'transform': transform(*slot, mini)}), (back, {'transform': transform(*slot, mini)})]
+        for j in range(1, 7):
+            u = ease(j/6)
+            pt = bezier(slot, (slot[0], 150), (x, 150), (x, y), u)
+            frames.append((back+j/6*.9, {'transform': transform(round(pt[0]), round(pt[1]), mini+(1-mini)*u)}))
+        lone_tile(draw, p, frames+[(back+1.0, {'transform': transform(x, y, 1.08)}), (back+1.15, {})])
+        pixel_puff(draw, x, y-8, t+.56*s, draw.accent)
+    place(finish, chute, 22, False)
+    for frames in (head_frames, cable_frames, prong_frames, car_frames):
+        frames.append((finish+.5, {**frames[-1][1], 'opacity': '0'}))
+    draw.parts.append(draw.animated(f'<rect x="-8" y="-3" width="16" height="7" fill="{draw.muted}"/><rect x="-8" y="2" width="16" height="2" fill="{draw.line}"/>', car_frames,
+                                    {'transform': transform(chute, 5), 'opacity': '0'}))
+    draw.parts.append(draw.animated(f'<rect x="0" y="0" width="1" height="1" fill="{draw.muted}"/>', cable_frames,
+                                    {'transform': f'translate({chute}px,7px) rotate(0deg) scale(1,15)', 'opacity': '0'}))
+    hub = f'<rect x="-6" y="-4" width="12" height="7" fill="{draw.accent}"/><rect x="-6" y="1" width="12" height="2" fill="{tint(draw.accent, .35, "#000000")}"/>'
+    draw.parts.append(draw.animated(hub, head_frames, {'transform': transform(chute, 22), 'opacity': '0'}))
+    prongs = (''.join(f'<rect x="{x0}" y="3" width="2" height="9" fill="{draw.accent}"/><rect x="{x1}" y="10" width="4" height="2" fill="{draw.accent}"/>'
+                      for x0, x1 in ((-7, -7), (5, 3)))
+              + f'<rect x="-1" y="3" width="2" height="8" fill="{draw.accent}"/>')
+    draw.parts.append(draw.animated(prongs, prong_frames, {'transform': f'translate({chute}px,22px) rotate(0deg) scale(1,1)', 'opacity': '0'}))
     draw.parts.append(caption('CLAW MACHINE / GRAB EVERY DAY'))
     return draw
 
