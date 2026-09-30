@@ -150,12 +150,52 @@ class Drawing:
                 ''.join(self.backdrop)+self.static_grid()+''.join(self.parts)+'</g></svg>')
 
 
+def mc_block(colour):
+    """A 12x12 grass block: coloured grass cap, dirt body with pebbles."""
+    return (f'<rect x="-6" y="-6" width="12" height="12" fill="#7d5233"/>'
+            '<rect x="-4" y="1" width="3" height="2" fill="#a06e42"/><rect x="1" y="3" width="3" height="2" fill="#a06e42"/>'
+            '<rect x="2" y="-1" width="2" height="2" fill="#65401f"/><rect x="-5" y="4" width="2" height="2" fill="#65401f"/>'
+            f'<rect x="-6" y="-6" width="12" height="4" fill="{colour}"/><rect x="-6" y="-2" width="2" height="2" fill="{colour}"/>'
+            f'<rect x="2" y="-2" width="3" height="2" fill="{colour}"/><rect x="-6" y="-6" width="12" height="1" fill="#ffffff" opacity=".22"/>')
+
+
 def minecraft(cal, model, theme):
-    order = model['order']
-    step = min(.7, 64/max(1, len(order)))
-    finish = 2+len(order)*step
+    order, n = model['order'], len(model['order'])
+    step = min(.7, 64/max(1, n))
+    finish = 2+n*step
     draw = Drawing(cal, 'minecraft', theme, finish+6)
-    # Pixel explorer with turquoise shirt, square head and a diamond-coloured pick.
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    w = draw.width
+    dark = theme == 'dark'
+    # Sky details in the free strip above the calendar: stars and a square moon by night, pixel clouds by day.
+    if dark:
+        rng = random.Random(n+7)
+        sky = ''.join(f'<rect x="{rng.randint(20, w-20)}" y="{rng.randint(20, 32)}" width="2" height="2"/>' for _ in range(14))
+        draw.backdrop.append(f'<g fill="#e8ecff" opacity=".7">{sky}</g><rect x="{w-70}" y="20" width="10" height="10" fill="#e8ecff"/>'
+                             f'<rect x="{w-67}" y="23" width="3" height="3" fill="#b7c0e6"/>')
+    else:
+        clouds = ''.join(f'<rect x="{x}" y="{y}" width="18" height="4"/><rect x="{x+4}" y="{y-3}" width="10" height="3"/>'
+                         for x, y in ((90, 26), (380, 30), (640, 25)))
+        draw.backdrop.append(f'<g fill="#e6eefc">{clouds}</g><rect x="{w-70}" y="20" width="10" height="10" fill="#ffd166"/>')
+    # Grass and dirt strip along the bottom.
+    rng = random.Random(n*3+1)
+    specks = ''.join(f'<rect x="{x}" y="{rng.randint(211, 214)}" width="{rng.choice((2, 3))}" height="2" fill="{rng.choice(("#65401f", "#a06e42", "#8a8a8a"))}"/>' for x in range(6, w, rng.randint(9, 15)))
+    tufts = ''.join(f'<rect x="{x}" y="203" width="2" height="1" fill="#86cf5a"/>' for x in range(4, w, 11))
+    draw.parts.append(f'<rect x="0" y="206" width="{w}" height="10" fill="#7d5233"/>{specks}<rect x="0" y="204" width="{w}" height="4" fill="#5fa03c"/>{tufts}')
+    # Hotbar: one slot per level with a live stack count, in the familiar bevelled grey.
+    counts = [sum(1 for p in cal.active if cal.grid[p] == level) for level in (1, 2, 3, 4)]
+    slot, gap = 22, 2
+    hx0 = round(w/2-(4*slot+3*gap)/2)
+    hy = 172
+    draw.parts.append(f'<rect x="{hx0-3}" y="{hy-3}" width="{4*slot+3*gap+6}" height="{slot+6}" fill="#c6c6c6"/>')
+    icons = []
+    for b in range(4):
+        sx = hx0+b*(slot+gap)
+        draw.parts.append(f'<rect x="{sx}" y="{hy}" width="{slot}" height="{slot}" fill="#8b8b8b"/><rect x="{sx}" y="{hy}" width="{slot}" height="2" fill="#373737"/>'
+                          f'<rect x="{sx}" y="{hy}" width="2" height="{slot}" fill="#373737"/><rect x="{sx}" y="{hy+slot-2}" width="{slot}" height="2" fill="#ffffff"/>'
+                          f'<rect x="{sx+slot-2}" y="{hy}" width="2" height="{slot}" fill="#ffffff"/>')
+        icons.append((sx+slot/2, hy+slot/2-1))
+        draw.parts.append(f'<g transform="translate({num(sx+slot/2)} {num(hy+slot/2-1)}) scale(.95)">{mc_block(draw.green[b+1])}</g>')
     sprite = ('<path d="M-5-17h10v9H-5z" fill="#bc865b"/>'
               '<path d="M-5-19h10v4H-5zM-5-19h3v7H-5z" fill="#513a29"/>'
               '<path d="M-5-8H5V1H-5z" fill="#29b6ad"/>'
@@ -164,65 +204,115 @@ def minecraft(cal, model, theme):
               '<path d="M9-14h7v5" stroke="#64eee2" stroke-width="3" fill="none"/>')
     start = xy(order[0])
     base = {'transform': transform(start[0]-12, start[1]+4), 'opacity': '0'}
-    moves = []
+    moves, changes = [], [[] for _ in range(4)]
+    seen = [0, 0, 0, 0]
     for i, p in enumerate(order):
-        x, y = xy(p)
+        x, y = int(xy(p)[0]), int(xy(p)[1])
+        level = cal.grid[p]
         at = 1.5+i*step
+        arrive = at+step+.3
+        back = finish+.6+i/max(1, n)*2
         moves += [(at, {'transform': transform(x-12, y+4), 'opacity': '1'}),
                   (at+step*.35, {'transform': transform(x-11, y+3, 1, -12)}),
                   (at+step*.7, {'transform': transform(x-12, y+4)})]
-        body = (f'<rect x="-6" y="-6" width="12" height="12" fill="{draw.green[cal.grid[p]]}" data-day="{p[0]},{p[1]}"/>'
-                '<path d="M-6-2H6V6H-6z" fill="#805432"/>'
-                '<path d="M-4 0h3v2h-3zM1 3h3v2H1z" fill="#b98452"/>'
-                f'<path d="M-6-6H6v4H-6zM-4-2h2v2h-2zM2-2h2v2H2z" fill="{draw.green[cal.grid[p]]}"/>')
+        slot_at = icons[level-1]
         home = {'transform': transform(x, y), 'opacity': '1'}
-        dock = (24+(i % cal.cols)*16, 173+(i//cal.cols)*5)
-        back = finish+.6+i/max(1, len(order))*2
-        draw.parts.append(draw.animated(body, [(at, home),
-            (at+step*.4, {'transform': transform(x, y, .9, -8)}),
-            (at+step*.7, {'transform': transform(x, y, .7, 12)}),
-            (at+step+ .3, {'transform': transform(*dock, .55), 'opacity': '1'}),
-            (back, {'transform': transform(*dock, .55)}), (back+.7, home)], home))
-        draw.flash(f'<path d="M{x-4} {y-5}l4 4-2 3 5 3" stroke="#f0f6fc" fill="none"/>', at+step*.2, at+step*.7)
-        draw.spark(p, at+step*.6)
+        body = mc_block(draw.green[level]).replace('<rect x="-6" y="-6" width="12" height="12" fill="#7d5233"/>', f'<rect x="-6" y="-6" width="12" height="12" fill="#7d5233" data-day="{p[0]},{p[1]}"/>', 1)
+        draw.parts.append(draw.animated(body, [
+            (at, home), (at+step*.55, {'transform': transform(x, y, 1)}), (at+step*.7, {'transform': transform(x, y, 1.1)}),
+            (arrive, {'transform': transform(*slot_at, .55), 'opacity': '1'}), (arrive+.06, {'transform': transform(*slot_at, .55), 'opacity': '0'}),
+            (back-.06, {'transform': transform(*slot_at, .55), 'opacity': '0'}), (back, {'transform': transform(*slot_at, .55), 'opacity': '1'}),
+            (back+.7, home)], home))
+        crack = ('<path d="M-1 -5v3h2v3h-3v3h3v3M2 -3h3M-5 2h3" stroke="#0d1117" stroke-width="1" fill="none"/>')
+        draw.parts.append(draw.animated(crack, stepped([(at+step*.2, {'transform': transform(x, y), 'opacity': '.4'}), (at+step*.45, {'transform': transform(x, y), 'opacity': '.75'}),
+                                                        (at+step*.68, {'transform': transform(x, y), 'opacity': '1'}), (at+step*.72, {'transform': transform(x, y), 'opacity': '0'})]),
+                                          {'transform': transform(x, y), 'opacity': '0'}))
+        pixel_puff(draw, x, y, at+step*.7, '#a06e42')
+        seen[level-1] += 1
+        changes[level-1].append((arrive, seen[level-1]))
+    # Stack counts follow every pick-up and every re-placement.
+    rebuild = [[] for _ in range(4)]
+    for i, p in enumerate(order):
+        level = cal.grid[p]
+        rebuild[level-1].append(finish+.6+i/max(1, n)*2)
+    for b in range(4):
+        sx, sy = icons[b]
+        timeline = changes[b]+[(t, counts[b]-k-1) for k, t in enumerate(rebuild[b])]
+        for j, (t, value) in enumerate(timeline):
+            end = timeline[j+1][0] if j+1 < len(timeline) else draw.duration-.2
+            if value <= 0:
+                continue
+            label = (f'<text x="{num(sx+slot/2-2)}" y="{num(sy+slot/2+8)}" text-anchor="end" style="fill:#3f3f3f;font-weight:700;font-size:9px">{value}</text>'
+                     f'<text x="{num(sx+slot/2-3)}" y="{num(sy+slot/2+7)}" text-anchor="end" style="fill:#ffffff;font-weight:700;font-size:9px">{value}</text>')
+            draw.parts.append(draw.animated(label, stepped([(t+.06, {'opacity': '1'}), (end+.06, {'opacity': '0'})]), {'opacity': '0'}))
     moves += [(finish, {'opacity': '0'}), (draw.duration-.1, base)]
     draw.parts.append(draw.animated(sprite, moves, base))
-    draw.parts.append(f'<text x="24" y="210">MINE / COLLECT / REBUILD</text>')
+    draw.parts.append('<text x="24" y="197">MINE / COLLECT / REBUILD</text>')
     return draw
 
 
 def lego(cal, model, theme):
     pieces = model['pieces']
-    step = min(.55, 55/max(1, len(pieces)))
-    back = 3+len(pieces)*step
+    n = len(pieces)
+    step = min(.55, 55/max(1, n))
+    back = 3+n*step
     draw = Drawing(cal, 'lego', theme, back+5)
-    draw.parts.append(f'<rect x="16" y="172" width="{draw.width-32}" height="22" rx="5" fill="{draw.line}"/>')
-    for x in range(24, draw.width-16, 24):
-        draw.parts.append(f'<circle cx="{x}" cy="188" r="3" fill="{draw.muted}"/>')
+    draw.css.append('svg{shape-rendering:crispEdges}')
+    w = draw.width
+    dark = theme == 'dark'
+    plate, plate_edge = ('#1a2740', '#2c3d5e') if dark else ('#d9e4f4', '#b7c8e2')
+    # A studded baseplate under the calendar.
+    studs = ''.join(f'<rect x="{x}" y="{y}" width="6" height="2"/>' for x in range(20, w-20, 16) for y in (33, 148))
+    draw.backdrop.append(f'<rect x="12" y="30" width="{w-24}" height="124" fill="{plate}"/><rect x="12" y="30" width="{w-24}" height="2" fill="{plate_edge}"/>'
+                         f'<rect x="12" y="152" width="{w-24}" height="2" fill="{plate_edge}"/><g fill="{plate_edge}">{studs}</g>')
+    # Overhead rail for the hoists and a conveyor belt with scrolling ribs.
+    draw.parts.append(f'<rect x="12" y="4" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="4" width="{w-24}" height="1" fill="{draw.muted}" opacity=".6"/>')
+    draw.parts.append(f'<rect x="12" y="170" width="{w-24}" height="4" fill="{draw.line}"/><rect x="12" y="192" width="{w-24}" height="4" fill="{draw.line}"/>'
+                      f'<rect x="12" y="174" width="{w-24}" height="18" fill="{tint(draw.line, .25, "#000000")}"/>')
+    ribs = ''.join(f'<rect x="{x}" y="176" width="3" height="14"/>' for x in range(-16, w+16, 16))
+    cycles = int(draw.duration)
+    rib_frames = []
+    for k in range(cycles):
+        rib_frames += [(k+.02, {'transform': 'translate(0px,0px)'}), (k+1.0, {'transform': 'translate(16px,0px)'})]
+    draw.parts.append(draw.animated(f'<g fill="{draw.muted}" opacity=".45">{ribs}</g>', rib_frames, {'transform': 'translate(0px,0px)'}))
+    for x in (16, w-16):
+        draw.parts.append(f'<rect x="{x-5}" y="172" width="10" height="22" fill="{draw.muted}"/><rect x="{x-3}" y="176" width="6" height="14" fill="{draw.line}"/>')
     for i, piece in enumerate(pieces):
-        x, y = xy(piece[0])
+        x, y = int(xy(piece[0])[0]), int(xy(piece[0])[1])
         width = (len(piece)-1)*16+12
         colour = draw.green[cal.grid[piece[0]]]
-        body = f'<rect x="-6" y="-6" width="{width}" height="12" rx="1" fill="{colour}"/>'
-        body += f'<path d="M-6 3h{width}v3H-6z" fill="#000000" opacity=".25"/>'
+        high, low = tint(colour, .35), tint(colour, .35, '#000000')
+        body = (f'<rect x="-6" y="-6" width="{width}" height="12" fill="{colour}"/><rect x="-6" y="-6" width="{width}" height="2" fill="{high}"/>'
+                f'<rect x="-6" y="4" width="{width}" height="2" fill="{low}"/><rect x="-6" y="-6" width="1" height="12" fill="{high}"/>')
         for j, p in enumerate(piece):
-            # Invisible identity rect follows its own real date within the brick.
             body += (f'<rect x="{j*16-6}" y="-6" width="12" height="12" fill="none" data-day="{p[0]},{p[1]}"/>'
-                     f'<ellipse cx="{j*16}" cy="-7" rx="4" ry="2" fill="{colour}" stroke="{draw.muted}" stroke-width=".7"/>')
+                     f'<rect x="{j*16-3}" y="-9" width="6" height="3" fill="{colour}"/><rect x="{j*16-3}" y="-9" width="6" height="1" fill="{high}"/>'
+                     f'<rect x="{j*16+2}" y="-8" width="1" height="2" fill="{low}"/>')
         home = {'transform': transform(x, y), 'opacity': '1'}
         at = 1.5+i*step
-        # The first pass feeds a brick to the belt; a small gantry returns it.
         dock_x = 28+(i % max(1, (cal.cols//4)))*64
-        frames = [(at, home), (at+.3, {'transform': transform(x, y-13)}),
+        lift = y-13
+        frames = [(at, home), (at+.3, {'transform': transform(x, lift)}),
                   (at+.85, {'transform': transform(dock_x, 178)}),
                   (at+1.15, {'transform': transform(dock_x+18, 178)}),
                   (at+1.65, {'transform': transform(x, y-14)}),
                   (at+1.85, home), (at+1.93, {'transform': transform(x, y, 1.08)}),
                   (at+2.05, home)]
         draw.parts.append(draw.animated(body, frames, home))
-        draw.spark(piece[-1], at+1.85, draw.cyan)
-        draw.flash(f'<path d="M{x} 24V{y-16}m-7 0h14" stroke="{draw.cyan}" stroke-width="2" fill="none"/>', at+1.15, at+1.85)
-    draw.parts.append('<text x="24" y="210">BRICK WORKSHOP / SNAP FIT</text>')
+        # A hoist: trolley on the rail, cable and clamp follow the brick on both trips.
+        cx = x+width/2-6
+        cx2 = dock_x+width/2-6
+        hx = lambda px, py: (f'translate({num(px)}px,{num(py)}px) rotate(0deg) scale(1)',
+                             f'translate({num(px)}px,8px) rotate(0deg) scale(1,{num(max(1, py-8))})')
+        pts = [(at+.02, cx, lift-9, '1'), (at+.3, cx, lift-9, '1'), (at+.85, cx2, 169, '1'), (at+1.0, cx2+0, 169, '0'),
+               (at+1.5, cx2+18, 160, '0'), (at+1.66, cx, y-23, '1'), (at+1.85, cx, y-9, '1'), (at+1.95, cx, y-30, '0')]
+        clamp = f'<rect x="-4" y="0" width="8" height="3" fill="{draw.muted}"/><rect x="-1" y="-3" width="2" height="3" fill="{draw.muted}"/>'
+        wire = f'<rect x="0" y="0" width="1" height="1" fill="{draw.muted}"/>'
+        first = hx(cx, 20)
+        draw.parts.append(draw.animated(clamp, [(t, {'transform': hx(px, py)[0], 'opacity': op}) for t, px, py, op in pts], {'transform': first[0], 'opacity': '0'}))
+        draw.parts.append(draw.animated(wire, [(t, {'transform': hx(px, py)[1], 'opacity': op}) for t, px, py, op in pts], {'transform': first[1], 'opacity': '0'}))
+        pixel_puff(draw, x+width/2-6, y-9, at+1.85, draw.cyan)
+    draw.parts.append('<text x="24" y="211">BRICK WORKSHOP / SNAP FIT</text>')
     return draw
 
 
