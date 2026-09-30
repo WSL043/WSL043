@@ -18,7 +18,7 @@ THEMES = {
 NAMES = {'bomber': 'Heatmap Bomber', 'miners': 'Commit Miners',
          'link-match': 'Contribution Link', 'portal': 'Portal Courier',
          'assembly': 'Magnetic Assembly', 'minecraft': 'Minecraft Block Miner', 'lego': 'LEGO Brick Workshop',
-         'fireworks': 'Firework Show', 'domino': 'Domino Ripple', 'dust': 'Pixel Dust',
+         'fireworks': 'Firework Show', 'domino': 'Domino Run', 'dust': 'Pixel Dust',
          'sorter': 'Level Sorter', 'synth': 'Heatmap Synth', 'claw': 'Claw Machine'}
 
 
