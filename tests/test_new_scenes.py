@@ -34,11 +34,17 @@ class NewSceneTests(unittest.TestCase):
             self.assertFalse(any((p[0], y) in remaining for y in range(p[1])))
             remaining.remove(p)
 
-    def test_domino_starts_from_a_real_active_day_and_orders_by_distance(self):
+    def test_domino_chain_runs_in_column_order_in_one_direction(self):
         cal = calendar()
         model = PLANNERS['domino'](cal, 3)
-        self.assertIn(model['origin'], cal.active)
-        self.assertEqual(model['order'][0], model['origin'])
+        self.assertIn(model['dir'], (1, -1))
+        columns = [p[0] * model['dir'] for p in model['order']]
+        self.assertEqual(columns, sorted(columns))
+        self.assertCountEqual(model['order'], cal.active)
+
+    def test_domino_pips_match_the_activity_level(self):
+        from scripts.svg_arcade import PIPS
+        self.assertEqual([len(PIPS[level]) for level in (1, 2, 3, 4)], [1, 2, 3, 4])
 
     def test_synth_runs_three_distinct_tempos_alternating_direction(self):
         model = PLANNERS['synth'](calendar(), 3)
