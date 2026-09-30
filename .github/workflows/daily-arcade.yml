@@ -19,11 +19,6 @@ on:
           - snake
           - maze-chase
           - 3d-city
-          - bomber
-          - miners
-          - link-match
-          - portal
-          - assembly
           - minecraft
           - lego
           - fireworks
@@ -41,14 +36,10 @@ on:
           - bobble
           - bomberman
           - minesweeper
-          - bricks
           - platformer
-          - invaders
-          - tetris
           - rain
-          - life
       generate_all:
-        description: Refresh all thirty-three experiences including external generators
+        description: Refresh all twenty-four experiences including external generators
         required: true
         default: false
         type: boolean
@@ -205,7 +196,7 @@ jobs:
           retention-days: 1
   maze-chase:
     needs: choose
-    if: needs.choose.outputs.mode == 'all' || contains(fromJSON('["maze-chase","galaga","bobble","bomberman","minesweeper","bricks"]'), needs.choose.outputs.selected)
+    if: needs.choose.outputs.mode == 'all' || contains(fromJSON('["maze-chase","galaga","bobble","bomberman","minesweeper"]'), needs.choose.outputs.selected)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -218,11 +209,11 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           github_token: ${{ github.token }}
-          games: pacman,galaga,puzzle-bobble,bomberman,minesweeper,breakout
+          games: pacman,galaga,puzzle-bobble,bomberman,minesweeper
           player_style: opportunistic
       - run: |
           mkdir -p generated
-          for pair in pacman:maze-chase galaga:galaga puzzle-bobble:bobble bomberman:bomberman minesweeper:minesweeper breakout:bricks; do
+          for pair in pacman:maze-chase galaga:galaga puzzle-bobble:bobble bomberman:bomberman minesweeper:minesweeper; do
             src="${pair%%:*}"; dst="${pair##*:}"
             mv "dist/${src}-contribution-graph.svg" "generated/${dst}-light.svg"
             mv "dist/${src}-contribution-graph-dark.svg" "generated/${dst}-dark.svg"
@@ -260,7 +251,7 @@ jobs:
           retention-days: 1
   contrib-arcade:
     needs: choose
-    if: needs.choose.outputs.mode == 'all' || contains(fromJSON('["platformer","invaders","tetris","rain","life"]'), needs.choose.outputs.selected)
+    if: needs.choose.outputs.mode == 'all' || contains(fromJSON('["platformer","rain"]'), needs.choose.outputs.selected)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -275,14 +266,8 @@ jobs:
           outputs: |
             generated/platformer-light.svg?game=platformer&palette=github-light
             generated/platformer-dark.svg?game=platformer&palette=github-dark
-            generated/invaders-light.svg?game=invaders&palette=github-light
-            generated/invaders-dark.svg?game=invaders&palette=github-dark
-            generated/tetris-light.svg?game=blocks&palette=github-light
-            generated/tetris-dark.svg?game=blocks&palette=github-dark
             generated/rain-light.svg?game=rain&palette=github-light
             generated/rain-dark.svg?game=rain&palette=github-dark
-            generated/life-light.svg?game=life&palette=github-light
-            generated/life-dark.svg?game=life&palette=github-dark
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: arcade-contrib-arcade
