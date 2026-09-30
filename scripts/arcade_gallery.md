@@ -74,9 +74,9 @@
   <img src="./assets/arcade/heatmap-fireworks-light.svg?v=autoplay-1" alt="烟花秀：黑场后火箭逐个点亮真实活跃日期" width="100%">
 </picture>
 
-## 多米诺涟漪 · Domino Ripple
+## 多米诺连锁 · Domino Run
 
-从一个真实活跃日期出发，冲击波按距离推倒整年的格子，倒下再依次扶起。涟漪圈的半径就是格子间的实际距离，格子身份和颜色不变。
+每个活跃日是一张双点多米诺骨牌，点数就是活跃等级（1–4 点）。一颗钢珠滚来撞倒第一张，整年的骨牌按列一路推倒，每张都绕底角倒下，随后倒着的骨牌快速倒放着重新立起。方向由每日种子决定，牌的位置和颜色不变。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-domino-dark.svg?v=autoplay-1">
