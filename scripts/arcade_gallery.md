@@ -20,51 +20,6 @@
   <img src="./assets/arcade/heatmap-lego-light.svg" alt="LEGO 风格 · Brick Workshop" width="100%">
 </picture>
 
-## 磁力拼装 · Magnetic Assembly
-
-真实活跃格子拆成相邻的 1–4 格小零件，旋转到下方暂存，再磁吸回每一个原来的日期。颜色和位置完全复原。分组按每日种子变化；这是磁吸拼装，不冒充带消行和重力规则的俄罗斯方块。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-assembly-dark.svg?v=autoplay-1">
-  <img src="./assets/arcade/heatmap-assembly-light.svg?v=autoplay-1" alt="磁力拼装：完整贡献热图拆分成相邻零件，再准确归位" width="100%">
-</picture>
-
-## 热图连连看 · Contribution Link
-
-相同活跃等级的两格，能通过空白格或外围走道、最多拐两次弯，就连线消除。路径真的检查障碍，不隔墙连线。配到没有合法配对即结束；奇数或被挡住的格子会留下，绝不补假贡献凑通关。停留后恢复原图，开始下一轮。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-link-match-dark.svg?v=autoplay-1">
-  <img src="./assets/arcade/heatmap-link-match-light.svg?v=autoplay-1" alt="热图连连看：相同等级的日期沿合法路线配对消除" width="100%">
-</picture>
-
-## 传送门搬运 · Portal Courier
-
-绿格子离开原来的日期，被橙色传送门收走，再从蓝色门逐个送回原位。搬运先后随每日种子变化，每块的原色和身份不变。两扇门是游戏设施，不是贡献日。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-portal-dark.svg?v=autoplay-1">
-  <img src="./assets/arcade/heatmap-portal-light.svg?v=autoplay-1" alt="传送门搬运：贡献格子穿过双门，再回到原来的日期" width="100%">
-</picture>
-
-## 热图炸弹人 · Heatmap Bomber
-
-空白是通路，绿格子是墙，活跃等级是耐久。机器人寻找能安全撤离的位置，放炸弹、后退，爆炸遇墙停止。一直规划到墙被清完，而不是固定演示九次爆炸。清场后贡献图逐格重建，平滑循环。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-bomber-dark.svg?v=autoplay-1">
-  <img src="./assets/arcade/heatmap-bomber-light.svg?v=autoplay-1" alt="SVG 热图炸弹人：真实寻路、安全撤离、完整清场" width="100%">
-</picture>
-
-## 采矿小队 · Commit Miners
-
-两台矿工从上下两侧开工，沿空白格走到可开采的矿块。颜色等级越高，钻取时间越长；矿粒落向下方小车。每轮采完所有活跃格子，再恢复原图，不半途截断。
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/arcade/heatmap-miners-dark.svg?v=autoplay-1">
-  <img src="./assets/arcade/heatmap-miners-light.svg?v=autoplay-1" alt="SVG 采矿小队：双矿工将完整贡献热图开采完毕" width="100%">
-</picture>
-
 ## 烟花秀 · Firework Show
 
 日历先熄灯，再由五个发射台随机打出烟花，逐个点亮每一个真实的活跃日期，颜色等级不变。每日种子改变发射台与点亮顺序；没有多出任何一天。
@@ -121,21 +76,21 @@
 
 ## 外部生成器与致谢
 
-除了原生 SVG 引擎，抽卡池里还有 15 个来自开源生成器的玩法。它们都用固定提交号引用，作业只有只读权限，输出文件先落到临时目录，通过校验后才提交。
+除了原生 SVG 引擎，抽卡池里还有 11 个来自开源生成器的玩法。它们都用固定提交号引用，作业只有只读权限，输出文件先落到临时目录，通过校验后才提交。
 
 | 生成器 | 许可 | 用到的玩法 |
 | --- | --- | --- |
 | [yoshi389111/github-profile-3d-contrib](https://github.com/yoshi389111/github-profile-3d-contrib) | MIT | 3D 贡献日历的 6 种主题：乐高方块、绿色生长、四季、夜景、夜景绿色、夜景彩虹。生成器会在旁边附带雷达图、语言环形图和统计文字，`scripts/trim_3d.py` 把它们去掉，只保留 3D 日历。 |
-| [abozanona/pacman-contribution-graph](https://github.com/abozanona/pacman-contribution-graph) | 见上游仓库 | Pac-Man（迷宫追逐）、Galaga、泡泡龙、炸弹人、扫雷、打砖块。 |
-| [Emanuel0428/contrib-arcade](https://github.com/Emanuel0428/contrib-arcade) | MIT | 平台跳跃、太空侵略者、俄罗斯方块式下落、数字雨、生命游戏。 |
+| [abozanona/pacman-contribution-graph](https://github.com/abozanona/pacman-contribution-graph) | 见上游仓库 | Pac-Man（迷宫追逐）、Galaga、泡泡龙、炸弹人、扫雷。 |
+| [Emanuel0428/contrib-arcade](https://github.com/Emanuel0428/contrib-arcade) | MIT | 平台跳跃、数字雨。 |
 
 原有的 Space Shooter、Breakout、Snake 仍来自各自的上游项目。
 
 ## 每天更新什么
 
-原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上上面 15 个外部玩法和这里十三种原生 SVG，共 **33 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
+原有的 Space Shooter、Breakout、Snake、Maze Chase 和 3D City 保留；加上上面 11 个外部玩法和这里八种原生 SVG，共 **24 种**。撤下上一版新增的塔防、弹珠、激光与落砂，旧 GIF 在新 SVG 验证并发布成功后移除，不影响原来的飞船 GIF。
 
-正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这十三种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这十三张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
+正常每日运行会先获取最近 **365 天**的 GitHub 贡献日历，重新生成这八种 SVG 的深浅色版本；即使首页当天抽到旧玩法，这八张也更新。首页仍只展示一种，完整轮换袋每种一次、跨袋不连续重复；同日随机重跑不重复抽签。
 
 数据决定每个格子的位置及 0–4 活跃等级；账号、UTC 日期和玩法决定动作种子。它是每日生成的快照动画，不是刷新浏览器就实时抓数据。同色等级内的贡献次数增加不一定改变地图，也不保证每次日期种子变化都肉眼明显。没有新增活跃日时不会凭空填格；没有任何活跃日时显示空日历。
 
@@ -143,13 +98,13 @@
 
 ## 画面与边界
 
-这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的十三种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
+这些是 SVG 矢量图形 + CSS 关键帧，没有脚本、位图、外部字体、在线服务或嵌入 HTML。动画时长随地图规模变化，完成动作后收尾并恢复初始状态。本合集的八种 SVG 在屏幕上自动循环播放，不再因“减少动态效果”偏好切换成静态图；打印时显示完整的原始日历。
 
 仍然是自动播放的热图演出，不支持按键操作。小游戏不修改真实贡献记录。墙耐久、矿粒和配对规则属于模拟规则，不是精确提交次数；仅使用可访问的日期和等级，不展示私有仓库内容。
 
 ## 维护
 
-Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新十三种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
+Actions → Daily profile arcade → Run workflow 可以指定 `experience`。默认 `refresh_native=true` 刷新八种 SVG；`generate_all=true` 才会连原来五个外部生成器一起刷新。
 
 只有发布作业有 `contents: write`。提交前检查源日期、SHA-256、矢量元素白名单、完整日历画幅与主分支是否被更新；不强制推送。项目介绍不改。原生 SVG 引擎只用 Python 标准库；飞船等原有外部生成器保留各自依赖。
 
