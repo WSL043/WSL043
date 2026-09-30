@@ -280,13 +280,13 @@ def fireworks(cal: Calendar, seed: int) -> dict:
 
 
 def domino(cal: Calendar, seed: int) -> dict:
-    # A shock wave from one real active day topples every tile by distance, then stands them up again.
+    # A real domino run: every active day is a standing tile, and the chain topples across the calendar in
+    # column order, left to right or right to left. Ties inside a column are shuffled by the seed.
     rng = random.Random(seed)
-    active = cal.active
-    origin = rng.choice(active) if active else (0, 0)
-    order = sorted(active, key=lambda p: (math.hypot(p[0] - origin[0], p[1] - origin[1]), p))
-    return {'scene': 'domino', 'origin': origin, 'order': order, 'lean': rng.choice((-1, 1)),
-            'levels': [cal.grid[p] for p in order]}
+    direction = rng.choice((1, -1))
+    jitter = {p: rng.random() for p in cal.active}
+    order = sorted(cal.active, key=lambda p: (p[0] * direction, jitter[p]))
+    return {'scene': 'domino', 'dir': direction, 'order': order, 'levels': [cal.grid[p] for p in order]}
 
 
 def dust(cal: Calendar, seed: int) -> dict:

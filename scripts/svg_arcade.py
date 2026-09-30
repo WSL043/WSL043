@@ -462,31 +462,62 @@ def fireworks(cal, model, theme):
     return draw
 
 
+PIPS = {1: ((0, 0),), 2: ((-2.2, -1.8), (2.2, 1.8)), 3: ((-2.4, -1.8), (0, 0), (2.4, 1.8)),
+        4: ((-2.2, -1.8), (2.2, -1.8), (-2.2, 1.8), (2.2, 1.8))}
+
+
+def luminance(colour):
+    r, g, b = (int(colour[i:i+2], 16) for i in (1, 3, 5))
+    return .2126*r+.7152*g+.0722*b
+
+
+def domino_body(fill, level, side, identity=''):
+    """A double-N domino (N pips on each half) drawn relative to the bottom corner it pivots on."""
+    x0 = -9 if side == 1 else 0
+    pip = '#ffffff' if luminance(fill) < 140 else '#0d1117'
+    pips = ''
+    for cy in (-11.25, -3.75):
+        for dx, dy in PIPS[level]:
+            pips += f'M{num(x0+4.5+dx+1.05)} {num(cy+dy)}a1.05 1.05 0 1 0 -2.1 0a1.05 1.05 0 1 0 2.1 0z'
+    return (f'<rect x="{x0}" y="-15" width="9" height="15" rx="1.8" fill="{fill}" stroke="#0d1117" stroke-opacity=".55" stroke-width=".8" {identity}/>'
+            f'<path d="M{x0+.9} -7.5H{x0+8.1}" stroke="{pip}" stroke-opacity=".55" stroke-width=".7"/>'
+            f'<path d="{pips}" fill="{pip}"/>')
+
+
 def domino(cal, model, theme):
-    order, origin, lean = model['order'], model['origin'], model['lean']
-    speed, fall0 = .11, 1.8
-    dist = {p: math.hypot(p[0]-origin[0], p[1]-origin[1]) for p in order}
-    far = max(dist.values(), default=0)
-    rise0 = fall0+far*speed+3
-    finish = rise0+far*speed+1.2
-    draw = Drawing(cal, 'domino', theme, finish+3)
-    for p in order:
+    order, n, side = model['order'], len(model['order']), model['dir']
+    step = min(.12, 26/max(1, n))
+    first = 2.6
+    down_end = first+n*step+.7
+    rise0 = down_end+3
+    finish = rise0+n*step*.55+1.2
+    draw = Drawing(cal, 'domino', theme, finish+2)
+    shadows = ''.join(f'M{num(xy(p)[0]-5)} {xy(p)[1]+7.6}a5 1.4 0 1 0 10 0a5 1.4 0 1 0 -10 0z' for p in order)
+    draw.parts.append(f'<path d="{shadows}" fill="#000000" opacity="{".3" if theme == "dark" else ".16"}"/>')
+    for i, p in enumerate(order):
         x, y = xy(p)
-        fall, rise = fall0+dist[p]*speed, rise0+dist[p]*speed
-        down = {'transform': transform(x+4*lean, y+4, .92, 84*lean), 'opacity': '.45'}
-        lone_tile(draw, p, [(fall, {}), (fall+.14, {'transform': transform(x+2*lean, y+2, 1, 38*lean)}),
-                            (fall+.32, down), (rise, down),
-                            (rise+.16, {'transform': transform(x+lean, y+1, 1.05, 30*lean), 'opacity': '.8'}),
-                            (rise+.34, {'transform': transform(x, y, 1.12)}), (rise+.5, {})])
-    ox, oy = xy(origin)
-    for start, colour in ((fall0, draw.accent), (rise0, draw.cyan)):
-        ring = f'<circle r="1" fill="none" stroke="{colour}" stroke-width="2" vector-effect="non-scaling-stroke"/>'
-        draw.parts.append(draw.animated(ring, [
-            (start, {'transform': transform(ox, oy, .5), 'opacity': '.9'}),
-            (start+far*speed+.3, {'transform': transform(ox, oy, far*16+24), 'opacity': '0'})],
-            {'transform': transform(ox, oy, .5), 'opacity': '0'}))
-    draw.spark(origin, fall0, draw.accent)
-    draw.parts.append(caption('DOMINO / RIPPLE EFFECT'))
+        pivot = (x+4.5*side, y+7.5)
+        at = lambda angle: transform(pivot[0], pivot[1], 1, angle*side)
+        fall = first+i*step
+        rise = rise0+(n-1-i)*step*.55
+        flat = 84
+        body = domino_body(draw.green[cal.grid[p]], cal.grid[p], side, f'data-day="{p[0]},{p[1]}"')
+        frames = [(fall, {'transform': at(0)}), (fall+.16, {'transform': at(20)}), (fall+.3, {'transform': at(58)}),
+                  (fall+.4, {'transform': at(flat)}), (fall+.47, {'transform': at(flat-5)}), (fall+.55, {'transform': at(flat)}),
+                  (rise, {'transform': at(flat)}), (rise+.25, {'transform': at(28)}), (rise+.42, {'transform': at(-5)}), (rise+.55, {'transform': at(0)})]
+        draw.parts.append(draw.animated(body, frames, {'transform': at(0)}))
+        if i % 3 == 0:
+            draw.spark((p[0]+side, p[1]), fall+.4, draw.accent)
+    # A steel ball rolls in from the edge and starts the chain.
+    x0, y0 = xy(order[0])
+    ball = ('<circle r="3.4" fill="#c9d1d9"/><circle cx="-1" cy="-1.1" r="1.1" fill="#ffffff"/>')
+    edge = -14 if side == 1 else draw.width+14
+    hit_x = x0-9*side
+    frames = [(first-1.6, {'transform': transform(edge, y0+3.1, 1, 0), 'opacity': '1'}),
+              (first-.05, {'transform': transform(hit_x, y0+3.1, 1, 360*side), 'opacity': '1'}),
+              (first+.4, {'transform': transform(hit_x+3*side, y0+3.1, 1, 400*side), 'opacity': '0'})]
+    draw.parts.append(draw.animated(ball, frames, {'transform': transform(edge, y0+3.1, 1, 0), 'opacity': '0'}))
+    draw.parts.append(caption('DOMINO / CHAIN REACTION'))
     return draw
 
 
