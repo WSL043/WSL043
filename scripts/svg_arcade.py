@@ -399,10 +399,11 @@ def fireworks(cal, model, theme):
     fire = p2['fire']
     pieces = 16 if n <= 50 else (8 if n <= 110 else (4 if n <= 200 else 0))
     hops = 8 if n <= 200 else 4
-    rings = ((4, 9, 14, 18), (7, 13, 19, 24))
-    drop = (0, 0, 2, 5)
-    fade = ('1', '1', '.85', '.45')
     grow = (1.3, 1.2, 1, .75)
+    # Ring: two nested rings. Star: long and short rays. Willow: slow, heavy droop.
+    styles = (dict(radii=((4, 9, 14, 18), (7, 13, 19, 24)), drop=(0, 0, 2, 5), fade=('1', '1', '.85', '.45')),
+              dict(radii=((5, 11, 18, 24), (3, 7, 11, 14)), drop=(0, 0, 1, 3), fade=('1', '1', '.85', '.45')),
+              dict(radii=((3, 7, 10, 12), (5, 9, 13, 15)), drop=(1, 5, 11, 19), fade=('1', '.95', '.75', '.5')))
     for i, p in enumerate(order):
         x, y = int(xy(p)[0]), int(xy(p)[1])
         at = first+i*step
@@ -424,7 +425,9 @@ def fireworks(cal, model, theme):
         draw.parts.append(draw.animated(flash, stepped([(boom, {'transform': transform(x, y, 1), 'opacity': '1'}), (boom+hop, {'transform': transform(x, y, 1.6), 'opacity': '.8'}),
                                                         (boom+2*hop, {'transform': transform(x, y, 1.6), 'opacity': '0'})]),
                                           {'transform': transform(x, y, 1), 'opacity': '0'}))
-        for ring, radii in enumerate(rings[:(1 if pieces < 16 else 2) if pieces else 0]):
+        look = styles[i % 3]
+        drop, fade = look['drop'], look['fade']
+        for ring, radii in enumerate(look['radii'][:(1 if pieces < 16 else 2) if pieces else 0]):
             count = 8 if pieces >= 8 else 4
             for k in range(count):
                 angle = math.tau*(k+.5*ring)/count
@@ -524,6 +527,14 @@ def dust(cal, model, theme):
     finish = back0+sweep+1.8
     draw = Drawing(cal, 'dust', theme, finish+3)
     draw.css.append('svg{shape-rendering:crispEdges}')
+    rng0 = random.Random(n*17+5)
+    dune, height, x = '', 8, 0
+    while x < draw.width:
+        run = 4*rng0.randint(3, 8)
+        height = max(4, min(14, height+2*rng0.choice((-2, -1, 0, 1, 2))))
+        dune += f'M{x} 216V{216-height}h{run}V216z'
+        x += run
+    draw.parts.append(f'<path d="{dune}" fill="{draw.line}" opacity=".55"/>')
     quads = ((-3, -3), (3, -3), (-3, 3), (3, 3)) if n <= 160 else ((-3, 0), (3, 0))
     size = 6 if n <= 160 else 6
     hop = .17
@@ -574,6 +585,8 @@ def sorter(cal, model, theme):
         draw.parts.append(f'<rect x="{x0}" y="156" width="{w}" height="46" fill="{accent}" opacity=".10"/>')
         draw.parts.append(f'<path d="M{x0} 156h{w}v46h-{w}zM{x0+2} 158v42h{w-4}v-42z" fill="{accent}" fill-rule="evenodd"/>')
         draw.parts.append(f'<rect x="{x0+w//2-18}" y="152" width="36" height="6" fill="{accent}"/>')
+        funnel = ''.join(f'<rect x="{x0+w//2-18-2*k}" y="{150-2*k}" width="{36+4*k}" height="2" fill="{accent}" opacity="{num(.55-.13*k)}"/>' for k in range(1, 4))
+        draw.parts.append(funnel)
         draw.parts.append(f'<text x="{x0+2}" y="214" style="fill:{accent};font-weight:700">LEVEL {b+1}</text>')
         draw.parts.append(f'<text x="{x0+w-2}" y="214" text-anchor="end" style="fill:{draw.muted};font-weight:700">{counts[b]} DAYS</text>')
     for i, (p, (b, k)) in enumerate(zip(order, slots)):
@@ -666,6 +679,11 @@ def claw(cal, model, theme):
     draw.parts.append(''.join(f'<rect x="{bin_x+k*binw//5}" y="170" width="1" height="34" fill="{draw.accent}" opacity=".25"/>' for k in range(1, 5)))
     draw.parts.append(f'<rect x="{chute-16}" y="164" width="32" height="5" fill="{draw.accent}"/>')
     draw.parts.append(f'<text x="{bin_x}" y="215" style="fill:{draw.accent};font-weight:700">PRIZES</text>')
+    for phase in (0, 1):
+        lights = ''.join(f'<rect x="{x}" y="4" width="2" height="2"/>' for x in range(20+8*phase, w-20, 16))
+        lights += ''.join(f'<rect x="{bin_x+4+8*phase+k*16}" y="162" width="2" height="2"/>' for k in range((binw-8)//16))
+        blink = [(t, {'opacity': '1' if (int(t*2)+phase) % 2 else '.2'}) for t in [k*.5 for k in range(1, int(finish*2))]]
+        draw.parts.append(draw.animated(f'<g fill="{draw.accent}">{lights}</g>', stepped(blink), {'opacity': '.2'}))
     head_frames, cable_frames, prong_frames, car_frames = [], [], [], []
 
     def place(t, x, yh, closed):
