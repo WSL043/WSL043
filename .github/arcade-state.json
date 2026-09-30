@@ -1,5 +1,5 @@
 {
-  "current": "domino",
+  "current": "fireworks",
   "remaining": [
     "dust",
     "sorter",
@@ -7,30 +7,11 @@
     "claw",
     "minecraft",
     "lego",
-    "bomber",
-    "miners",
-    "link-match",
-    "assembly",
-    "3d-green",
-    "platformer",
-    "3d-night",
-    "bobble",
-    "invaders",
-    "tetris",
-    "galaga",
-    "3d-season",
-    "minesweeper",
-    "3d-night-green",
-    "3d-rainbow",
-    "life",
-    "rain",
-    "bricks",
-    "bomberman",
     "breakout",
     "space-shooter",
     "snake"
   ],
   "cycle": 4,
   "updated_on": "2026-09-30",
-  "catalog_version": 6
+  "catalog_version": 7
 }
