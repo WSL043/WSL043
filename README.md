@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Domino Run
+## Today's Arcade: Pixel Dust
 
-A steel ball tips the first domino and the whole year topples in a chain, pips and all, then stands back up.
+Your green days crumble into drifting dust, then pull themselves back together.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-domino-dark.svg">
-    <img src="./assets/arcade/heatmap-domino-light.svg" alt="Domino Run" width="100%">
+            srcset="./assets/arcade/heatmap-dust-dark.svg">
+    <img src="./assets/arcade/heatmap-dust-light.svg" alt="Pixel Dust" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-09-30 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-01 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
