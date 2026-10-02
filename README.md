@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Pixel Dust
+## Today's Arcade: Level Sorter
 
-Your green days crumble into drifting dust, then pull themselves back together.
+Every active day flies into the bin for its level, revealing your real activity histogram.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-dust-dark.svg">
-    <img src="./assets/arcade/heatmap-dust-light.svg" alt="Pixel Dust" width="100%">
+            srcset="./assets/arcade/heatmap-sorter-dark.svg">
+    <img src="./assets/arcade/heatmap-sorter-light.svg" alt="Level Sorter" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-01 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-02 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
