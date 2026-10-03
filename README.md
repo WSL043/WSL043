@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Level Sorter
+## Today's Arcade: Heatmap Synth
 
-Every active day flies into the bin for its level, revealing your real activity histogram.
+A playhead sweeps the year like a sequencer; every green day pulses as it plays.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-sorter-dark.svg">
-    <img src="./assets/arcade/heatmap-sorter-light.svg" alt="Level Sorter" width="100%">
+            srcset="./assets/arcade/heatmap-synth-dark.svg">
+    <img src="./assets/arcade/heatmap-synth-light.svg" alt="Heatmap Synth" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-02 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-03 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
