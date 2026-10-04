@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Heatmap Synth
+## Today's Arcade: Claw Machine
 
-A playhead sweeps the year like a sequencer; every green day pulses as it plays.
+A claw plucks your contribution days one by one, then drops them back in place.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-synth-dark.svg">
-    <img src="./assets/arcade/heatmap-synth-light.svg" alt="Heatmap Synth" width="100%">
+            srcset="./assets/arcade/heatmap-claw-dark.svg">
+    <img src="./assets/arcade/heatmap-claw-light.svg" alt="Claw Machine" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-03 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-04 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
