@@ -1,7 +1,6 @@
 {
-  "current": "claw",
+  "current": "minecraft",
   "remaining": [
-    "minecraft",
     "rain",
     "3d-season",
     "3d-night",
@@ -18,6 +17,6 @@
     "snake"
   ],
   "cycle": 4,
-  "updated_on": "2026-10-04",
+  "updated_on": "2026-10-05",
   "catalog_version": 8
 }
