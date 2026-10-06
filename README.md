@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minecraft Block Miner
+## Today's Arcade: Digital Rain 🌧️
 
-Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
+Code rain cascades down and reveals your active days.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
-    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
+            srcset="./assets/arcade/rain-dark.svg">
+    <img src="./assets/arcade/rain-light.svg" alt="Digital Rain" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-05 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-06 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
