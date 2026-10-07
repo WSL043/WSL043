@@ -1,7 +1,6 @@
 {
-  "current": "rain",
+  "current": "3d-season",
   "remaining": [
-    "3d-season",
     "3d-night",
     "bobble",
     "3d-night-green",
@@ -16,6 +15,6 @@
     "snake"
   ],
   "cycle": 4,
-  "updated_on": "2026-10-06",
+  "updated_on": "2026-10-07",
   "catalog_version": 8
 }
