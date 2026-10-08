@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Night View 🌃
+## Today's Arcade: Firework Show
 
-A night-time isometric plate of your year.
+The calendar goes dark, then rockets relight every active day in a burst of colour.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-night.svg" alt="3D Night View" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/heatmap-fireworks-dark.svg">
+    <img src="./assets/arcade/heatmap-fireworks-light.svg" alt="Firework Show" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-08 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-08 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
