@@ -18,6 +18,7 @@ except ModuleNotFoundError:
     from search_race import ANALYSIS_FILES, comparison, render_comparison
 
 ASSET_MAP = {
+    'rickroll': (),  # hotlinked gif, nothing to copy
     'space-shooter': (('space-shooter.gif', 'space-shooter.gif'),),
     **{s: tuple((f'{s}-{t}.svg', f'{s}-{t}.svg') for t in ('light', 'dark'))
        for s in ('breakout', 'snake', 'maze-chase', 'galaga', 'bobble', 'bomberman', 'minesweeper', 'platformer', 'rain')},

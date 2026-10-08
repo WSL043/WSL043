@@ -37,8 +37,9 @@ on:
           - minesweeper
           - platformer
           - rain
+          - rickroll
       generate_all:
-        description: Refresh all twenty-three experiences including external generators
+        description: Refresh all twenty-four experiences including external generators
         required: true
         default: false
         type: boolean
