@@ -13,11 +13,9 @@
 <!-- ARCADE:START -->
 ## Today's Arcade: Rickroll 🎤
 
-A rare cartridge. You were looking at a contribution graph, weren't you? Click it.
+A rare cartridge. You were looking at a contribution graph, weren't you? Unmute it.
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><img src="https://github.com/poteto/poteto/blob/master/nice.gif?raw=true" alt="Rickroll" width="100%"></a>
-</p>
+https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d
 
 <p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-08 UTC</sub></p>
 
