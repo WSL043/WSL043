@@ -12,12 +12,12 @@ from pathlib import Path
 
 NATIVE = ('fireworks', 'domino', 'dust', 'sorter', 'synth', 'claw', 'minecraft')
 NEW_LEGACY = ('3d-green', '3d-season', '3d-night', '3d-night-green', '3d-rainbow',
-              'galaga', 'bobble', 'bomberman', 'minesweeper', 'platformer', 'rain')
+              'galaga', 'bobble', 'bomberman', 'minesweeper', 'platformer', 'rain', 'rickroll')
 LEGACY = ('space-shooter', 'breakout', 'snake', 'maze-chase', '3d-city') + NEW_LEGACY
 RETIRED = ('defense', 'pinball', 'laser', 'gravity', 'bomber', 'miners', 'link-match', 'portal', 'assembly',
            'invaders', 'tetris', 'life', 'bricks', 'lego')
 ARCADE_EXPERIENCES = LEGACY + NATIVE
-CATALOG_VERSION = 8
+CATALOG_VERSION = 9
 EXPERIENCE_DETAILS = {
     'space-shooter': {'title': 'Space Shooter', 'icon': '🚀', 'description': "Today's contribution grid has entered bullet-hell mode.", 'light': './assets/arcade/space-shooter.gif'},
     'breakout': {'title': 'Breakout', 'icon': '🧱', 'description': "A tiny paddle is clearing the year's contribution bricks.", 'light': './assets/arcade/breakout-light.svg', 'dark': './assets/arcade/breakout-dark.svg'},
@@ -54,6 +54,9 @@ for key, title, description in [
 ]:
     EXPERIENCE_DETAILS[key] = {'title': title, 'icon': '', 'description': description,
         'light': f'./assets/arcade/heatmap-{key}-light.svg', 'dark': f'./assets/arcade/heatmap-{key}-dark.svg'}
+EXPERIENCE_DETAILS['rickroll'] = {
+    'title': 'Rickroll', 'icon': '🎤', 'description': "A rare cartridge. You were looking at a contribution graph, weren't you? Click it.",
+    'light': 'https://github.com/poteto/poteto/blob/master/nice.gif?raw=true', 'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
 START_MARKER, END_MARKER = '<!-- ARCADE:START -->', '<!-- ARCADE:END -->'
 
 
@@ -116,10 +119,14 @@ def select_daily(state, day, requested='random', seed=''):
 def render_arcade_block(selected, day=None):
     d = EXPERIENCE_DETAILS[selected]
     lines = [f"## Today's Arcade: {d['title']} {d['icon']}".rstrip(), '', d['description'], '',
-             '<p align="center">', '  <picture>']
-    if d.get('dark'):
-        lines += ['    <source media="(prefers-color-scheme: dark)"', f'            srcset="{d["dark"]}">']
-    lines += [f'    <img src="{d["light"]}" alt="{d["title"]}" width="100%">', '  </picture>', '</p>', '']
+             '<p align="center">']
+    if d.get('link'):
+        lines += [f'  <a href="{d["link"]}"><img src="{d["light"]}" alt="{d["title"]}" width="100%"></a>', '</p>', '']
+    else:
+        lines += ['  <picture>']
+        if d.get('dark'):
+            lines += ['    <source media="(prefers-color-scheme: dark)"', f'            srcset="{d["dark"]}">']
+        lines += [f'    <img src="{d["light"]}" alt="{d["title"]}" width="100%">', '  </picture>', '</p>', '']
     stamp = f' · Updated {valid_day(day)} UTC' if day else ''
     lines += [f'<p align="center"><sub>{len(ARCADE_EXPERIENCES)} cartridges · a fresh daily draw · no back-to-back repeats{stamp}</sub></p>', '',
               '[Explore the SVG arcade](./ARCADE.md)']
