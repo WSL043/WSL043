@@ -55,8 +55,10 @@ for key, title, description in [
     EXPERIENCE_DETAILS[key] = {'title': title, 'icon': '', 'description': description,
         'light': f'./assets/arcade/heatmap-{key}-light.svg', 'dark': f'./assets/arcade/heatmap-{key}-dark.svg'}
 EXPERIENCE_DETAILS['rickroll'] = {
-    'title': 'Rickroll', 'icon': '🎤', 'description': "A rare cartridge. You were looking at a contribution graph, weren't you? Unmute it.",
-    'video': 'https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d'}
+    'title': 'Rickroll', 'icon': '🎤', 'description': "A rare cartridge. You were looking at a contribution graph, weren't you? Click for sound.",
+    'light': 'https://github.com/poteto/poteto/blob/master/nice.gif?raw=true',
+    # The gif autoplays silently; clicking it opens the hosted video in the browser's own player, with sound.
+    'link': 'https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d'}
 START_MARKER, END_MARKER = '<!-- ARCADE:START -->', '<!-- ARCADE:END -->'
 
 
@@ -120,9 +122,8 @@ def render_arcade_block(selected, day=None):
     d = EXPERIENCE_DETAILS[selected]
     lines = [f"## Today's Arcade: {d['title']} {d['icon']}".rstrip(), '', d['description'], '',
              '<p align="center">']
-    if d.get('video'):
-        # A bare user-attachments URL on its own line is rendered by GitHub as a video player (with sound).
-        lines = lines[:-1]+[d['video'], '']
+    if d.get('link'):
+        lines += [f'  <a href="{d["link"]}"><img src="{d["light"]}" alt="{d["title"]}" width="100%"></a>', '</p>', '']
     else:
         lines += ['  <picture>']
         if d.get('dark'):
