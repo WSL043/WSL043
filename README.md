@@ -11,17 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Seasons 🍃
+## Today's Arcade: 3D Night View 🌃
 
-Isometric 3D bars whose colours follow the seasons of the year.
+A night-time isometric plate of your year.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-season.svg" alt="3D Seasons" width="100%">
+    <img src="./assets/arcade/3d-night.svg" alt="3D Night View" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-07 UTC</sub></p>
+<p align="center"><sub>23 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-08 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
