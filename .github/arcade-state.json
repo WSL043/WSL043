@@ -1,7 +1,6 @@
 {
-  "current": "domino",
+  "current": "dust",
   "remaining": [
-    "dust",
     "sorter",
     "synth",
     "claw",
@@ -13,6 +12,6 @@
     "snake"
   ],
   "cycle": 4,
-  "updated_on": "2026-10-09",
+  "updated_on": "2026-10-10",
   "catalog_version": 9
 }
