@@ -8,6 +8,8 @@
   <a href="./ENGINEERING.md">Under the hood</a>
   ·
   <a href="mailto:wangsr043@gmail.com">Say hello</a>
+  ·
+  <a href="https://ko-fi.com/wsl043">Ko-fi</a>
 </p>
 
 <!-- ARCADE:START -->
