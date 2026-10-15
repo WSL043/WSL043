@@ -13,19 +13,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minecraft Block Miner
+## Today's Arcade: 3D Seasons 🍃
 
-Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
+Isometric 3D bars whose colours follow the seasons of the year.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
-    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
+    <img src="./assets/arcade/3d-season.svg" alt="3D Seasons" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-14 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-15 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
