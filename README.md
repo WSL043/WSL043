@@ -13,19 +13,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Digital Rain 🌧️
+## Today's Arcade: Breakout 🧱
 
-Code rain cascades down and reveals your active days.
+A tiny paddle is clearing the year's contribution bricks.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/rain-dark.svg">
-    <img src="./assets/arcade/rain-light.svg" alt="Digital Rain" width="100%">
+            srcset="./assets/arcade/breakout-dark.svg">
+    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-16 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-17 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
