@@ -13,19 +13,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Breakout 🧱
+## Today's Arcade: Space Shooter 🚀
 
-A tiny paddle is clearing the year's contribution bricks.
+Today's contribution grid has entered bullet-hell mode.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/breakout-dark.svg">
-    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
+    <img src="./assets/arcade/space-shooter.gif" alt="Space Shooter" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-17 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-18 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
