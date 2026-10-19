@@ -13,17 +13,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: Snake 🐍
 
-Today's contribution grid has entered bullet-hell mode.
+The classic contribution snake is having lunch.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif" alt="Space Shooter" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/snake-dark.svg">
+    <img src="./assets/arcade/snake-light.svg" alt="Snake" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-18 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-19 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

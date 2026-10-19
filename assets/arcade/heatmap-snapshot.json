@@ -1,9 +1,9 @@
 {
   "owner": "WSL043",
   "source": "github-graphql",
-  "as_of": "2026-10-18",
-  "range_start": "2025-10-19",
-  "retrieved_at": "2026-10-18T05:51:58.694955+00:00",
+  "as_of": "2026-10-19",
+  "range_start": "2025-10-20",
+  "retrieved_at": "2026-10-19T06:10:30.082311+00:00",
   "columns": 53,
   "rows": 7,
   "week_starts": [
@@ -63,7 +63,7 @@
   ],
   "active_columns": {
     "0": [
-      0,
+      null,
       0,
       0,
       0,
@@ -531,8 +531,8 @@
       1
     ],
     "52": [
-      0,
-      null,
+      1,
+      2,
       null,
       null,
       null,
