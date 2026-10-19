@@ -1,9 +1,7 @@
 {
-  "current": "space-shooter",
-  "remaining": [
-    "snake"
-  ],
+  "current": "snake",
+  "remaining": [],
   "cycle": 4,
-  "updated_on": "2026-10-18",
+  "updated_on": "2026-10-19",
   "catalog_version": 9
 }
