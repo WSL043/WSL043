@@ -13,17 +13,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Space Shooter 🚀
+## Today's Arcade: 3D Rainbow Night 🌈
 
-Today's contribution grid has entered bullet-hell mode.
+Night-mode 3D bars on a rainbow-lit plate.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/space-shooter.gif" alt="Space Shooter" width="100%">
+    <img src="./assets/arcade/3d-rainbow.svg" alt="3D Rainbow Night" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-20 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-21 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
