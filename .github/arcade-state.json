@@ -1,7 +1,6 @@
 {
-  "current": "3d-rainbow",
+  "current": "snake",
   "remaining": [
-    "snake",
     "sorter",
     "3d-night-green",
     "domino",
@@ -25,6 +24,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-10-21",
+  "updated_on": "2026-10-22",
   "catalog_version": 9
 }
