@@ -1,7 +1,6 @@
 {
-  "current": "snake",
+  "current": "sorter",
   "remaining": [
-    "sorter",
     "3d-night-green",
     "domino",
     "minecraft",
@@ -24,6 +23,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-10-22",
+  "updated_on": "2026-10-23",
   "catalog_version": 9
 }
