@@ -13,19 +13,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Snake 🐍
+## Today's Arcade: Level Sorter
 
-The classic contribution snake is having lunch.
+Every active day flies into the bin for its level, revealing your real activity histogram.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/snake-dark.svg">
-    <img src="./assets/arcade/snake-light.svg" alt="Snake" width="100%">
+            srcset="./assets/arcade/heatmap-sorter-dark.svg">
+    <img src="./assets/arcade/heatmap-sorter-light.svg" alt="Level Sorter" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-22 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-23 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
