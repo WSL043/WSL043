@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Level Sorter
+## Today's Arcade: 3D Night Green 🌲
 
-Every active day flies into the bin for its level, revealing your real activity histogram.
+Green isometric bars on a night-time plate.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-sorter-dark.svg">
-    <img src="./assets/arcade/heatmap-sorter-light.svg" alt="Level Sorter" width="100%">
+    <img src="./assets/arcade/3d-night-green.svg" alt="3D Night Green" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-23 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-24 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
