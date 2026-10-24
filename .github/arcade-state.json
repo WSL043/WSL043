@@ -1,7 +1,6 @@
 {
-  "current": "sorter",
+  "current": "3d-night-green",
   "remaining": [
-    "3d-night-green",
     "domino",
     "minecraft",
     "rain",
@@ -23,6 +22,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-10-23",
+  "updated_on": "2026-10-24",
   "catalog_version": 9
 }
