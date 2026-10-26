@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Domino Run
+## Today's Arcade: Minecraft Block Miner
 
-A steel ball tips the first domino and the whole year topples in a chain, pips and all, then stands back up.
+Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-domino-dark.svg">
-    <img src="./assets/arcade/heatmap-domino-light.svg" alt="Domino Run" width="100%">
+            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
+    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-25 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-26 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
