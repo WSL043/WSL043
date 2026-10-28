@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Digital Rain 🌧️
+## Today's Arcade: Heatmap Synth
 
-Code rain cascades down and reveals your active days.
+A playhead sweeps the year like a sequencer; every green day pulses as it plays.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/rain-dark.svg">
-    <img src="./assets/arcade/rain-light.svg" alt="Digital Rain" width="100%">
+            srcset="./assets/arcade/heatmap-synth-dark.svg">
+    <img src="./assets/arcade/heatmap-synth-light.svg" alt="Heatmap Synth" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-27 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-28 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
