@@ -1,7 +1,6 @@
 {
-  "current": "synth",
+  "current": "claw",
   "remaining": [
-    "claw",
     "3d-green",
     "platformer",
     "3d-season",
@@ -18,6 +17,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-10-28",
+  "updated_on": "2026-10-29",
   "catalog_version": 9
 }
