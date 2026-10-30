@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Claw Machine
+## Today's Arcade: 3D Contribution Bars 🟩
 
-A claw plucks your contribution days one by one, then drops them back in place.
+Your year as isometric 3D bars that grow in shades of green.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-claw-dark.svg">
-    <img src="./assets/arcade/heatmap-claw-light.svg" alt="Claw Machine" width="100%">
+    <img src="./assets/arcade/3d-green.svg" alt="3D Contribution Bars" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-29 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-30 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
