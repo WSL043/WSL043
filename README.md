@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Contribution Bars 🟩
+## Today's Arcade: Platformer 🍄
 
-Your year as isometric 3D bars that grow in shades of green.
+A hero hops across your green days as platforms, collecting coins on the way to the flag.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-green.svg" alt="3D Contribution Bars" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/platformer-dark.svg">
+    <img src="./assets/arcade/platformer-light.svg" alt="Platformer" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-30 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-10-31 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
