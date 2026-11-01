@@ -1,7 +1,6 @@
 {
-  "current": "platformer",
+  "current": "3d-season",
   "remaining": [
-    "3d-season",
     "bobble",
     "rickroll",
     "3d-night",
@@ -15,6 +14,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-10-31",
+  "updated_on": "2026-11-01",
   "catalog_version": 9
 }
