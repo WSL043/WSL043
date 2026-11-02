@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Seasons 🍃
+## Today's Arcade: Puzzle Bobble 🫧
 
-Isometric 3D bars whose colours follow the seasons of the year.
+Bubbles in your contribution colours get popped by a bubble launcher.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-season.svg" alt="3D Seasons" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/bobble-dark.svg">
+    <img src="./assets/arcade/bobble-light.svg" alt="Puzzle Bobble" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-01 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-02 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

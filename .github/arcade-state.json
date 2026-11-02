@@ -1,7 +1,6 @@
 {
-  "current": "3d-season",
+  "current": "bobble",
   "remaining": [
-    "bobble",
     "rickroll",
     "3d-night",
     "bomberman",
@@ -14,6 +13,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-11-01",
+  "updated_on": "2026-11-02",
   "catalog_version": 9
 }
