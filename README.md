@@ -11,19 +11,15 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Puzzle Bobble 🫧
+## Today's Arcade: Rickroll 🎤
 
-Bubbles in your contribution colours get popped by a bubble launcher.
+A rare cartridge. You were looking at a contribution graph, weren't you? Click for sound.
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/bobble-dark.svg">
-    <img src="./assets/arcade/bobble-light.svg" alt="Puzzle Bobble" width="100%">
-  </picture>
+  <a href="https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d"><img src="https://github.com/poteto/poteto/blob/master/nice.gif?raw=true" alt="Rickroll" width="100%"></a>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-02 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-03 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

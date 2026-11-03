@@ -1,7 +1,6 @@
 {
-  "current": "bobble",
+  "current": "rickroll",
   "remaining": [
-    "rickroll",
     "3d-night",
     "bomberman",
     "dust",
@@ -13,6 +12,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-11-02",
+  "updated_on": "2026-11-03",
   "catalog_version": 9
 }
