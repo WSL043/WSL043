@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Night View 🌃
+## Today's Arcade: Bomberman 💣
 
-A night-time isometric plate of your year.
+A bomber blasts through the green days of your year.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-night.svg" alt="3D Night View" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/bomberman-dark.svg">
+    <img src="./assets/arcade/bomberman-light.svg" alt="Bomberman" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-04 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-05 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

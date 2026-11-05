@@ -1,7 +1,6 @@
 {
-  "current": "3d-night",
+  "current": "bomberman",
   "remaining": [
-    "bomberman",
     "dust",
     "breakout",
     "3d-city",
@@ -11,6 +10,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-11-04",
+  "updated_on": "2026-11-05",
   "catalog_version": 9
 }
