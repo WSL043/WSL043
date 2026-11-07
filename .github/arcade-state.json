@@ -1,7 +1,6 @@
 {
-  "current": "dust",
+  "current": "breakout",
   "remaining": [
-    "breakout",
     "3d-city",
     "galaga",
     "minesweeper",
@@ -9,6 +8,6 @@
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-11-06",
+  "updated_on": "2026-11-07",
   "catalog_version": 9
 }

@@ -1,9 +1,9 @@
 {
   "owner": "WSL043",
   "source": "github-graphql",
-  "as_of": "2026-11-06",
-  "range_start": "2025-11-07",
-  "retrieved_at": "2026-11-06T07:54:08.388569+00:00",
+  "as_of": "2026-11-07",
+  "range_start": "2025-11-08",
+  "retrieved_at": "2026-11-07T07:05:48.461565+00:00",
   "columns": 53,
   "rows": 7,
   "week_starts": [
@@ -68,7 +68,7 @@
       null,
       null,
       null,
-      0,
+      null,
       0
     ],
     "1": [
@@ -537,7 +537,7 @@
       1,
       1,
       1,
-      null
+      1
     ]
   },
   "note": "Calendar positions and levels only. Game units are not contribution counts."

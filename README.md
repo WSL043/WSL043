@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Pixel Dust
+## Today's Arcade: Breakout 🧱
 
-Your green days crumble into drifting dust, then pull themselves back together.
+A tiny paddle is clearing the year's contribution bricks.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-dust-dark.svg">
-    <img src="./assets/arcade/heatmap-dust-light.svg" alt="Pixel Dust" width="100%">
+            srcset="./assets/arcade/breakout-dark.svg">
+    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-06 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-07 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

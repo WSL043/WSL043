@@ -1,8 +1,8 @@
 {
   "schema": "search-comparison-v1",
   "owner": "WSL043",
-  "date": "2026-11-06",
-  "grid_sha256": "9706f2625f86298b58278b7a2138edadd956f857eea22cdd26afde39c8319024",
+  "date": "2026-11-07",
+  "grid_sha256": "1ae9e6cf11c07b1c35273ea6d7a8895d761c208b666bb74e64ff475c0226a76a",
   "rules": {
     "movement": "right/down/left/up",
     "cost": "1 + contribution level; start excluded",
@@ -297,10 +297,6 @@
           6
         ],
         [
-          0,
-          5
-        ],
-        [
           1,
           0
         ],
@@ -1629,7 +1625,7 @@
           3
         ]
       ],
-      "expanded": 348,
+      "expanded": 347,
       "steps": 51,
       "cost": 74
     },
@@ -1916,10 +1912,6 @@
           6
         ],
         [
-          0,
-          5
-        ],
-        [
           1,
           0
         ],
@@ -3308,7 +3300,7 @@
           3
         ]
       ],
-      "expanded": 363,
+      "expanded": 362,
       "steps": 53,
       "cost": 71
     },
@@ -4335,10 +4327,6 @@
           6
         ],
         [
-          0,
-          5
-        ],
-        [
           1,
           0
         ],
@@ -4947,7 +4935,7 @@
           3
         ]
       ],
-      "expanded": 353,
+      "expanded": 352,
       "steps": 53,
       "cost": 71
     }
