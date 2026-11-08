@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Breakout 🧱
+## Today's Arcade: 3D Contribution City 🏙️
 
-A tiny paddle is clearing the year's contribution bricks.
+Today's commits have been rebuilt as a tiny skyline.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/breakout-dark.svg">
-    <img src="./assets/arcade/breakout-light.svg" alt="Breakout" width="100%">
+    <img src="./assets/arcade/3d-city.svg" alt="3D Contribution City" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-07 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-08 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
