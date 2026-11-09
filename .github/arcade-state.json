@@ -1,12 +1,11 @@
 {
-  "current": "3d-city",
+  "current": "galaga",
   "remaining": [
-    "galaga",
     "minesweeper",
     "fireworks",
     "maze-chase"
   ],
   "cycle": 5,
-  "updated_on": "2026-11-08",
+  "updated_on": "2026-11-09",
   "catalog_version": 9
 }
