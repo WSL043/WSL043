@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Galaga 👾
+## Today's Arcade: Minesweeper 🚩
 
-A fighter clears your contribution grid, one wave at a time.
+Your contribution grid gets swept, flag by flag.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/galaga-dark.svg">
-    <img src="./assets/arcade/galaga-light.svg" alt="Galaga" width="100%">
+            srcset="./assets/arcade/minesweeper-dark.svg">
+    <img src="./assets/arcade/minesweeper-light.svg" alt="Minesweeper" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-09 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-10 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
