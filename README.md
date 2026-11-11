@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minesweeper 🚩
+## Today's Arcade: Firework Show
 
-Your contribution grid gets swept, flag by flag.
+The calendar goes dark, then rockets relight every active day in a burst of colour.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/minesweeper-dark.svg">
-    <img src="./assets/arcade/minesweeper-light.svg" alt="Minesweeper" width="100%">
+            srcset="./assets/arcade/heatmap-fireworks-dark.svg">
+    <img src="./assets/arcade/heatmap-fireworks-light.svg" alt="Firework Show" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-10 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-11 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
