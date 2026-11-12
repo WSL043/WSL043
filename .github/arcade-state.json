@@ -1,9 +1,7 @@
 {
-  "current": "fireworks",
-  "remaining": [
-    "maze-chase"
-  ],
+  "current": "maze-chase",
+  "remaining": [],
   "cycle": 5,
-  "updated_on": "2026-11-11",
+  "updated_on": "2026-11-12",
   "catalog_version": 9
 }

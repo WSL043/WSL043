@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Firework Show
+## Today's Arcade: Maze Chase 👻
 
-The calendar goes dark, then rockets relight every active day in a burst of colour.
+Dots, ghosts, and a full year of commits to chase.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-fireworks-dark.svg">
-    <img src="./assets/arcade/heatmap-fireworks-light.svg" alt="Firework Show" width="100%">
+            srcset="./assets/arcade/maze-chase-dark.svg">
+    <img src="./assets/arcade/maze-chase-light.svg" alt="Maze Chase" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-11 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-12 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
