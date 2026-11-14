@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minecraft Block Miner
+## Today's Arcade: Puzzle Bobble 🫧
 
-Mine your green days into grass blocks, collect them, then rebuild the whole calendar.
+Bubbles in your contribution colours get popped by a bubble launcher.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-minecraft-dark.svg">
-    <img src="./assets/arcade/heatmap-minecraft-light.svg" alt="Minecraft Block Miner" width="100%">
+            srcset="./assets/arcade/bobble-dark.svg">
+    <img src="./assets/arcade/bobble-light.svg" alt="Puzzle Bobble" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-13 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-14 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

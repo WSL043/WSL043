@@ -1,7 +1,6 @@
 {
-  "current": "minecraft",
+  "current": "bobble",
   "remaining": [
-    "bobble",
     "rain",
     "3d-night",
     "3d-night-green",
@@ -26,6 +25,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-13",
+  "updated_on": "2026-11-14",
   "catalog_version": 9
 }
