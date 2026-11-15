@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Puzzle Bobble 🫧
+## Today's Arcade: Digital Rain 🌧️
 
-Bubbles in your contribution colours get popped by a bubble launcher.
+Code rain cascades down and reveals your active days.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/bobble-dark.svg">
-    <img src="./assets/arcade/bobble-light.svg" alt="Puzzle Bobble" width="100%">
+            srcset="./assets/arcade/rain-dark.svg">
+    <img src="./assets/arcade/rain-light.svg" alt="Digital Rain" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-14 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-15 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
