@@ -1,7 +1,6 @@
 {
-  "current": "rain",
+  "current": "3d-night",
   "remaining": [
-    "3d-night",
     "3d-night-green",
     "galaga",
     "3d-green",
@@ -24,6 +23,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-15",
+  "updated_on": "2026-11-16",
   "catalog_version": 9
 }
