@@ -11,17 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Night View 🌃
+## Today's Arcade: 3D Night Green 🌲
 
-A night-time isometric plate of your year.
+Green isometric bars on a night-time plate.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-night.svg" alt="3D Night View" width="100%">
+    <img src="./assets/arcade/3d-night-green.svg" alt="3D Night Green" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-16 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-17 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
