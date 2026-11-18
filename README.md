@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Night Green 🌲
+## Today's Arcade: Galaga 👾
 
-Green isometric bars on a night-time plate.
+A fighter clears your contribution grid, one wave at a time.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-night-green.svg" alt="3D Night Green" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/galaga-dark.svg">
+    <img src="./assets/arcade/galaga-light.svg" alt="Galaga" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-17 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-18 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
