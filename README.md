@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Galaga 👾
+## Today's Arcade: 3D Contribution Bars 🟩
 
-A fighter clears your contribution grid, one wave at a time.
+Your year as isometric 3D bars that grow in shades of green.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/galaga-dark.svg">
-    <img src="./assets/arcade/galaga-light.svg" alt="Galaga" width="100%">
+    <img src="./assets/arcade/3d-green.svg" alt="3D Contribution Bars" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-18 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-19 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

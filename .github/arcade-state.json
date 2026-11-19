@@ -1,7 +1,6 @@
 {
-  "current": "galaga",
+  "current": "3d-green",
   "remaining": [
-    "3d-green",
     "minesweeper",
     "rickroll",
     "bomberman",
@@ -21,6 +20,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-18",
+  "updated_on": "2026-11-19",
   "catalog_version": 9
 }
