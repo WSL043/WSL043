@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Contribution Bars 🟩
+## Today's Arcade: Minesweeper 🚩
 
-Your year as isometric 3D bars that grow in shades of green.
+Your contribution grid gets swept, flag by flag.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-green.svg" alt="3D Contribution Bars" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/minesweeper-dark.svg">
+    <img src="./assets/arcade/minesweeper-light.svg" alt="Minesweeper" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-19 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-20 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
