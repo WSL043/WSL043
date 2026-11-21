@@ -11,19 +11,15 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Minesweeper 🚩
+## Today's Arcade: Rickroll 🎤
 
-Your contribution grid gets swept, flag by flag.
+A rare cartridge. You were looking at a contribution graph, weren't you? Click for sound.
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/minesweeper-dark.svg">
-    <img src="./assets/arcade/minesweeper-light.svg" alt="Minesweeper" width="100%">
-  </picture>
+  <a href="https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d"><img src="https://github.com/poteto/poteto/blob/master/nice.gif?raw=true" alt="Rickroll" width="100%"></a>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-20 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-21 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

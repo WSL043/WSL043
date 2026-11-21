@@ -1,7 +1,6 @@
 {
-  "current": "minesweeper",
+  "current": "rickroll",
   "remaining": [
-    "rickroll",
     "bomberman",
     "platformer",
     "3d-rainbow",
@@ -19,6 +18,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-20",
+  "updated_on": "2026-11-21",
   "catalog_version": 9
 }
