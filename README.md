@@ -11,15 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Rickroll 🎤
+## Today's Arcade: Bomberman 💣
 
-A rare cartridge. You were looking at a contribution graph, weren't you? Click for sound.
+A bomber blasts through the green days of your year.
 
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/fc8c0213-6f86-4320-b41d-ff954747642d"><img src="https://github.com/poteto/poteto/blob/master/nice.gif?raw=true" alt="Rickroll" width="100%"></a>
+  <picture>
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/bomberman-dark.svg">
+    <img src="./assets/arcade/bomberman-light.svg" alt="Bomberman" width="100%">
+  </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-21 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-22 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

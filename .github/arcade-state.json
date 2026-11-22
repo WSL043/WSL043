@@ -1,7 +1,6 @@
 {
-  "current": "rickroll",
+  "current": "bomberman",
   "remaining": [
-    "bomberman",
     "platformer",
     "3d-rainbow",
     "dust",
@@ -18,6 +17,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-21",
+  "updated_on": "2026-11-22",
   "catalog_version": 9
 }
