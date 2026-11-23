@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Bomberman 💣
+## Today's Arcade: Platformer 🍄
 
-A bomber blasts through the green days of your year.
+A hero hops across your green days as platforms, collecting coins on the way to the flag.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/bomberman-dark.svg">
-    <img src="./assets/arcade/bomberman-light.svg" alt="Bomberman" width="100%">
+            srcset="./assets/arcade/platformer-dark.svg">
+    <img src="./assets/arcade/platformer-light.svg" alt="Platformer" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-22 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-23 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

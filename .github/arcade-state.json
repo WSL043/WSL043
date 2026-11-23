@@ -1,7 +1,6 @@
 {
-  "current": "bomberman",
+  "current": "platformer",
   "remaining": [
-    "platformer",
     "3d-rainbow",
     "dust",
     "claw",
@@ -17,6 +16,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-22",
+  "updated_on": "2026-11-23",
   "catalog_version": 9
 }
