@@ -11,19 +11,17 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Platformer 🍄
+## Today's Arcade: 3D Rainbow Night 🌈
 
-A hero hops across your green days as platforms, collecting coins on the way to the flag.
+Night-mode 3D bars on a rainbow-lit plate.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/platformer-dark.svg">
-    <img src="./assets/arcade/platformer-light.svg" alt="Platformer" width="100%">
+    <img src="./assets/arcade/3d-rainbow.svg" alt="3D Rainbow Night" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-23 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-24 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->

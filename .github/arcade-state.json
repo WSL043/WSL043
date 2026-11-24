@@ -1,7 +1,6 @@
 {
-  "current": "platformer",
+  "current": "3d-rainbow",
   "remaining": [
-    "3d-rainbow",
     "dust",
     "claw",
     "synth",
@@ -16,6 +15,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-23",
+  "updated_on": "2026-11-24",
   "catalog_version": 9
 }
