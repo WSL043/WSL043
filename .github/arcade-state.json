@@ -1,7 +1,6 @@
 {
-  "current": "3d-rainbow",
+  "current": "dust",
   "remaining": [
-    "dust",
     "claw",
     "synth",
     "breakout",
@@ -15,6 +14,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-24",
+  "updated_on": "2026-11-25",
   "catalog_version": 9
 }

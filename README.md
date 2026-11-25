@@ -11,17 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: 3D Rainbow Night 🌈
+## Today's Arcade: Pixel Dust
 
-Night-mode 3D bars on a rainbow-lit plate.
+Your green days crumble into drifting dust, then pull themselves back together.
 
 <p align="center">
   <picture>
-    <img src="./assets/arcade/3d-rainbow.svg" alt="3D Rainbow Night" width="100%">
+    <source media="(prefers-color-scheme: dark)"
+            srcset="./assets/arcade/heatmap-dust-dark.svg">
+    <img src="./assets/arcade/heatmap-dust-light.svg" alt="Pixel Dust" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-24 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-25 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
