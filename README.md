@@ -11,19 +11,19 @@
 </p>
 
 <!-- ARCADE:START -->
-## Today's Arcade: Pixel Dust
+## Today's Arcade: Claw Machine
 
-Your green days crumble into drifting dust, then pull themselves back together.
+A claw plucks your contribution days one by one, then drops them back in place.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)"
-            srcset="./assets/arcade/heatmap-dust-dark.svg">
-    <img src="./assets/arcade/heatmap-dust-light.svg" alt="Pixel Dust" width="100%">
+            srcset="./assets/arcade/heatmap-claw-dark.svg">
+    <img src="./assets/arcade/heatmap-claw-light.svg" alt="Claw Machine" width="100%">
   </picture>
 </p>
 
-<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-25 UTC</sub></p>
+<p align="center"><sub>24 cartridges · a fresh daily draw · no back-to-back repeats · Updated 2026-11-26 UTC</sub></p>
 
 [Explore the SVG arcade](./ARCADE.md)
 <!-- ARCADE:END -->
