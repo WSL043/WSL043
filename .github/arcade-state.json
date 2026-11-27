@@ -1,7 +1,6 @@
 {
-  "current": "claw",
+  "current": "synth",
   "remaining": [
-    "synth",
     "breakout",
     "3d-season",
     "domino",
@@ -13,6 +12,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-26",
+  "updated_on": "2026-11-27",
   "catalog_version": 9
 }
