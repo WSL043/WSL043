@@ -1,7 +1,6 @@
 {
-  "current": "synth",
+  "current": "breakout",
   "remaining": [
-    "breakout",
     "3d-season",
     "domino",
     "maze-chase",
@@ -12,6 +11,6 @@
     "snake"
   ],
   "cycle": 6,
-  "updated_on": "2026-11-27",
+  "updated_on": "2026-11-28",
   "catalog_version": 9
 }
